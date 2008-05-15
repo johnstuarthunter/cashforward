@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="Dell" name="org.cashforward.persistence.PaymentCalculationTest" tests="1" time="7.704" timestamp="2008-05-15T02:34:02">
+  <properties>
+    <property name="javax.xml.parsers.SAXParserFactory" value="org.netbeans.core.startup.SAXFactoryImpl" />
+    <property name="release.dir" value="C:\development\CashForward\CashForwardModel\release" />
+    <property name="nbm.module.author" value="" />
+    <property name="org.openide.TopManager.GUI" value="true" />
+    <property name="libs.junit.javadoc" value="C:\Program Files\NetBeans 6.1\java2\docs\junit-3.8.2-api.zip" />
+    <property name="ant.core.lib" value="C:\Program Files\NetBeans 6.1\java2\ant\lib\ant.jar" />
+    <property name="build.compiler.debug" value="true" />
+    <property name="libs.swing-app-framework.src" value="" />
+    <property name="libs.toplink.classpath" value="C:\Program Files\NetBeans 6.1\java2\modules\ext\toplink\toplink-essentials.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\toplink\toplink-essentials-agent.jar" />
+    <property name="libs.HibernateEntityManager.javadoc" value="" />
+    <property name="user.dir" value="C:\Program Files\NetBeans 6.1" />
+    <property name="java.vm.version" value="1.6.0_01-b06" />
+    <property name="libs.MySQLDriver.classpath" value="C:\Program Files\NetBeans 6.1\ide9\modules\ext\mysql-connector-java-5.1.5-bin.jar" />
+    <property name="build.package.index" value="false" />
+    <property name="libs.hibernate-support.maven-pom" value="" />
+    <property name="libs.hibernate-support.javadoc" value="" />
+    <property name="jdk.home" value="C:\Program Files\Java\jdk1.6.0_01" />
+    <property name="nbm" value="org-cashforward-model.nbm" />
+    <property name="libs.javac-api.src" value="" />
+    <property name="javahelp.search" value="JavaHelpSearch" />
+    <property name="libs.JNA.src" value="" />
+    <property name="sun.os.patch.level" value="Service Pack 2" />
+    <property name="libs.JDIC.maven-pom" value="" />
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
+    <property name="libs.TimingFramework.classpath" value="C:\development\TimingFramework-1.0.jar" />
+    <property name="org.xml.sax.driver" value="com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser" />
+    <property name="test.unit.run.cp.short" value="${netbeans.dest.dir}/java2/modules/ext/junit-3.8.2.jar:\
+${netbeans.dest.dir}/java2/modules/ext/junit-4.1.jar" />
+    <property name="test.unit.dir" value="C:\development\CashForward\CashForwardModel\test\unit" />
+    <property name="libs.javac-api.javadoc" value="" />
+    <property name="os.name" value="Windows XP" />
+    <property name="public.packages" value="-" />
+    <property name="libs.AnimatedTransitions.src" value="" />
+    <property name="libs.beans-binding.classpath" value="C:\Program Files\NetBeans 6.1\java2\modules\ext\beansbinding-1.2.1.jar" />
+    <property name="test.unit.src.dir" value="C:\development\CashForward\CashForwardModel\test\unit\src" />
+    <property name="libs.CommonsLogging.maven-pom" value="" />
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi" />
+    <property name="buildnumber" value="080515" />
+    <property name="nbplatform.active" value="default" />
+    <property name="extra.module.files" value="" />
+    <property name="os.arch" value="x86" />
+    <property name="user.name" value="Bill" />
+    <property name="libs.jaxb21.maven-pom" value="" />
+    <property name="platforms.Java_HotSpot_TM__Client_VM_1.5.0_04-b05.bootclasspath" value="C:\Program Files\Java\jdk1.5.0_04\jre\lib\rt.jar;C:\Program Files\Java\jdk1.5.0_04\jre\lib\i18n.jar;C:\Program Files\Java\jdk1.5.0_04\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.5.0_04\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.5.0_04\jre\lib\jce.jar;C:\Program Files\Java\jdk1.5.0_04\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.5.0_04\jre\classes;C:\Program Files\Java\jdk1.5.0_04\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.5.0_04\jre\lib\ext\j3dcore.jar;C:\Program Files\Java\jdk1.5.0_04\jre\lib\ext\j3dutils.jar;C:\Program Files\Java\jdk1.5.0_04\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.5.0_04\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.5.0_04\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.5.0_04\jre\lib\ext\vecmath.jar" />
+    <property name="libs.swing-layout.maven-pom" value="" />
+    <property name="build.classes.dir" value="C:\development\CashForward\CashForwardModel\build\classes" />
+    <property name="netbeans.accept_license_class" value="org.netbeans.license.AcceptLicense" />
+    <property name="build.sysclasspath" value="ignore" />
+    <property name="libs.AnimatedTransitions.classpath" value="C:\development\AnimatedTransitions-0.11.jar" />
+    <property name="libs.Net2Java.src" value="" />
+    <property name="libs.jaxws21.javadoc" value="C:\Program Files\NetBeans 6.1\java2\docs\jaxws-2_1-api-doc.zip" />
+    <property name="libs.Groovy.classpath" value="C:\Program Files\Groovy\Groovy-1.5.4\lib\gant-1.1.0_groovy-1.5.2.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\graphicsbuilder-0.4.5-.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\graphicsbuilder-ext-jdk6-0.4.5.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\graphicsbuilder-ext-svg-0.4.5.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\graphicsbuilder-ext-swingx-0.4.5.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\groovy-1.5.4.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\groovyws-standalone-0.2.0.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\jide-oss-2.2.1.05.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\jidebuilder-1.0.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\MultipleGradientPaint.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\swing-worker.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\swingx-0.9.1.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\swingx-ws.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\swingxbuilder-0.1.5.jar;C:\Program Files\Groovy\Groovy-1.5.4\lib\TimingFramework-1.0-groovy.jar" />
+    <property name="extra.test.libs.dir" value="C:\development\CashForward\CashForwardMain\build\testdist\extralibs" />
+    <property name="javax.xml.parsers.DocumentBuilderFactory" value="org.netbeans.core.startup.DOMFactoryImpl" />
+    <property name="user.country" value="US" />
+    <property name="libs.GlazedLists.src" value="" />
+    <property name="ant.file.jdk" value="C:\Program Files\NetBeans 6.1\harness\jdk.xml" />
+    <property name="libs.GlazedLists.javadoc" value="" />
+    <property name="netbeans.system_http_non_proxy_hosts" value="" />
+    <property name="disabled.modules" value="org.netbeans.api.visual,org.netbeans.core.execution,org.netbeans.core.multiview,org.netbeans.libs.jsr223,org.netbeans.modules.autoupdate.services,org.netbeans.modules.autoupdate.ui,org.netbeans.modules.core.kit,org.netbeans.modules.favorites,org.netbeans.modules.templates,org.openide.compat,org.openide.execution,org.openide.options,org.openide.util.enumerations" />
+    <property name="netbeans.home" value="C:\Program Files\NetBeans 6.1\platform8" />
+    <property name="libs.GlazedLists.classpath" value="C:\development\glazedlists-1.7.0_java15.jar" />
+    <property name="build.compiler.emacs" value="true" />
+    <property name="java.endorsed.dirs" value="C:\Program Files\Java\jdk1.6.0_01\jre\lib\endorsed" />
+    <property name="netbeans.dynamic.classpath" value="C:\Program Files\NetBeans 6.1\platform8\core\core.jar;C:\Program Files\NetBeans 6.1\platform8\core\org-openide-filesystems.jar;C:\Program Files\NetBeans 6.1\nb6.1\core\org-netbeans-upgrader.jar;C:\Program Files\NetBeans 6.1\nb6.1\core\locale\core_nb.jar" />
+    <property name="java.vm.specification.version" value="1.0" />
+    <property name="test.excludes" value="" />
+    <property name="libs.HibernateEntityManager.classpath" value="C:\development\CashForward\CashForwardLibraries\hibernate-em-3.3.2\ejb3-persistence.jar;C:\development\CashForward\CashForwardLibraries\hibernate-em-3.3.2\hibernate-annotations.jar;C:\development\CashForward\CashForwardLibraries\hibernate-em-3.3.2\hibernate-commons-annotations.jar;C:\development\CashForward\CashForwardLibraries\hibernate-em-3.3.2\hibernate-entitymanager.jar" />
+    <property name="libs.jaxws21.src" value="" />
+    <property name="libs.JNA.classpath" value="C:\development\jna\examples.jar;C:\development\jna\jna.jar;C:\development\jna\win32-x86.jar" />
+    <property name="libs.swing-app-framework.classpath" value="C:\Program Files\NetBeans 6.1\java2\modules\ext\appframework-1.0.3.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\swing-worker-1.1.jar" />
+    <property name="java.vendor" value="Sun Microsystems Inc." />
+    <property name="code.name.base.dashes" value="org-cashforward-model" />
+    <property name="file.separator" value="\" />
+    <property name="module.run.classpath" value="C:\development\CashForward\CashForwardMain\build\cluster\modules\javax-persistence.jar:C:\development\CashForward\CashForwardLibraries\HibernateEntityManager\release\modules\ext\ejb3-persistence.jar:C:\development\CashForward\CashForwardLibraries\HibernateEntityManager\release\modules\ext\hibernate-annotations.jar:C:\development\CashForward\CashForwardLibraries\HibernateEntityManager\release\modules\ext\hibernate-commons-annotations.jar:C:\development\CashForward\CashForwardLibraries\HibernateEntityManager\release\modules\ext\hibernate-entitymanager.jar:C:\development\CashForward\CashForwardLibraries\HibernateEntityManager\release\modules\ext\javassist.jar:C:\development\CashForward\CashForwardMain\build\cluster\modules\org-h2.jar:C:\development\CashForward\CashForwardLibraries\H2\release\modules\ext\h2.jar" />
+    <property name="nbjdk.home.defaulted" value="true" />
+    <property name="libs.junit_4.maven-pom" value="" />
+    <property name="build.test.unit.work.dir" value="C:\development\CashForward\CashForwardModel\build\test\unit\work" />
+    <property name="netbeans.buildnumber" value="200804211638" />
+    <property name="user.variant" value="" />
+    <property name="nbm.needs.restart" value="false" />
+    <property name="sun.java.launcher" value="SUN_STANDARD" />
+    <property name="libs.junit.classpath" value="C:\Program Files\NetBeans 6.1\java2\modules\ext\junit-3.8.2.jar" />
+    <property name="ant.home" value="C:\Program Files\NetBeans 6.1\java2\ant" />
+    <property name="libs.junit_4.src" value="" />
+    <property name="libs.JFreeChart.javadoc" value="" />
+    <property name="test.unit.folder" value="C:\development\CashForward\CashForwardModel/../CashForwardMain/build/testdist/unit/cluster/org-cashforward-model" />
+    <property name="libs.absolutelayout.maven-pom" value="" />
+    <property name="ant.java.version" value="1.6" />
+    <property name="java.library.path" value="C:\Program Files\Java\jdk1.6.0_01\jre\bin;.;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\MinGW\bin;C:\Program Files\PC Connectivity Solution\;c:\cygwin\bin;C:\Program Files\Java\jdk1.5.0_04\bin;C:\apache-ant-1.6.5\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Program Files\ATI Technologies\ATI Control Panel;C:\Program Files\Microsoft SQL Server\80\Tools\Binn\;;C:\Program Files\Subversion\bin;C:\Program Files\Common Files\GTK\2.0\bin;C:\development\jdic-20060613-bin-cross-platform\windows\x86;C:\development\jna;C:\Program Files\Subversion\bin;C:\Program Files\Common Files\Ulead Systems\MPEG;C:\Program Files\Java\jdk1.5.0_04\include;C:\Program Files\Java\jdk1.5.0_04\include\win32;C:\Program Files\Groovy\Groovy-1.5.4\bin;C:\Program Files\QuickTime\QTSystem\;C:\Program Files\Subversion" />
+    <property name="build.test.unit.classes.dir" value="C:\development\CashForward\CashForwardModel\build\test\unit\classes" />
+    <property name="libs.JFreeChart.classpath" value="C:\development\jfreechart-1.0.6\lib\gnujaxp.jar;C:\development\jfreechart-1.0.6\lib\itext-2.0.2.jar;C:\development\jfreechart-1.0.6\lib\jcommon-1.0.10.jar;C:\development\jfreechart-1.0.6\lib\jfreechart-1.0.6.jar;C:\development\jfreechart-1.0.6\lib\servlet.jar;C:\development\orson-0.5.0\orson-0.5.0.jar" />
+    <property name="java.util.logging.config.class" value="org.netbeans.core.startup.TopLogging" />
+    <property name="DSTAMP" value="20080514" />
+    <property name="nbjunit.workdir" value="C:\development\CashForward\CashForwardModel\build\test\unit\work" />
+    <property name="libs.PostgreSQLDriver.src" value="" />
+    <property name="sun.arch.data.model" value="32" />
+    <property name="basedir" value="C:\development\CashForward\CashForwardModel" />
+    <property name="libs.HibernateEntityManager.src" value="" />
+    <property name="path.separator" value=";" />
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle" />
+    <property name="libs.jaxws21.classpath" value="C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\activation.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\FastInfoset.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\http.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\api\jaxb-api.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\jaxb-impl.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\jaxb-xjc.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\api\jaxws-api.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\jaxws-rt.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\jaxws-tools.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\api\jsr173_api.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\api\jsr181-api.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\api\jsr250-api.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\api\saaj-api.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\saaj-impl.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\sjsxp.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\stax-ex.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\streambuffer.jar" />
+    <property name="TSTAMP" value="2233" />
+    <property name="user.language" value="en" />
+    <property name="libs.jaxb21.javadoc" value="" />
+    <property name="libs.spring-framework.classpath" value="C:\Program Files\NetBeans 6.1\java2\modules\ext\spring\commons-logging-1.1.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\spring\spring-2.5.jar" />
+    <property name="module.classpath" value="C:\development\CashForward\CashForwardMain\build\public-package-jars\javax-persistence.jar:C:\development\CashForward\CashForwardMain\build\public-package-jars\org-h2.jar" />
+    <property name="build.test.unit.results.dir" value="C:\development\CashForward\CashForwardModel\build\test\unit\results" />
+    <property name="libs.swing-layout.javadoc" value="C:\Program Files\NetBeans 6.1\platform8\docs\swing-layout-1.0.3-doc.zip" />
+    <property name="nbm.is.global" value="" />
+    <property name="libs.JDIC.classpath" value="C:\development\jdic-0.9.1-bin-cross-platform\jdic.jar;C:\development\jdic-0.9.1-bin-cross-platform\windows\jdic_stub.jar" />
+    <property name="libs.swing-app-framework.javadoc" value="C:\Program Files\NetBeans 6.1\java2\docs\appframework-1.0.3-doc.zip" />
+    <property name="https.nonProxyHosts" value="localhost|127.0.0.1|Dell" />
+    <property name="libs.PostgreSQLDriver.maven-pom" value="" />
+    <property name="java.class.version" value="50.0" />
+    <property name="libs.Groovy.javadoc" value="" />
+    <property name="netbeans.system_http_proxy" value="DIRECT" />
+    <property name="user.properties.file" value="C:\Documents and Settings\Bill\.netbeans\6.1\build.properties" />
+    <property name="libs.spring-framework.src" value="" />
+    <property name="libs.javac-api.maven-pom" value="" />
+    <property name="file.encoding.pkg" value="sun.io" />
+    <property name="sun.cpu.endian" value="little" />
+    <property name="harness.taskdefs.done" value="true" />
+    <property name="test.unit.compile.cp" value="C:/development/CashForward/CashForwardMain/build/cluster/modules/javax-persistence.jar;C:/development/CashForward/CashForwardMain/build/cluster/modules/org-h2.jar;C:/development/CashForward/CashForwardMain/build/cluster/modules/org-hibernate.jar" />
+    <property name="java.home.parent" value="C:\Program Files\Java\jdk1.6.0_01" />
+    <property name="test.unit.runtime.cp" value="C:/development/CashForward/CashForwardMain/build/cluster/modules/javax-persistence.jar;C:/development/CashForward/CashForwardMain/build/cluster/modules/org-h2.jar;C:/development/CashForward/CashForwardMain/build/cluster/modules/org-hibernate.jar" />
+    <property name="libs.jaxb21.src" value="" />
+    <property name="libs.Net2Java.classpath" value="C:\development\d2xx\dnj_translation" />
+    <property name="nbplatform.default.harness.dir" value="C:\Program Files\NetBeans 6.1/harness" />
+    <property name="java.home" value="C:\Program Files\Java\jdk1.6.0_01\jre" />
+    <property name="libs.H2.classpath" value="C:\development\CashForward\CashForwardLibraries\h2-1.0.72\h2.jar" />
+    <property name="javahelp.jar.dir" value="modules/docs" />
+    <property name="netbeans.importclass" value="org.netbeans.upgrade.AutoUpgrade" />
+    <property name="platforms.Java_HotSpot_TM__Client_VM_1.5.0_04-b05.home" value="C:\Program Files\Java\jdk1.5.0_04" />
+    <property name="org.openide.TopManager" value="org.netbeans.core.NonGui" />
+    <property name="libs.Net2Java.javadoc" value="" />
+    <property name="ant.file.harness" value="C:\Program Files\NetBeans 6.1\harness\build.xml" />
+    <property name="libs.toplink.maven-pom" value="" />
+    <property name="public.package.jar.dir" value="C:\development\CashForward\CashForwardModel/../CashForwardMain/build/public-package-jars" />
+    <property name="libs.PostgreSQLDriver.javadoc" value="" />
+    <property name="extra.test.libs.short" value="${extra.test.libs}/javax-persistence.jar:\
+${extra.test.libs}/org-h2.jar:\
+${extra.test.libs}/org-hibernate.jar:\
+${extra.test.libs}/org-cashforward-model.jar:\
+${extra.test.libs}/ejb3-persistence.jar:\
+${extra.test.libs}/hibernate-annotations.jar:\
+${extra.test.libs}/hibernate-commons-annotations.jar:\
+${extra.test.libs}/hibernate-entitymanager.jar:\
+${extra.test.libs}/javassist.jar:\
+${extra.test.libs}/h2.jar" />
+    <property name="nbm.distribution" value="" />
+    <property name="libs.MySQLDriver.maven-pom" value="" />
+    <property name="http.nonProxyHosts" value="localhost|127.0.0.1|Dell" />
+    <property name="libs.junit_4.javadoc" value="" />
+    <property name="libs.toplink.src" value="" />
+    <property name="libs.hibernate-support.src" value="" />
+    <property name="test.qa-functional.folder" value="C:\development\CashForward\CashForwardModel/../CashForwardMain/build/testdist/qa-functional/cluster/org-cashforward-model" />
+    <property name="ant.file.org.cashforward.model" value="C:\development\CashForward\CashForwardModel\build.xml" />
+    <property name="libs.TimingFramework.maven-pom" value="" />
+    <property name="module.dependencies" value="javax.persistence &gt; 1.0, org.h2 &gt; 1.0" />
+    <property name="sun.management.compiler" value="HotSpot Client Compiler" />
+    <property name="sun.java2d.noddraw" value="true" />
+    <property name="tools.jar" value="C:\Program Files\Java\jdk1.6.0_01\lib\tools.jar" />
+    <property name="class.files.in.src" value="" />
+    <property name="javac.compilerargs" value="-Xlint -Xlint:-serial" />
+    <property name="ant.file" value="C:\development\CashForward\CashForwardModel\build.xml" />
+    <property name="libs.beans-binding.maven-pom" value="" />
+    <property name="ant.file.projectized-common" value="C:\Program Files\NetBeans 6.1\harness\common.xml" />
+    <property name="nbjdk.home" value="C:\Program Files\Java\jdk1.6.0_01" />
+    <property name="test.unit.data.dir" value="C:\development\CashForward\CashForwardModel\test\unit\data" />
+    <property name="sun.awt.exception.handler" value="org.netbeans.core.startup.TopLogging$AWTHandler" />
+    <property name="libs.beans-binding.src" value="" />
+    <property name="javahelp.jar.basename" value="org-cashforward-model.jar" />
+    <property name="nbm.homepage" value="" />
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="libs.swing-layout.src" value="C:\Program Files\NetBeans 6.1\platform8\docs\swing-layout-1.0.3-src.zip" />
+    <property name="nbm.release.date" value="" />
+    <property name="ant.file.org.cashforward.model-impl" value="C:\development\CashForward\CashForwardModel\nbproject\build-impl.xml" />
+    <property name="test.timeout" value="600000" />
+    <property name="org.openide.major.version" value="IDE/1" />
+    <property name="java.vm.name" value="Java HotSpot(TM) Client VM" />
+    <property name="build.javahelp.dir" value="C:\development\CashForward\CashForwardModel\build\javahelp" />
+    <property name="build.test.unit.dir" value="C:\development\CashForward\CashForwardModel\build\test\unit" />
+    <property name="netbeans.user" value="C:\Documents and Settings\Bill\.netbeans\6.1" />
+    <property name="tests.failed" value="true" />
+    <property name="java.io.tmpdir" value="C:\DOCUME~1\Bill\LOCALS~1\Temp\" />
+    <property name="java.vendor.url" value="http://java.sun.com/" />
+    <property name="libs.AnimatedTransitions.maven-pom" value="" />
+    <property name="libs.JDIC.src" value="" />
+    <property name="libs.Groovy.maven-pom" value="" />
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.6.0_01\jre\bin" />
+    <property name="libs.JFreeChart.src" value="" />
+    <property name="manifest.mf" value="C:\development\CashForward\CashForwardModel\manifest.mf" />
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
+    <property name="netbeans.dest.dir" value="C:\Program Files\NetBeans 6.1" />
+    <property name="ant.project.name" value="org.cashforward.model" />
+    <property name="javahelp.base" value="org/cashforward/model/docs" />
+    <property name="javahelp.jar" value="modules/docs/org-cashforward-model.jar" />
+    <property name="sun.cpu.isalist" value="pentium_pro+mmx pentium_pro pentium+mmx pentium i486 i386 i86" />
+    <property name="libs.CopyLibs.javadoc" value="" />
+    <property name="netbeans.javadoc.dir" value="C:\development\CashForward\CashForwardModel\build\javadoc" />
+    <property name="org.openide.specification.version" value="6.2" />
+    <property name="libs.hibernate-support.classpath" value="C:\Documents and Settings\Bill\.netbeans\6.1\modules\ext\hibernate\antlr-2.7.6.jar;C:\Documents and Settings\Bill\.netbeans\6.1\modules\ext\hibernate\asm.jar;C:\Documents and Settings\Bill\.netbeans\6.1\modules\ext\hibernate\asm-attrs.jar;C:\Documents and Settings\Bill\.netbeans\6.1\modules\ext\hibernate\cglib-2.1.3.jar;C:\Documents and Settings\Bill\.netbeans\6.1\modules\ext\hibernate\commons-collections-2.1.1.jar;C:\Documents and Settings\Bill\.netbeans\6.1\modules\ext\hibernate\commons-logging-1.0.4.jar;C:\Documents and Settings\Bill\.netbeans\6.1\modules\ext\hibernate\dom4j-1.6.1.jar;C:\Documents and Settings\Bill\.netbeans\6.1\modules\ext\hibernate\ehcache-1.2.3.jar;C:\Documents and Settings\Bill\.netbeans\6.1\modules\ext\hibernate\jdbc2_0-stdext.jar;C:\Documents and Settings\Bill\.netbeans\6.1\modules\ext\hibernate\jta.jar;C:\Documents and Settings\Bill\.netbeans\6.1\modules\ext\hibernate\hibernate3.jar" />
+    <property name="user.home" value="C:\Documents and Settings\Bill" />
+    <property name="libs.CopyLibs.maven-pom" value="" />
+    <property name="libs.absolutelayout.javadoc" value="" />
+    <property name="java.specification.name" value="Java Platform API Specification" />
+    <property name="libs.JNA.maven-pom" value="" />
+    <property name="libs.swing-app-framework.maven-pom" value="" />
+    <property name="java.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="libs.javac-api.classpath" value="C:\Program Files\NetBeans 6.1\java2\modules\ext\javac-api-nb-7.0-b07.jar" />
+    <property name="java.version" value="1.6.0_01" />
+    <property name="libs.MySQLDriver.javadoc" value="" />
+    <property name="org.openide.version" value="deprecated" />
+    <property name="libs.AnimatedTransitions.javadoc" value="" />
+    <property name="is.regular" value="true" />
+    <property name="libs.junit.maven-pom" value="" />
+    <property name="libs.CommonsLogging.classpath" value="C:\development\commons-logging-1.1.1.jar;C:\development\commons-logging-adapters-1.1.1.jar;C:\development\commons-logging-api-1.1.1.jar" />
+    <property name="libs.CommonsLogging.javadoc" value="" />
+    <property name="libs.JFreeChart.maven-pom" value="" />
+    <property name="libs.jaxb21.classpath" value="C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\activation.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\api\jaxb-api.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\jaxb-impl.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\jaxb-xjc.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\jaxws21\api\jsr173_api.jar" />
+    <property name="libs.swing-layout.classpath" value="C:\Program Files\NetBeans 6.1\platform8\modules\ext\swing-layout-1.0.3.jar" />
+    <property name="javac.source" value="1.5" />
+    <property name="line.separator" value="
+" />
+    <property name="java.specification.version" value="1.6" />
+    <property name="libs.jaxws21.maven-pom" value="" />
+    <property name="java.vm.info" value="mixed mode, sharing" />
+    <property name="test.filter.trace" value="true" />
+    <property name="libs.spring-framework.maven-pom" value="" />
+    <property name="sun.boot.class.path" value="C:\Program Files\Java\jdk1.6.0_01\jre\lib\resources.jar;C:\Program Files\Java\jdk1.6.0_01\jre\lib\rt.jar;C:\Program Files\Java\jdk1.6.0_01\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.6.0_01\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.6.0_01\jre\lib\jce.jar;C:\Program Files\Java\jdk1.6.0_01\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.6.0_01\jre\classes" />
+    <property name="libs.TimingFramework.src" value="" />
+    <property name="javac.target" value="1.5" />
+    <property name="module.jar.basename" value="org-cashforward-model.jar" />
+    <property name="src.dir" value="C:\development\CashForward\CashForwardModel\src" />
+    <property name="sun.awt.keepWorkingSetOnMinimize" value="true" />
+    <property name="build.compiler.optimize" value="off" />
+    <property name="libs.Groovy.src" value="" />
+    <property name="disabled.clusters" value="apisupport1,enterprise5,gsf1,harness,ide9,java2,nb6.1,profiler3" />
+    <property name="libs.H2.javadoc" value="" />
+    <property name="nbplatform.default.netbeans.dest.dir" value="C:\Program Files\NetBeans 6.1" />
+    <property name="libs.H2.src" value="" />
+    <property name="code.name.base.slashes" value="org/cashforward/model" />
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob" />
+    <property name="TODAY" value="May 14 2008" />
+    <property name="default.javac.source" value="1.6" />
+    <property name="release.files.extra" value="" />
+    <property name="libs.MySQLDriver.src" value="" />
+    <property name="sun.jnu.encoding" value="Cp1252" />
+    <property name="suite.dir" value="C:\development\CashForward\CashForwardModel/../CashForwardMain" />
+    <property name="java.runtime.version" value="1.6.0_01-b06" />
+    <property name="libs.Net2Java.maven-pom" value="" />
+    <property name="platforms.Java_HotSpot_TM__Client_VM_1.5.0_04-b05.compiler" value="modern" />
+    <property name="cluster" value="C:\development\CashForward\CashForwardModel/../CashForwardMain/build/cluster" />
+    <property name="default.javac.target" value="1.6" />
+    <property name="libs.JDIC.javadoc" value="" />
+    <property name="libs.junit_4.classpath" value="C:\Program Files\NetBeans 6.1\java2\modules\ext\junit-4.1.jar" />
+    <property name="user.timezone" value="" />
+    <property name="test.unit.out.folder" value="C:\development\CashForward\CashForwardMain\build\testdist\unit\cluster\org-cashforward-model" />
+    <property name="test.dist.dir" value="C:\development\CashForward\CashForwardModel/../CashForwardMain/build/testdist" />
+    <property name="release.files" value="" />
+    <property name="libs.H2.maven-pom" value="" />
+    <property name="enabled.clusters" value="platform8" />
+    <property name="netbeans.dirs" value="C:\Program Files\NetBeans 6.1\nb6.1;C:\Program Files\NetBeans 6.1\ide9;C:\Program Files\NetBeans 6.1\java2;C:\Program Files\NetBeans 6.1\apisupport1;C:\Program Files\NetBeans 6.1\profiler3;C:\Program Files\NetBeans 6.1\gsf1;C:\Program Files\NetBeans 6.1\harness;C:\Program Files\NetBeans 6.1\enterprise5;C:\Program Files\NetBeans 6.1\uml5" />
+    <property name="jar-excludes" value="**/*.java,**/*.form,**/package.html,**/doc-files/" />
+    <property name="java.ext.dirs" value="C:\Program Files\Java\jdk1.6.0_01\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext" />
+    <property name="libs.absolutelayout.classpath" value="C:\Program Files\NetBeans 6.1\java2\modules\ext\AbsoluteLayout.jar" />
+    <property name="java.class.path" value="C:\development\CashForward\CashForwardMain\build\cluster\modules\javax-persistence.jar;C:\development\CashForward\CashForwardMain\build\cluster\modules\org-h2.jar;C:\development\CashForward\CashForwardMain\build\cluster\modules\org-hibernate.jar;C:\development\CashForward\CashForwardMain\build\cluster\modules\org-cashforward-model.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\junit-3.8.2.jar;C:\Program Files\NetBeans 6.1\java2\modules\ext\junit-4.1.jar;C:\development\CashForward\CashForwardModel\build\test\unit\classes;C:\development\CashForward\CashForwardLibraries\HibernateEntityManager\release\modules\ext\ejb3-persistence.jar;C:\development\CashForward\CashForwardLibraries\HibernateEntityManager\release\modules\ext\hibernate-annotations.jar;C:\development\CashForward\CashForwardLibraries\HibernateEntityManager\release\modules\ext\hibernate-commons-annotations.jar;C:\development\CashForward\CashForwardLibraries\HibernateEntityManager\release\modules\ext\hibernate-entitymanager.jar;C:\development\CashForward\CashForwardLibraries\HibernateEntityManager\release\modules\ext\javassist.jar;C:\development\CashForward\CashForwardLibraries\H2\release\modules\ext\h2.jar;C:\development\CashForward\CashForwardModel;C:\Program Files\Java\jre6\lib\ext\QTJava.zip;C:\Program Files\NetBeans 6.1\java2\ant\lib\ant-launcher.jar;C:\Program Files\NetBeans 6.1\java2\ant\lib\ant.jar;C:\Program Files\NetBeans 6.1\java2\ant\lib\ant-junit.jar" />
+    <property name="apple.laf.useScreenMenuBar" value="true" />
+    <property name="libs.CommonsLogging.src" value="" />
+    <property name="exists.test.unit.src.dir" value="true" />
+    <property name="libs.absolutelayout.src" value="" />
+    <property name="have-jdk-1.6" value="true" />
+    <property name="have-jdk-1.5" value="true" />
+    <property name="have-jdk-1.4" value="true" />
+    <property name="libs.JNA.javadoc" value="" />
+    <property name="harness.dir" value="C:\Program Files\NetBeans 6.1/harness" />
+    <property name="os.version" value="5.1" />
+    <property name="libs.toplink.javadoc" value="" />
+    <property name="sun.desktop" value="windows" />
+    <property name="libs.GlazedLists.maven-pom" value="" />
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment" />
+    <property name="build.compiler.deprecation" value="true" />
+    <property name="libs.beans-binding.javadoc" value="C:\Program Files\NetBeans 6.1\java2\docs\beansbinding-1.2.1-doc.zip" />
+    <property name="java.vm.vendor" value="Sun Microsystems Inc." />
+    <property name="libs.CopyLibs.classpath" value="C:\Program Files\NetBeans 6.1\java2\ant\extra\org-netbeans-modules-java-j2seproject-copylibstask.jar" />
+    <property name="module.jar.dir" value="modules" />
+    <property name="build.package.compress" value="false" />
+    <property name="build.compiler.debuglevel" value="source,lines,vars" />
+    <property name="libs.TimingFramework.javadoc" value="" />
+    <property name="license.file" value="C:\development\CashForward\CashForwardModel\build\no-license.txt" />
+    <property name="libs.spring-framework.javadoc" value="" />
+    <property name="libs.HibernateEntityManager.maven-pom" value="" />
+    <property name="libs.PostgreSQLDriver.classpath" value="C:\Program Files\NetBeans 6.1\ide9\modules\ext\postgresql-8.3-603.jdbc3.jar" />
+    <property name="module.auto.deps.xml" value="C:\development\CashForward\CashForwardModel\module-auto-deps.xml" />
+    <property name="libs.junit.src" value="" />
+    <property name="libs.CopyLibs.src" value="" />
+    <property name="module.jar.verifylinkageignores" value="" />
+    <property name="module.jar" value="modules/org-cashforward-model.jar" />
+    <property name="ant.version" value="Apache Ant version 1.7.0 compiled on December 13 2006" />
+    <property name="file.encoding" value="Cp1252" />
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit" />
+  </properties>
+  <testcase classname="org.cashforward.persistence.PaymentCalculationTest" name="testPaymentConsolidation" time="0.5" />
+  <system-out><![CDATA[Hibernate: select label0_.ID as ID1_, label0_.NAME as NAME1_ from LABEL label0_ where label0_.NAME=?
+Hibernate: insert into LABEL (ID, NAME) values (null, ?)
+Hibernate: select payee0_.ID as ID3_, payee0_.NAME as NAME3_ from PAYEE payee0_ where payee0_.NAME=?
+Hibernate: insert into PAYEE (ID, NAME) values (null, ?)
+Hibernate: insert into PAYMENT (ID, AMOUNT, END_DATE, OCCURENCE, payee_ID, START_DATE) values (null, ?, ?, ?, ?, ?)
+Hibernate: insert into PAYMENT_OVERRIDE (ID, AMOUNT, payment_ID, PAYMENT_DATE, SEQUENCE_INDEX) values (null, ?, ?, ?, ?)
+Hibernate: insert into PAYMENT_LABEL (LABEL_ID, PAYMENT_ID) values (?, ?)
+Payment was added:1
+]]></system-out>
+  <system-err><![CDATA[May 14, 2008 10:34:02 PM org.hibernate.cfg.annotations.Version <clinit>
+INFO: Hibernate Annotations 3.3.1.GA
+May 14, 2008 10:34:03 PM org.hibernate.cfg.Environment <clinit>
+INFO: Hibernate 3.2.5
+May 14, 2008 10:34:03 PM org.hibernate.cfg.Environment <clinit>
+INFO: hibernate.properties not found
+May 14, 2008 10:34:03 PM org.hibernate.cfg.Environment buildBytecodeProvider
+INFO: Bytecode provider name : cglib
+May 14, 2008 10:34:03 PM org.hibernate.cfg.Environment <clinit>
+INFO: using JDK 1.4 java.sql.Timestamp handling
+May 14, 2008 10:34:03 PM org.hibernate.ejb.Version <clinit>
+INFO: Hibernate EntityManager 3.3.2.GA
+May 14, 2008 10:34:04 PM org.hibernate.cfg.AnnotationBinder bindClass
+INFO: Binding entity from annotated class: org.cashforward.model.PaymentOverride
+May 14, 2008 10:34:05 PM org.hibernate.cfg.annotations.EntityBinder bindTable
+INFO: Bind entity org.cashforward.model.PaymentOverride on table PAYMENT_OVERRIDE
+May 14, 2008 10:34:05 PM org.hibernate.cfg.AnnotationBinder bindClass
+INFO: Binding entity from annotated class: org.cashforward.model.Label
+May 14, 2008 10:34:05 PM org.hibernate.cfg.annotations.QueryBinder bindQuery
+INFO: Binding Named query: Label.findById => SELECT l FROM Label l WHERE l.id = :id
+May 14, 2008 10:34:05 PM org.hibernate.cfg.annotations.QueryBinder bindQuery
+INFO: Binding Named query: Label.findByName => SELECT l FROM Label l WHERE l.name = :name
+May 14, 2008 10:34:05 PM org.hibernate.cfg.annotations.EntityBinder bindTable
+INFO: Bind entity org.cashforward.model.Label on table LABEL
+May 14, 2008 10:34:05 PM org.hibernate.cfg.AnnotationBinder bindClass
+INFO: Binding entity from annotated class: org.cashforward.model.Payment
+May 14, 2008 10:34:05 PM org.hibernate.cfg.annotations.EntityBinder bindTable
+INFO: Bind entity org.cashforward.model.Payment on table PAYMENT
+May 14, 2008 10:34:05 PM org.hibernate.cfg.AnnotationBinder bindClass
+INFO: Binding entity from annotated class: org.cashforward.model.Payee
+May 14, 2008 10:34:05 PM org.hibernate.cfg.annotations.QueryBinder bindQuery
+INFO: Binding Named query: Payee.findById => SELECT p FROM Payee p WHERE p.id = :id
+May 14, 2008 10:34:05 PM org.hibernate.cfg.annotations.QueryBinder bindQuery
+INFO: Binding Named query: Payee.findByName => SELECT p FROM Payee p WHERE p.name = :name
+May 14, 2008 10:34:05 PM org.hibernate.cfg.annotations.EntityBinder bindTable
+INFO: Bind entity org.cashforward.model.Payee on table PAYEE
+May 14, 2008 10:34:05 PM org.hibernate.cfg.annotations.CollectionBinder bindOneToManySecondPass
+INFO: Mapping collection: org.cashforward.model.Payment.overrides -> PAYMENT_OVERRIDE
+May 14, 2008 10:34:05 PM org.hibernate.cfg.AnnotationConfiguration secondPassCompile
+INFO: Hibernate Validator not found: ignoring
+May 14, 2008 10:34:05 PM org.hibernate.connection.DriverManagerConnectionProvider configure
+INFO: Using Hibernate built-in connection pool (not for production use!)
+May 14, 2008 10:34:05 PM org.hibernate.connection.DriverManagerConnectionProvider configure
+INFO: Hibernate connection pool size: 20
+May 14, 2008 10:34:05 PM org.hibernate.connection.DriverManagerConnectionProvider configure
+INFO: autocommit mode: true
+May 14, 2008 10:34:05 PM org.hibernate.connection.DriverManagerConnectionProvider configure
+INFO: using driver: org.h2.Driver at URL: jdbc:h2:cashflow_test;FILE_LOCK=NO
+May 14, 2008 10:34:05 PM org.hibernate.connection.DriverManagerConnectionProvider configure
+INFO: connection properties: {user=sa, password=****, autocommit=true, release_mode=auto}
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: RDBMS: H2, version: 1.0.72 (2008-05-10)
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: JDBC driver: H2 JDBC Driver, version: 1.0.72 (2008-05-10)
+May 14, 2008 10:34:06 PM org.hibernate.dialect.Dialect <init>
+INFO: Using dialect: org.hibernate.dialect.H2Dialect
+May 14, 2008 10:34:06 PM org.hibernate.transaction.TransactionFactoryFactory buildTransactionFactory
+INFO: Transaction strategy: org.hibernate.transaction.JDBCTransactionFactory
+May 14, 2008 10:34:06 PM org.hibernate.transaction.TransactionManagerLookupFactory getTransactionManagerLookup
+INFO: No TransactionManagerLookup configured (in JTA environment, use of read-write or transactional second-level cache is not recommended)
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Automatic flush during beforeCompletion(): disabled
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Automatic session close at end of transaction: disabled
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: JDBC batch size: 15
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: JDBC batch updates for versioned data: disabled
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Scrollable result sets: enabled
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: JDBC3 getGeneratedKeys(): enabled
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Connection release mode: auto
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Default batch fetch size: 1
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Generate SQL with comments: disabled
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Order SQL updates by primary key: disabled
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Order SQL inserts for batching: disabled
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory createQueryTranslatorFactory
+INFO: Query translator: org.hibernate.hql.ast.ASTQueryTranslatorFactory
+May 14, 2008 10:34:06 PM org.hibernate.hql.ast.ASTQueryTranslatorFactory <init>
+INFO: Using ASTQueryTranslatorFactory
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Query language substitutions: {}
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: JPA-QL strict compliance: enabled
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Second-level cache: enabled
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Query cache: disabled
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory createCacheProvider
+INFO: Cache provider: org.hibernate.cache.NoCacheProvider
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Optimize cache for minimal puts: disabled
+May 14, 2008 10:34:06 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Structured second-level cache entries: disabled
+May 14, 2008 10:34:07 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Echoing all SQL to stdout
+May 14, 2008 10:34:07 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Statistics: disabled
+May 14, 2008 10:34:07 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Deleted entity synthetic identifier rollback: disabled
+May 14, 2008 10:34:07 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Default entity-mode: pojo
+May 14, 2008 10:34:07 PM org.hibernate.cfg.SettingsFactory buildSettings
+INFO: Named query checking : enabled
+May 14, 2008 10:34:07 PM org.hibernate.impl.SessionFactoryImpl <init>
+INFO: building session factory
+May 14, 2008 10:34:08 PM org.hibernate.impl.SessionFactoryObjectFactory addInstance
+INFO: Not binding factory to JNDI, no JNDI name configured
+May 14, 2008 10:34:08 PM org.hibernate.tool.hbm2ddl.SchemaExport execute
+INFO: Running hbm2ddl schema export
+May 14, 2008 10:34:08 PM org.hibernate.tool.hbm2ddl.SchemaExport execute
+INFO: exporting generated schema to database
+May 14, 2008 10:34:08 PM org.hibernate.tool.hbm2ddl.SchemaExport execute
+INFO: schema export complete
+]]></system-err>
+</testsuite>
