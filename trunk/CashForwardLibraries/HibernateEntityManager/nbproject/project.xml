@@ -7,6 +7,21 @@
             <suite-component/>
             <module-dependencies/>
             <public-packages>
+                <package>javassist</package>
+                <package>javassist.bytecode</package>
+                <package>javassist.bytecode.annotation</package>
+                <package>javassist.compiler</package>
+                <package>javassist.compiler.ast</package>
+                <package>javassist.convert</package>
+                <package>javassist.expr</package>
+                <package>javassist.runtime</package>
+                <package>javassist.scopedpool</package>
+                <package>javassist.tools</package>
+                <package>javassist.tools.reflect</package>
+                <package>javassist.tools.rmi</package>
+                <package>javassist.tools.web</package>
+                <package>javassist.util</package>
+                <package>javassist.util.proxy</package>
                 <package>javax.persistence</package>
                 <package>javax.persistence.spi</package>
                 <package>org.hibernate</package>
@@ -47,6 +62,10 @@
             <class-path-extension>
                 <runtime-relative-path>ext/hibernate-entitymanager.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/hibernate-entitymanager.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/javassist.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/javassist.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>
