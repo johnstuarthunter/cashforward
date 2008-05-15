@@ -19,6 +19,21 @@
                 <package>antlr.debug</package>
                 <package>antlr.debug.misc</package>
                 <package>antlr.preprocessor</package>
+                <package>javassist</package>
+                <package>javassist.bytecode</package>
+                <package>javassist.bytecode.annotation</package>
+                <package>javassist.compiler</package>
+                <package>javassist.compiler.ast</package>
+                <package>javassist.convert</package>
+                <package>javassist.expr</package>
+                <package>javassist.runtime</package>
+                <package>javassist.scopedpool</package>
+                <package>javassist.tools</package>
+                <package>javassist.tools.reflect</package>
+                <package>javassist.tools.rmi</package>
+                <package>javassist.tools.web</package>
+                <package>javassist.util</package>
+                <package>javassist.util.proxy</package>
                 <package>javax.sql</package>
                 <package>javax.transaction</package>
                 <package>javax.transaction.xa</package>
@@ -170,6 +185,10 @@
             <class-path-extension>
                 <runtime-relative-path>ext/asm.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/asm.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/javassist.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/javassist.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jta.jar</runtime-relative-path>
