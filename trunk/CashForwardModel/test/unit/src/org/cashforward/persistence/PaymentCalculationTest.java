@@ -9,7 +9,7 @@ import org.cashforward.model.PaymentOverride;
 import org.cashforward.persistence.PersistenceService;
 import org.cashforward.model.Payment;
 import org.cashforward.model.Label;
-import org.cashforward.model.Payee;
+import org.cashforward.model.Payee; 
 import java.util.Calendar;
 import java.util.Date;
 import org.junit.After;

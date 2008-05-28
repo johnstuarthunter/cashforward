@@ -8,6 +8,7 @@
  */
 package org.cashforward.persistence;
 
+import java.util.ArrayList;
 import org.cashforward.*;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +30,7 @@ import org.cashforward.model.PaymentOverride;
 public class PersistenceService {
 
     public static String STORAGE_MAIN = "CashForwardPersistence";
+    public static String STORAGE_DEV = "CashForwardPersistenceDev";
     public static String STORAGE_TEST = "CashForwardPersistenceTest";
     
     EntityManagerFactory factory;
@@ -110,6 +112,22 @@ public class PersistenceService {
             e.printStackTrace();
             return false;
         }
+    }
+    
+     public List<Payment> getAllPayments() throws Exception {
+        List<Payment> payments = new ArrayList();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        try {
+            Query query = manager.createNamedQuery("Payment.findAll");
+            payments = query.getResultList();
+            tx.commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            return payments;
+        }
+        
+        return payments;
     }
     
     public Payee getPayeeByID(long id) throws Exception {

@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -29,7 +31,22 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "PAYMENT")
-//@NamedQueries({@NamedQuery(name = "Payment.findById", query = "SELECT p FROM Payment p WHERE p.id = :id"), @NamedQuery(name = "Payment.findByPayeeId", query = "SELECT p FROM Payment p WHERE p.payeeId = :payeeId"), @NamedQuery(name = "Payment.findByAmount", query = "SELECT p FROM Payment p WHERE p.amount = :amount"), @NamedQuery(name = "Payment.findByStartDate", query = "SELECT p FROM Payment p WHERE p.startDate = :startDate"), @NamedQuery(name = "Payment.findByEndDate", query = "SELECT p FROM Payment p WHERE p.endDate = :endDate"), @NamedQuery(name = "Payment.findByOccurence", query = "SELECT p FROM Payment p WHERE p.occurence = :occurence")})
+@NamedQueries({
+     @NamedQuery(name = "Payment.findAll", 
+        query = "SELECT p FROM Payment p"),
+    @NamedQuery(name = "Payment.findById", 
+        query = "SELECT p FROM Payment p WHERE p.id = :id"), 
+    @NamedQuery(name = "Payment.findByPayeeId", 
+        query = "SELECT p FROM Payment p WHERE p.payee.id = :payeeId"), 
+    @NamedQuery(name = "Payment.findByAmount", 
+        query = "SELECT p FROM Payment p WHERE p.amount = :amount"), 
+    @NamedQuery(name = "Payment.findByStartDate", 
+        query = "SELECT p FROM Payment p WHERE p.startDate = :startDate"), 
+    @NamedQuery(name = "Payment.findByEndDate", 
+        query = "SELECT p FROM Payment p WHERE p.endDate = :endDate"),
+    @NamedQuery(name = "Payment.findByOccurence", 
+        query = "SELECT p FROM Payment p WHERE p.occurence = :occurence")})
+    
 public class Payment implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

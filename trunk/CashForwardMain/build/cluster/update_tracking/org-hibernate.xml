@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.hibernate">
-    <module_version install_time="1210818805640" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1211938296609" last="true" origin="installer" specification_version="1.0">
         <file crc="393890162" name="config/Modules/org-hibernate.xml"/>
         <file crc="3507015122" name="modules/ext/antlr-2.7.6.jar"/>
         <file crc="1656749251" name="modules/ext/asm-attrs.jar"/>
         <file crc="1662521808" name="modules/ext/asm.jar"/>
+        <file crc="4207353500" name="modules/ext/c3p0-0.9.1.jar"/>
         <file crc="2188745679" name="modules/ext/cglib-2.1.3.jar"/>
         <file crc="1661102391" name="modules/ext/commons-collections-2.1.1.jar"/>
         <file crc="3420158953" name="modules/ext/commons-logging-1.0.4.jar"/>
         <file crc="2050839146" name="modules/ext/dom4j-1.6.1.jar"/>
-        <file crc="1955655451" name="modules/ext/ehcache-1.2.3.jar"/>
-        <file crc="4273568775" name="modules/ext/hibernate3.jar"/>
-        <file crc="2853313314" name="modules/ext/javassist.jar"/>
-        <file crc="3058178599" name="modules/ext/jdbc2_0-stdext.jar"/>
+        <file crc="3160810910" name="modules/ext/ejb3-persistence.jar"/>
+        <file crc="130342522" name="modules/ext/hibernate-annotations.jar"/>
+        <file crc="2366925555" name="modules/ext/hibernate-commons-annotations.jar"/>
+        <file crc="3833616534" name="modules/ext/hibernate-entitymanager.jar"/>
+        <file crc="1842684900" name="modules/ext/hibernate3.jar"/>
+        <file crc="2826004045" name="modules/ext/javassist.jar"/>
         <file crc="190545487" name="modules/ext/jta.jar"/>
-        <file crc="4145037032" name="modules/org-hibernate.jar"/>
+        <file crc="592316552" name="modules/ext/log4j-1.2.11.jar"/>
+        <file crc="2824474027" name="modules/org-hibernate.jar"/>
     </module_version>
 </module>

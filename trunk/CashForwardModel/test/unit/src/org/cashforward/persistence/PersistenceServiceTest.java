@@ -12,6 +12,7 @@ import org.cashforward.model.Payee;
 import org.cashforward.persistence.PersistenceService;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -118,6 +119,25 @@ public class PersistenceServiceTest {
             pservice.addOrUpdatePayment(payment);
             System.out.println("Payment was added:"+payment.getId());
             assertTrue("Payment was added.", payment.getId() > 0);
+        } catch (Exception ex) {
+            Logger.getLogger(PersistenceServiceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Test
+    public void testGetAllPayments(){
+        try {
+            Date now = Calendar.getInstance().getTime();
+            Label groceries = new Label("Groceries");
+            Payee walmart = new Payee("Wal-Mart");
+            Payment payment = new Payment(45.22f,walmart,now);
+            payment.setOccurence("ONCE");
+            pservice.addOrUpdatePayment(payment);
+            System.out.println("Payment was added:"+payment.getId());
+            assertTrue("Payment was added.", payment.getId() > 0);
+            
+            List<Payment> allpayments = pservice.getAllPayments();
+            assertTrue(allpayments.size() > 0);
         } catch (Exception ex) {
             Logger.getLogger(PersistenceServiceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
