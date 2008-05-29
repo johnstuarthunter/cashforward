@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.cashforward.model
-OpenIDE-Module-Layer: org/cashforward/model/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/cashforward/model/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0
-
