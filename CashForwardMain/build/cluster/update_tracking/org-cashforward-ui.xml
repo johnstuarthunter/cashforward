@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module codename="org.cashforward.ui">
-    <module_version install_time="1211938345046" last="true" origin="installer" specification_version="1.0">
-        <file crc="3940566410" name="config/Modules/org-cashforward-ui.xml"/>
-        <file crc="380251469" name="modules/org-cashforward-ui.jar"/>
-    </module_version>
-</module>
