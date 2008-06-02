@@ -2,6 +2,7 @@ package org.cashforward.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -20,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.cashforward.model.Payment.Occurence;
 
 /**
  * The <code>Payment</code> represents a single or recurring transaction. 
@@ -48,6 +50,29 @@ import javax.persistence.TemporalType;
         query = "SELECT p FROM Payment p WHERE p.occurence = :occurence")})
     
 public class Payment implements Serializable {
+            
+    public enum Occurence {
+        DAILY(1,Calendar.DAY_OF_YEAR),
+        WEEKLY(7,Calendar.DAY_OF_YEAR);
+        
+        private final int period;   
+        private final int unit;
+        
+        Occurence(int unit, int period) {
+            this.period = period;
+            this.unit = unit;
+        }
+        
+        public int unit() {
+            return unit;
+        }
+        
+        public int period() {
+            return period;
+        }
+        
+    }        
+            
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -207,7 +232,12 @@ public class Payment implements Serializable {
 
     @Override
     public String toString() {
-        return "cashfxpersistence.Payment[id=" + id + "]";
+        return "org.cashforward.Payment[id=" + id + ";" +
+                ";payee="+payee+";amount:" + amount +
+                ";occurence:"+occurence +
+                ";start:"+startDate+
+                ";end:"+endDate +
+                "]";
     }
 
     public void addLabel(Label label) {

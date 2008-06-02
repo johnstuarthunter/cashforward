@@ -48,7 +48,6 @@ public class PaymentCalculatorTest {
     @Test
     public void testCalculatePayments() throws Exception {
         System.out.println("calculatePayments");
-        
         Calendar start = Calendar.getInstance();
         start.set(Calendar.MONTH, Calendar.MAY);
         start.set(Calendar.DAY_OF_MONTH, 1);

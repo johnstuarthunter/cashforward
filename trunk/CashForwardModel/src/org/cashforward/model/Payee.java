@@ -74,7 +74,8 @@ public class Payee implements Serializable {
 
     @Override
     public String toString() {
-        return "cashfxpersistence.Payee[id=" + id + "]";
+        return "org.cashforward.Payee[id=" + id + 
+                ";name:"+name+"]";
     }
 
 }

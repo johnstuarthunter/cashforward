@@ -5,6 +5,7 @@
 package org.cashforward.service.internal;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.cashforward.model.Payment;
@@ -14,7 +15,7 @@ import org.cashforward.model.Payment;
  * @author Bill 
  */
 public class PaymentCalculator {
-
+    
     public List<Payment> calculatePayments(Payment payment, Date start, Date end)
             throws Exception {
         List<Payment> payments = new ArrayList();
