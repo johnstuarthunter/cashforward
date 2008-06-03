@@ -53,7 +53,8 @@ public class Payment implements Serializable {
             
     public enum Occurence {
         DAILY(1,Calendar.DAY_OF_YEAR),
-        WEEKLY(7,Calendar.DAY_OF_YEAR);
+        WEEKLY(1,Calendar.DAY_OF_YEAR),
+        MONTHLY(1,Calendar.MONTH);
         
         private final int period;   
         private final int unit;
