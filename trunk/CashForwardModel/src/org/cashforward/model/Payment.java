@@ -52,9 +52,15 @@ import org.cashforward.model.Payment.Occurence;
 public class Payment implements Serializable {
             
     public enum Occurence {
+        ONCE(0,Calendar.DAY_OF_YEAR),
         DAILY(1,Calendar.DAY_OF_YEAR),
-        WEEKLY(1,Calendar.DAY_OF_YEAR),
-        MONTHLY(1,Calendar.MONTH);
+        WEEKLY(7,Calendar.DAY_OF_YEAR),
+        BIWEEKLY(14,Calendar.DAY_OF_MONTH),
+        MONTHLY(1,Calendar.MONTH),
+        BIMONTHLY(15,Calendar.DAY_OF_MONTH),
+        ANNUALLY(12,Calendar.MONTH),
+        BIANNUALLY(6,Calendar.MONTH),
+        TRIANNUALLY(3,Calendar.MONTH);
         
         private final int period;   
         private final int unit;
@@ -219,6 +225,7 @@ public class Payment implements Serializable {
     }
 
     @Override
+    //TODO complete this 
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Payment)) {
@@ -228,6 +235,14 @@ public class Payment implements Serializable {
         if (id != other.id) {
             return false;
         }
+        else if (other.getAmount() != getAmount())
+            return false;
+        else if (other.getStartDate() != null && 
+                !other.getStartDate().equals(getStartDate()))
+            return false;
+        else if (other.getEndDate() != null && 
+                !other.getEndDate().equals(getEndDate()))
+            return false;
         return true;
     }
 
