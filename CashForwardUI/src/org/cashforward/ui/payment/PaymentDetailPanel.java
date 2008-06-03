@@ -36,7 +36,6 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        payment = new org.cashforward.model.Payment();
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -255,7 +254,6 @@ private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private org.jdesktop.swingx.JXTitledSeparator jXTitledSeparator2;
     private javax.swing.JComboBox occurenceCombo;
     private com.jidesoft.swing.AutoCompletionComboBox payeeCombo;
-    private org.cashforward.model.Payment payment;
     private com.jidesoft.combobox.DateComboBox untilDateCombo;
     // End of variables declaration//GEN-END:variables
 

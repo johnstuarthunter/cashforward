@@ -5,9 +5,12 @@
 
 package org.cashforward.service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.cashforward.model.Payment;
 import org.cashforward.persistence.PersistenceService;
+import org.cashforward.service.internal.PaymentCalculator;
 
 /**
  *
@@ -16,10 +19,13 @@ import org.cashforward.persistence.PersistenceService;
 public class PaymentService {
     
     PersistenceService persistenceService;
+    PaymentCalculator paymentCalculator;
     
      public PaymentService(){
+         //TODO read db from config
          persistenceService = 
                  PersistenceService.getInstance(PersistenceService.STORAGE_DEV);
+         paymentCalculator = new PaymentCalculator();
      }
     
     protected PaymentService(PersistenceService persistenceService){
@@ -28,9 +34,26 @@ public class PaymentService {
         this.persistenceService = persistenceService;
     }
     
-    public List<Payment> getPayments(PaymentSearchCriteria criteria) 
+    public List<Payment> getScheduledPayments() 
         throws Exception {
             return persistenceService.getAllPayments();
+    }
+    
+    public List<Payment> getPayments(PaymentSearchCriteria criteria) 
+        throws Exception {
+        Date start = criteria.getDateStart();
+        Date end = criteria.getDateEnd();
+        
+        List<Payment> allPayments = new ArrayList();    
+        List<Payment> payments = persistenceService.getAllPayments();
+        for (Payment payment : payments) {
+            List newPayments = paymentCalculator.calculatePayments(payment, start, end);
+            System.out.println(newPayments.size());
+            allPayments.addAll(
+                    newPayments);
+        }
+        
+        return allPayments;
     }
     
     public boolean addOrUpdatePayment(Payment newPayment) throws Exception {

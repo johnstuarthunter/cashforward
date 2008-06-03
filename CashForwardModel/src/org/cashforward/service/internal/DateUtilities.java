@@ -37,4 +37,12 @@ public class DateUtilities {
         
         return start.getTime();
     }
+    
+    public static Date getDateAfterPeriod(Date date, int period, int unitsAfter) {
+        Calendar start = Calendar.getInstance();
+        start.setTime(date);
+        start.add(period, unitsAfter);
+        
+        return start.getTime();
+    }
 }

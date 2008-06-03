@@ -59,16 +59,16 @@ public class PaymentCalculatorTest {
         
         Calendar now = Calendar.getInstance();
         now.set(Calendar.MONTH, Calendar.JUNE);
-        now.set(Calendar.DAY_OF_MONTH, 3);
+        now.set(Calendar.DAY_OF_MONTH, 2);
 
         Calendar paymentEndDate = Calendar.getInstance();
         paymentEndDate.set(Calendar.MONTH, Calendar.AUGUST);
-        paymentEndDate.set(Calendar.DAY_OF_MONTH, 2);
+        paymentEndDate.set(Calendar.DAY_OF_MONTH, 3);
         
         Payment payment = new Payment();
         payment.setAmount(4.00f);
         payment.setPayee(new Payee("GetGo"));
-        payment.setOccurence("weekly");
+        payment.setOccurence(Payment.Occurence.BIWEEKLY.name());
         payment.setStartDate(now.getTime());
         payment.setEndDate(paymentEndDate.getTime());
         
