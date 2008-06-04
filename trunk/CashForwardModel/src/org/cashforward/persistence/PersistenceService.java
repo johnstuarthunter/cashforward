@@ -22,6 +22,7 @@ import org.cashforward.model.Label;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
 import org.cashforward.model.PaymentOverride;
+import org.cashforward.model.PaymentSearchCriteria;
 
 /**
  *
@@ -120,6 +121,38 @@ public class PersistenceService {
         tx.begin();
         try {
             Query query = manager.createNamedQuery("Payment.findAll");
+            payments = query.getResultList();
+            tx.commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            return payments;
+        }
+        
+        return payments;
+    }
+     
+     public List<Payment> getPayments(PaymentSearchCriteria criteria)
+             throws Exception {
+        List<Payment> payments = new ArrayList();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        try {
+            StringBuffer queryString = new StringBuffer();
+            queryString.append("SELECT p FROM Payment p WHERE ");
+            
+            if (criteria != null){
+                if (criteria.getDateStart() != null)  
+                    queryString.append("p.startDate >= " 
+                        + criteria.getDateStart()); 
+                if (criteria.getDateEnd() != null)  
+                    queryString.append("p.endDate <= " 
+                        + criteria.getDateEnd()); 
+                if (criteria.getAmountHigh() > -1)  
+                    queryString.append("p.startDate >= " 
+                        + criteria.getDateStart()); 
+            }
+            
+            Query query = manager.createQuery(queryString.toString());
             payments = query.getResultList();
             tx.commit();
         } catch (Exception e){

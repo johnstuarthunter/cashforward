@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.cashforward.service;
+package org.cashforward.model;
 
 import java.util.Date;
 import java.util.List;
