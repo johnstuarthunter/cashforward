@@ -1,4 +1,4 @@
-/*
+    /*
  * PaymentListPanel.java
  *
  * Created on May 19, 2008, 9:53 PM
@@ -10,6 +10,8 @@ import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.SortedList;
+import ca.odell.glazedlists.event.ListEvent;
+import ca.odell.glazedlists.event.ListEventListener;
 import ca.odell.glazedlists.gui.AdvancedTableFormat;
 import ca.odell.glazedlists.gui.WritableTableFormat;
 import ca.odell.glazedlists.swing.EventSelectionModel;
@@ -20,9 +22,12 @@ import java.util.Date;
 import java.util.Iterator;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import org.cashforward.core.Context;
+import org.cashforward.ui.UIContext;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
+import org.cashforward.ui.UIContext;
+import org.cashforward.ui.action.LoadCurrentPaymentsAction;
+import org.cashforward.ui.action.LoadScheduledPaymentsAction;
 import org.openide.windows.TopComponent;
 
 /**
@@ -31,18 +36,21 @@ import org.openide.windows.TopComponent;
  */
 public class PaymentListPanel extends TopComponent {
 
-    private EventList payments = new BasicEventList();
+    private EventList payments;
     private SortedList sortedItems;
     private FilterList filteredList;
     private EventTableModel tableModel;
     private EventSelectionModel selectionModel;
+    
+    private LoadScheduledPaymentsAction loadScheduledPayments;
+    private LoadCurrentPaymentsAction loadCurrentPayments;
 
     /** Creates new form PaymentListPanel */
     public PaymentListPanel() {
         initComponents();
     }
 
-    public void setPayments(EventList payments) {
+    public void setPayments(final EventList payments) {
         this.payments = payments;
         //set up model
         sortedItems =
@@ -50,7 +58,17 @@ public class PaymentListPanel extends TopComponent {
 
         //filteredList = new FilterList(sortedItems,
         //        matcherFactory.createMatcher(songs,this));
+        payments.addListEventListener(new ListEventListener() {
 
+            public void listChanged(ListEvent event) {
+                System.out.println(event);
+            }
+        });
+        loadCurrentPayments = new LoadCurrentPaymentsAction(payments);
+        loadScheduledPayments = new LoadScheduledPaymentsAction(payments);
+        btnCurrent.setAction(loadCurrentPayments);
+        btnScheduled.setAction(loadScheduledPayments);
+        
         selectionModel = new EventSelectionModel(sortedItems);
         tableModel = new EventTableModel(payments, new PaymentTableFormat());
         paymentTable.setModel(tableModel);
@@ -59,20 +77,15 @@ public class PaymentListPanel extends TopComponent {
                 new ListSelectionListener() {
 
                     public void valueChanged(ListSelectionEvent e) {
-                        if (e.getValueIsAdjusting()) {
+                        if (e.getValueIsAdjusting() ||
+                                paymentTable.getSelectedRow() > 
+                                payments.size()) {
                             return;
-                        }
-                        Payment payment = (Payment) sortedItems.get(paymentTable.getSelectedRow());
+                        } 
+                        Payment payment = (Payment) 
+                                payments.get(paymentTable.getSelectedRow());
                         //content.set(Collections.singleton (payment), null);
-                        Collection all = Context.getDefault().lookupAll(Payment.class);
-                        if (all != null) {
-                            Iterator ia = all.iterator();
-                            while (ia.hasNext()) {
-                                Context.getDefault().remove(ia.next());
-                            }
-                        }
-
-                        Context.getDefault().add(payment);
+                        UIContext.getDefault().setPayment(payment);
                     }
                 });
 
@@ -87,10 +100,11 @@ public class PaymentListPanel extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jScrollPane1 = new javax.swing.JScrollPane();
         paymentTable = new javax.swing.JTable();
-        jToggleButton1 = new javax.swing.JToggleButton();
-        jToggleButton2 = new javax.swing.JToggleButton();
+        btnCurrent = new javax.swing.JToggleButton();
+        btnScheduled = new javax.swing.JToggleButton();
 
         paymentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -105,12 +119,19 @@ public class PaymentListPanel extends TopComponent {
         ));
         jScrollPane1.setViewportView(paymentTable);
 
-        jToggleButton1.setText(org.openide.util.NbBundle.getMessage(PaymentListPanel.class, "PaymentListPanel.jToggleButton1.text")); // NOI18N
-
-        jToggleButton2.setText(org.openide.util.NbBundle.getMessage(PaymentListPanel.class, "PaymentListPanel.jToggleButton2.text")); // NOI18N
-        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(btnCurrent);
+        btnCurrent.setText(org.openide.util.NbBundle.getMessage(PaymentListPanel.class, "PaymentListPanel.btnCurrent.text_2")); // NOI18N
+        btnCurrent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton2ActionPerformed(evt);
+                btnCurrentActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(btnScheduled);
+        btnScheduled.setText(org.openide.util.NbBundle.getMessage(PaymentListPanel.class, "PaymentListPanel.btnScheduled.text_3")); // NOI18N
+        btnScheduled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnScheduledActionPerformed(evt);
             }
         });
 
@@ -120,9 +141,9 @@ public class PaymentListPanel extends TopComponent {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(234, Short.MAX_VALUE)
-                .addComponent(jToggleButton2)
+                .addComponent(btnScheduled)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToggleButton1)
+                .addComponent(btnCurrent)
                 .addContainerGap())
             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
@@ -131,21 +152,26 @@ public class PaymentListPanel extends TopComponent {
             .addGroup(layout.createSequentialGroup()
                 .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButton1)
-                    .addComponent(jToggleButton2))
+                    .addComponent(btnCurrent)
+                    .addComponent(btnScheduled))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+private void btnScheduledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScheduledActionPerformed
 // TODO add your handling code here:
-}//GEN-LAST:event_jToggleButton2ActionPerformed
+}//GEN-LAST:event_btnScheduledActionPerformed
+
+private void btnCurrentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCurrentActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_btnCurrentActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToggleButton btnCurrent;
+    private javax.swing.JToggleButton btnScheduled;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JTable paymentTable;
     // End of variables declaration//GEN-END:variables
     class PaymentComparator implements Comparator {

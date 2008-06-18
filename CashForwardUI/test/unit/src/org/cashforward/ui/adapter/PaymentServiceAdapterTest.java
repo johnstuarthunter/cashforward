@@ -68,7 +68,7 @@ public class PaymentServiceAdapterTest {
         payment.setOccurence("daily");
         boolean ok = instance.addOrUpdatePayment(payment);
         assertTrue("Payment added/updated", ok);
-        List<Payment> result = instance.getAllPayments();
+        List<Payment> result = instance.getScheduledPayments();
         assertTrue("Got all payments.",result.size() > 1);
     }
 

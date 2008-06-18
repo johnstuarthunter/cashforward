@@ -5,8 +5,10 @@
 
 package org.cashforward.ui.adapter;
 
+import ca.odell.glazedlists.EventList;
 import java.util.List;
 import org.cashforward.model.Payment;
+import org.cashforward.model.PaymentSearchCriteria;
 import org.cashforward.service.PaymentService;
 
 /**
@@ -28,10 +30,37 @@ public class PaymentServiceAdapter {
             return false;
         }
     }
+
+    public List getPayees() {
+       try {
+            return paymentService.getPayees();
+        } catch (Exception e) {
+        }
+        
+        return null;
+    }
     
-    public List<Payment> getAllPayments(){
+    public List<Payment> getPayments(PaymentSearchCriteria criteria){
         try {
-            return paymentService.getPayments(null);
+            return paymentService.getPayments(criteria);
+        } catch (Exception e) {
+        }
+        
+        return null;
+    }
+    
+    public List<Payment> getCurrentPayments(){
+        try {
+            return paymentService.getCurrentPayments();
+        } catch (Exception e) {
+        }
+        
+        return null;
+    }
+    
+    public List<Payment> getScheduledPayments(){
+        try {
+            return paymentService.getScheduledPayments();
         } catch (Exception e) {
         }
         

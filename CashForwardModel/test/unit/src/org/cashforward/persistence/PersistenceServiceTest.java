@@ -9,7 +9,6 @@ import org.cashforward.model.PaymentOverride;
 import org.cashforward.model.Payment;
 import org.cashforward.model.Label;
 import org.cashforward.model.Payee;
-import org.cashforward.persistence.PersistenceService;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -82,6 +81,21 @@ public class PersistenceServiceTest {
     }
     
     @Test
+    public void testFindAllPayees() {
+        try {
+            Payee walmart = new Payee("Bill-Mart");
+            pservice.addOrUpdatePayee(walmart);
+            System.out.println("Payee was added:"+walmart.getId());
+            assertTrue("Payee was added.", walmart.getId() > 0);
+            
+            List<Payee>payees = pservice.getPayees();
+            assertTrue("Payees exist", payees.size() > 0);
+        } catch (Exception ex) {
+            Logger.getLogger(PersistenceServiceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Test
     public void testAddLabel(){
         try {
             Label groceries = new Label("Groceries");
@@ -109,6 +123,21 @@ public class PersistenceServiceTest {
     }
     
     @Test
+    public void testFindAllLabels() {
+        try {
+             Label groceries = new Label("Groceries");
+            pservice.addOrUpdateLabel(groceries);
+            System.out.println("Label was added:"+groceries.getId());
+            assertTrue("Label was added.", groceries.getId() > 0);
+            
+            List<Label>labels = pservice.getLabels();
+            assertTrue("Labels exist", labels.size() > 0);
+        } catch (Exception ex) {
+            Logger.getLogger(PersistenceServiceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Test
     public void testAddPayment(){
         try {
             Date now = Calendar.getInstance().getTime();
@@ -125,7 +154,26 @@ public class PersistenceServiceTest {
     }
     
     @Test
-    public void testGetAllPayments(){
+    public void testGetCurrentPayments(){
+        try {
+            Date now = Calendar.getInstance().getTime();
+            Label groceries = new Label("Groceries");
+            Payee walmart = new Payee("Wal-Mart");
+            Payment payment = new Payment(45.22f,walmart,now);
+            payment.setOccurence("NONE");
+            pservice.addOrUpdatePayment(payment);
+            System.out.println("Payment was added:"+payment.getId());
+            assertTrue("Payment was added.", payment.getId() > 0);
+            
+            List<Payment> allpayments = pservice.getCurrentPayments();
+            assertTrue(allpayments.size() > 0);
+        } catch (Exception ex) {
+            Logger.getLogger(PersistenceServiceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Test
+    public void testGetAllScheduledPayments(){
         try {
             Date now = Calendar.getInstance().getTime();
             Label groceries = new Label("Groceries");
@@ -136,7 +184,13 @@ public class PersistenceServiceTest {
             System.out.println("Payment was added:"+payment.getId());
             assertTrue("Payment was added.", payment.getId() > 0);
             
-            List<Payment> allpayments = pservice.getAllPayments();
+            Payment payment2 = new Payment(190f,walmart,now);
+            payment2.setOccurence("ONCE");
+            pservice.addOrUpdatePayment(payment2);
+            System.out.println("Payment was added:"+payment2.getId());
+            assertTrue("Payment was added.", payment2.getId() > 0);
+            
+            List<Payment> allpayments = pservice.getSchdeuledPayments();
             assertTrue(allpayments.size() > 0);
         } catch (Exception ex) {
             Logger.getLogger(PersistenceServiceTest.class.getName()).log(Level.SEVERE, null, ex);

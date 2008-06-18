@@ -9,6 +9,7 @@ import org.cashforward.model.PaymentSearchCriteria;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
 import org.cashforward.persistence.PersistenceService;
 import org.cashforward.service.internal.PaymentCalculator;
@@ -45,16 +46,22 @@ public class PaymentService {
     
     public List<Payment> getScheduledPayments() 
         throws Exception {
-            return persistenceService.getAllPayments();
+            return persistenceService.getSchdeuledPayments();
+    }
+    
+    public List<Payment> getCurrentPayments() 
+        throws Exception {
+            return persistenceService.getCurrentPayments();
     }
     
     public List<Payment> getPayments(PaymentSearchCriteria criteria) 
         throws Exception {
+        
         Date start = criteria.getDateStart();
         Date end = criteria.getDateEnd();
         
         List<Payment> allPayments = new ArrayList();    
-        List<Payment> payments = persistenceService.getAllPayments();
+        List<Payment> payments = persistenceService.getSchdeuledPayments();
         for (Payment payment : payments) {
             List newPayments = 
                     paymentCalculator.calculatePayments(payment, start, end);
@@ -71,6 +78,10 @@ public class PaymentService {
     
     public boolean removePayment(Payment oldPayment) throws Exception {
         return persistenceService.removePayment(oldPayment);
+    }
+    
+    public List<Payee> getPayees() throws Exception {
+        return persistenceService.getPayees();
     }
     
 }

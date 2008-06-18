@@ -6,6 +6,12 @@
 
 package org.cashforward.ui.payment;
 
+import ca.odell.glazedlists.EventList;
+import java.util.Collection;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import org.cashforward.model.Label;
+import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
 
 /**
@@ -14,17 +20,46 @@ import org.cashforward.model.Payment;
  */
 public class PaymentDetailPanel extends javax.swing.JPanel {
 
+    Payment payment;
+    EventList<Payee> payees;
+    
+    
     /** Creates new form PaymentDetailPanel */
     public PaymentDetailPanel() {
         initComponents();
     }
+    
+    public void setPayees(Collection<Payee>payees){
+        payeeCombo.setModel(new DefaultComboBoxModel(payees.toArray()));
+    }
 
+    public void setLabels(EventList<Label>labels){
+        
+    }
+    
+    public void setOccurences(List<Label>occurences){
+        
+    }
+     
     public void setPayment(Payment payment) {
-       amountCombo.getCalculator().setDisplayText(
+       this.payment = payment;
+       descriptionText.setText(payment.getDescription());
+       paymentAmountCombo.getCalculator().setDisplayText(
                Float.toString(payment.getAmount()));
        payeeCombo.setEditable(true);
        payeeCombo.setSelectedItem(payment.getPayee());
-       dateChooser.setDate(payment.getStartDate());
+       paymentDateChooser.setDate(payment.getStartDate());
+    }
+    
+    public Payment getPayment(){
+        //set up the payment
+       payment.setDescription(descriptionText.getText());
+       payment.setAmount(Float.parseFloat(
+               paymentAmountCombo.getCalculator().getDisplayText()));
+       
+       payment.setPayee((Payee) payeeCombo.getSelectedItem());
+       payment.setStartDate(paymentDateChooser.getDate());
+       return this.payment;
     }
 
     /** This method is called from within the constructor to
@@ -46,15 +81,15 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
         jComboBox2 = new javax.swing.JComboBox();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
-        amountCombo = new com.jidesoft.combobox.CalculatorComboBox();
-        dateChooser = new com.jidesoft.combobox.DateComboBox();
+        paymentAmountCombo = new com.jidesoft.combobox.CalculatorComboBox();
+        paymentDateChooser = new com.jidesoft.combobox.DateComboBox();
         untilDateCombo = new com.jidesoft.combobox.DateComboBox();
         payeeCombo = new com.jidesoft.swing.AutoCompletionComboBox();
         jXTitledSeparator1 = new org.jdesktop.swingx.JXTitledSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
         checkBoxList1 = new com.jidesoft.swing.CheckBoxList();
         jXTitledSeparator2 = new org.jdesktop.swingx.JXTitledSeparator();
-        jTextField1 = new javax.swing.JTextField();
+        descriptionText = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Payment Detail"));
@@ -90,8 +125,6 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
             }
         });
 
-        payeeCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jXTitledSeparator1.setTitle(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jXTitledSeparator1.title")); // NOI18N
 
         checkBoxList1.setModel(new javax.swing.AbstractListModel() {
@@ -103,10 +136,9 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
 
         jXTitledSeparator2.setTitle(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jXTitledSeparator2.title")); // NOI18N
 
-        jTextField1.setText(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jTextField1.text")); // NOI18N
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        descriptionText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                descriptionTextActionPerformed(evt);
             }
         });
 
@@ -131,7 +163,7 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField1)
+                                    .addComponent(descriptionText)
                                     .addComponent(payeeCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,8 +171,8 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
                                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(dateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
-                                    .addComponent(amountCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)))
+                                    .addComponent(paymentDateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                                    .addComponent(paymentAmountCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)))
                             .addComponent(occurenceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jXTitledSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
@@ -167,17 +199,17 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(payeeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(dateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(paymentDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(descriptionText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(amountCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(paymentAmountCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jXTitledSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -229,15 +261,14 @@ private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 // TODO add your handling code here:
 }//GEN-LAST:event_jRadioButton2ActionPerformed
 
-private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+private void descriptionTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_descriptionTextActionPerformed
 // TODO add your handling code here:
-}//GEN-LAST:event_jTextField1ActionPerformed
+}//GEN-LAST:event_descriptionTextActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.jidesoft.combobox.CalculatorComboBox amountCombo;
     private com.jidesoft.swing.CheckBoxList checkBoxList1;
-    private com.jidesoft.combobox.DateComboBox dateChooser;
+    private javax.swing.JTextField descriptionText;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -249,11 +280,12 @@ private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JTextField jTextField1;
     private org.jdesktop.swingx.JXTitledSeparator jXTitledSeparator1;
     private org.jdesktop.swingx.JXTitledSeparator jXTitledSeparator2;
     private javax.swing.JComboBox occurenceCombo;
     private com.jidesoft.swing.AutoCompletionComboBox payeeCombo;
+    private com.jidesoft.combobox.CalculatorComboBox paymentAmountCombo;
+    private com.jidesoft.combobox.DateComboBox paymentDateChooser;
     private com.jidesoft.combobox.DateComboBox untilDateCombo;
     // End of variables declaration//GEN-END:variables
 

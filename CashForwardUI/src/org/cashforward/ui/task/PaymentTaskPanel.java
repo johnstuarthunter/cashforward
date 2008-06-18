@@ -7,12 +7,12 @@
 package org.cashforward.ui.task;
 
 import java.util.Collection;
-import org.cashforward.core.Context;
+import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
+import org.cashforward.ui.UIContext;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
-import org.openide.util.Utilities;
 
 /**
  *
@@ -21,17 +21,19 @@ import org.openide.util.Utilities;
 public class PaymentTaskPanel extends javax.swing.JPanel 
     implements LookupListener{
 
-    private Lookup.Result result = null;
-
+    private Lookup.Result paymentNotifier = null;
+    private Lookup.Result payeeNotifier = null;
     
     /** Creates new form PaymentTaskPanel */
     public PaymentTaskPanel() {
         initComponents();
+        
         Lookup.Template tpl = new Lookup.Template (Payment.class);
-        result = Context.getDefault().lookup(tpl);
-        result.addLookupListener (this);
-        System.out.println("current content:" + result.allInstances());
-        System.out.println("adding lul");
+        paymentNotifier = UIContext.getDefault().lookup(tpl);
+        paymentNotifier.addLookupListener (this);
+        
+        paymentDetail.setPayees(UIContext.getDefault().getPayees());
+        
     }
 
     /** This method is called from within the constructor to
@@ -43,37 +45,26 @@ public class PaymentTaskPanel extends javax.swing.JPanel
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        paymentFilterPanel1 = new org.cashforward.ui.task.PaymentFilterPanel();
         paymentDetail = new org.cashforward.ui.payment.PaymentDetailPanel();
-        floorTabbedPane1 = new com.jidesoft.pane.FloorTabbedPane();
-        floorTabbedPane1.addTab("Search", paymentFilterPanel1);
-        floorTabbedPane1.addTab("Payment", paymentDetail);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 417, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(floorTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE))
+            .addComponent(paymentDetail, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 369, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(floorTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE))
+            .addComponent(paymentDetail, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.jidesoft.pane.FloorTabbedPane floorTabbedPane1;
     private org.cashforward.ui.payment.PaymentDetailPanel paymentDetail;
-    private org.cashforward.ui.task.PaymentFilterPanel paymentFilterPanel1;
     // End of variables declaration//GEN-END:variables
 
    public void resultChanged(LookupEvent lookupEvent) {
-       System.out.println("got a result"); 
        Lookup.Result r = (Lookup.Result) lookupEvent.getSource();
         Collection c = r.allInstances();
         if (!c.isEmpty()) {

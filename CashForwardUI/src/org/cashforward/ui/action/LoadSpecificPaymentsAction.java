@@ -15,12 +15,13 @@ import org.cashforward.ui.adapter.PaymentServiceAdapter;
  * 
  * @author Bill 
  */
-public class FindPaymentAction extends AbstractAction {
-
+public class LoadSpecificPaymentsAction extends AbstractAction {
+    
     PaymentServiceAdapter serviceAdapter;
     List<Payment> paymentList;
     
-    public FindPaymentAction(List<Payment> paymentList){
+    
+    public LoadSpecificPaymentsAction(List<Payment> paymentList){
         this.paymentList = paymentList;
     }
     
@@ -29,7 +30,7 @@ public class FindPaymentAction extends AbstractAction {
         if (serviceAdapter == null)
             serviceAdapter = new PaymentServiceAdapter();
         
-        List allPayments = serviceAdapter.getAllPayments();
+        List allPayments = serviceAdapter.getScheduledPayments();
         paymentList.clear();
         paymentList.addAll(allPayments);
         

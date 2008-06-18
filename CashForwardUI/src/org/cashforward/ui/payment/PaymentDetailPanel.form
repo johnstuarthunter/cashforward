@@ -62,7 +62,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="jTextField1" max="32767" attributes="1"/>
+                                      <Component id="descriptionText" max="32767" attributes="1"/>
                                       <Component id="payeeCombo" alignment="0" pref="190" max="32767" attributes="1"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -72,8 +72,8 @@
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="dateChooser" pref="106" max="32767" attributes="1"/>
-                                      <Component id="amountCombo" alignment="0" pref="106" max="32767" attributes="1"/>
+                                      <Component id="paymentDateChooser" pref="106" max="32767" attributes="1"/>
+                                      <Component id="paymentAmountCombo" alignment="0" pref="106" max="32767" attributes="1"/>
                                   </Group>
                               </Group>
                               <Component id="occurenceCombo" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
@@ -111,20 +111,20 @@
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="payeeCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="dateChooser" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="paymentDateChooser" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="descriptionText" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="amountCombo" min="-2" max="-2" attributes="0"/>
+                          <Component id="paymentAmountCombo" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -231,21 +231,16 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRadioButton2ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="com.jidesoft.combobox.CalculatorComboBox" name="amountCombo">
+        <Component class="com.jidesoft.combobox.CalculatorComboBox" name="paymentAmountCombo">
         </Component>
-        <Component class="com.jidesoft.combobox.DateComboBox" name="dateChooser">
+        <Component class="com.jidesoft.combobox.DateComboBox" name="paymentDateChooser">
         </Component>
         <Component class="com.jidesoft.combobox.DateComboBox" name="untilDateCombo">
         </Component>
         <Component class="com.jidesoft.swing.AutoCompletionComboBox" name="payeeCombo">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
-              </StringArray>
+              <StringArray count="0"/>
             </Property>
           </Properties>
         </Component>
@@ -285,14 +280,9 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField1">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/cashforward/ui/payment/Bundle.properties" key="PaymentDetailPanel.jTextField1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-            </Property>
-          </Properties>
+        <Component class="javax.swing.JTextField" name="descriptionText">
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="descriptionTextActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
