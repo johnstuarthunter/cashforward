@@ -10,7 +10,7 @@ import ca.odell.glazedlists.EventList;
 import java.io.Serializable;
 import java.util.logging.Logger;
 import org.cashforward.model.Payment;
-import org.cashforward.ui.action.FindPaymentAction;
+import org.cashforward.ui.action.LoadScheduledPaymentsAction;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -20,7 +20,12 @@ import org.openide.windows.WindowManager;
  * Top component which displays something.
  */
 final class PaymentTopComponent extends TopComponent {
-
+    
+    static {
+        com.jidesoft.utils.Lm.verifyLicense(
+                "Bill Snyder", "CashForward", 
+                "U4Fnx9Ak6M1DGKsRXc2fNF8nTG0c2aC");
+    }
     private static PaymentTopComponent instance;
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
@@ -101,8 +106,8 @@ final class PaymentTopComponent extends TopComponent {
     public void componentOpened() {
         paymentListPanel.setPayments(paymentList);
         //Load all the payments into the view
-        FindPaymentAction paymentLoader 
-                = new FindPaymentAction(paymentList);
+        LoadScheduledPaymentsAction paymentLoader 
+                = new LoadScheduledPaymentsAction(paymentList);
         paymentLoader.actionPerformed(null);
     }
 

@@ -19,6 +19,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import org.cashforward.model.Label;
+import org.cashforward.model.Label;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
 import org.cashforward.model.PaymentOverride;
@@ -56,6 +57,7 @@ public class PersistenceService {
 
         return instance;
     }
+
 
     public void startup(String unit) {
         if (factory != null) {
@@ -115,7 +117,7 @@ public class PersistenceService {
         }
     }
     
-     public List<Payment> getAllPayments() throws Exception {
+     public List<Payment> getCurrentPayments() throws Exception {
         List<Payment> payments = new ArrayList();
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
@@ -131,7 +133,23 @@ public class PersistenceService {
         return payments;
     }
      
-     public List<Payment> getPayments(PaymentSearchCriteria criteria)
+    public List<Payment> getSchdeuledPayments() {
+         List<Payment> payments = new ArrayList();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        try {
+            Query query = manager.createNamedQuery("Payment.findAllScheduled");
+            payments = query.getResultList();
+            tx.commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            return payments;
+        }
+        
+        return payments;
+    }
+
+    public List<Payment> getPayments(PaymentSearchCriteria criteria)
              throws Exception {
         List<Payment> payments = new ArrayList();
         EntityTransaction tx = manager.getTransaction();
@@ -234,6 +252,22 @@ public class PersistenceService {
             return a;
         }
     }
+    
+    public List<Label> getLabels(){
+        List<Label> labels = new ArrayList();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        try {
+            Query query = manager.createNamedQuery("Label.findAll");
+            labels = query.getResultList();
+            tx.commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            return labels;
+        }
+        
+        return labels;
+    }
 
     
     public Payment getPaymentByID(long id) throws Exception {
@@ -262,6 +296,21 @@ public class PersistenceService {
         return true;
     }
 
+    public List<Payee> getPayees(){
+        List<Payee> payees = new ArrayList();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        try {
+            Query query = manager.createNamedQuery("Payee.findAll");
+            payees = query.getResultList();
+            tx.commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            return payees;
+        }
+        
+        return payees;
+    }
 
     /**
      * @param args the command line arguments

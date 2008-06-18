@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cashforward.core;
+package org.cashforward.ui;
 
-import org.openide.util.Lookup.Result;
+import java.util.Collection;
+import java.util.Iterator;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 /**

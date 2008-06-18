@@ -18,7 +18,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "LABEL")
-@NamedQueries({@NamedQuery(name = "Label.findById", query = "SELECT l FROM Label l WHERE l.id = :id"), @NamedQuery(name = "Label.findByName", query = "SELECT l FROM Label l WHERE l.name = :name")})
+@NamedQueries({
+    @NamedQuery(name = "Label.findById", 
+        query = "SELECT l FROM Label l WHERE l.id = :id"), 
+    @NamedQuery(name = "Label.findByName", 
+        query = "SELECT l FROM Label l WHERE l.name = :name"),
+    @NamedQuery(name = "Label.findAll", 
+        query = "SELECT l FROM Label l")})
 public class Label implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

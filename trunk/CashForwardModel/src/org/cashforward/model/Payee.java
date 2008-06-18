@@ -19,7 +19,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "PAYEE")
-@NamedQueries({@NamedQuery(name = "Payee.findById", query = "SELECT p FROM Payee p WHERE p.id = :id"), @NamedQuery(name = "Payee.findByName", query = "SELECT p FROM Payee p WHERE p.name = :name")})
+@NamedQueries({
+    @NamedQuery(name = "Payee.findById", 
+        query = "SELECT p FROM Payee p WHERE p.id = :id"),
+    @NamedQuery(name = "Payee.findByName", 
+        query = "SELECT p FROM Payee p WHERE p.name = :name"),
+    @NamedQuery(name = "Payee.findAll", 
+        query = "SELECT p FROM Payee p")})
 public class Payee implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

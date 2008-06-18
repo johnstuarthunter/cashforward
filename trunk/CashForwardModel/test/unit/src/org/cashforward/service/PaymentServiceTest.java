@@ -8,6 +8,7 @@ package org.cashforward.service;
 import java.util.Calendar;
 import java.util.List;
 import org.cashforward.model.Payment;
+import org.cashforward.model.PaymentSearchCriteria;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

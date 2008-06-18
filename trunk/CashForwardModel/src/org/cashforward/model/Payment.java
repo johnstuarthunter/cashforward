@@ -34,8 +34,10 @@ import org.cashforward.model.Payment.Occurence;
 @Entity
 @Table(name = "PAYMENT")
 @NamedQueries({
-     @NamedQuery(name = "Payment.findAll", 
-        query = "SELECT p FROM Payment p"),
+    @NamedQuery(name = "Payment.findAll", 
+        query = "SELECT p FROM Payment p where p.occurence = 'NONE'"),
+    @NamedQuery(name = "Payment.findAllScheduled", 
+        query = "SELECT p FROM Payment p where p.occurence != 'NONE'"),
     @NamedQuery(name = "Payment.findById", 
         query = "SELECT p FROM Payment p WHERE p.id = :id"), 
     @NamedQuery(name = "Payment.findByPayeeId", 
@@ -95,6 +97,8 @@ public class Payment implements Serializable {
     @Column(name = "END_DATE", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date endDate;
+    @Column(name = "DESCRIPTION", nullable = true)
+    private String description;
     @Column(name = "OCCURENCE", nullable = false)
     private String occurence;
     @OneToMany(mappedBy="payment", cascade=CascadeType.ALL)
@@ -216,6 +220,13 @@ public class Payment implements Serializable {
         return overrides;
     }
 
+     public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     @Override
     public int hashCode() {
