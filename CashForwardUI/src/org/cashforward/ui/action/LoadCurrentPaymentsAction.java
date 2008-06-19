@@ -9,7 +9,9 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.UIDefaults;
 import org.cashforward.model.Payment;
+import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
 
 /**

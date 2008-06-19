@@ -7,7 +7,8 @@
 package org.cashforward.ui.payment;
 
 import ca.odell.glazedlists.EventList;
-import java.util.Collection;
+import ca.odell.glazedlists.event.ListEvent;
+import ca.odell.glazedlists.event.ListEventListener;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import org.cashforward.model.Label;
@@ -29,8 +30,8 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
         initComponents();
     }
     
-    public void setPayees(Collection<Payee>payees){
-        payeeCombo.setModel(new DefaultComboBoxModel(payees.toArray()));
+    public void setPayees(EventList<Payee>payees){
+        payeeCombo.setModel(new EventListComboBoxModel(payees));
     }
 
     public void setLabels(EventList<Label>labels){
@@ -60,6 +61,33 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
        payment.setPayee((Payee) payeeCombo.getSelectedItem());
        payment.setStartDate(paymentDateChooser.getDate());
        return this.payment;
+    }
+    
+    private class EventListComboBoxModel extends DefaultComboBoxModel{
+        EventList source;
+        public EventListComboBoxModel(EventList source){
+            super();
+            this.source = source;
+            source.addListEventListener(new ListEventListener<Payee> () {
+                public void listChanged(ListEvent<Payee> arg0) {
+                    EventListComboBoxModel.this.fireContentsChanged(
+                            EventListComboBoxModel.this, 0, 0);
+                }
+            });
+        }
+        
+        public Object getElementAt(int index) {
+            Object retValue;
+            retValue = source.get(index);
+            return retValue;
+        }
+        
+        public int getSize() {
+            int retValue;
+            retValue = source.size();
+            return retValue;
+        }
+        
     }
 
     /** This method is called from within the constructor to

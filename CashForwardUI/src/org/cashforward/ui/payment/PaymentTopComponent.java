@@ -2,20 +2,23 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.cashforward.ui.payment;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.logging.Logger;
 import org.cashforward.model.Payment;
+import org.cashforward.ui.UIContext;
 import org.cashforward.ui.action.LoadScheduledPaymentsAction;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 //import org.openide.util.Utilities;
-
 /**
  * Top component which displays something.
  */
@@ -23,14 +26,15 @@ final class PaymentTopComponent extends TopComponent {
     
     static {
         com.jidesoft.utils.Lm.verifyLicense(
-                "Bill Snyder", "CashForward", 
+                "Bill Snyder", "CashForward",
                 "U4Fnx9Ak6M1DGKsRXc2fNF8nTG0c2aC");
     }
     private static PaymentTopComponent instance;
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
-
     private static final String PREFERRED_ID = "PaymentTopComponent";
+    Lookup.Result paymentNotifier =
+            UIContext.getDefault().lookupResult(Payment.class);
     private EventList<Payment> paymentList = new BasicEventList();
 
     private PaymentTopComponent() {
@@ -38,6 +42,19 @@ final class PaymentTopComponent extends TopComponent {
         setName(NbBundle.getMessage(PaymentTopComponent.class, "CTL_PaymentTopComponent"));
         setToolTipText(NbBundle.getMessage(PaymentTopComponent.class, "HINT_PaymentTopComponent"));
 //        setIcon(Utilities.loadImage(ICON_PATH, true));
+        
+        paymentNotifier.addLookupListener(new LookupListener() {
+
+            public void resultChanged(LookupEvent event) {
+                Lookup.Result r = (Lookup.Result) event.getSource();
+                Collection c = r.allInstances();
+                if (!c.isEmpty()) {
+                    Payment payment = (Payment) c.iterator().next();
+                    System.out.println("setting payment:" + payment);
+                    //paymentDetail.setPayment(payment);
+                }                
+            }
+        });
     }
 
     /** This method is called from within the constructor to
@@ -61,8 +78,6 @@ final class PaymentTopComponent extends TopComponent {
             .addComponent(paymentListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.cashforward.ui.payment.PaymentListPanel paymentListPanel;
     // End of variables declaration//GEN-END:variables
@@ -104,11 +119,8 @@ final class PaymentTopComponent extends TopComponent {
 
     @Override
     public void componentOpened() {
-        paymentListPanel.setPayments(paymentList);
-        //Load all the payments into the view
-        LoadScheduledPaymentsAction paymentLoader 
-                = new LoadScheduledPaymentsAction(paymentList);
-        paymentLoader.actionPerformed(null);
+        paymentListPanel.setPayments(
+                UIContext.getDefault().getCurrentPayments());
     }
 
     @Override
