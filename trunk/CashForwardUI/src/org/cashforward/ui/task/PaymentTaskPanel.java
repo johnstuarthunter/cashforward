@@ -28,11 +28,16 @@ public class PaymentTaskPanel extends javax.swing.JPanel
     public PaymentTaskPanel() {
         initComponents();
         
-        Lookup.Template tpl = new Lookup.Template (Payment.class);
-        paymentNotifier = UIContext.getDefault().lookup(tpl);
+        paymentNotifier = UIContext.getDefault().lookupResult(Payment.class);
         paymentNotifier.addLookupListener (this);
         
-        paymentDetail.setPayees(UIContext.getDefault().getPayees());
+        payeeNotifier = UIContext.getDefault().lookupResult(Payee.class);
+        payeeNotifier.addLookupListener(new LookupListener() {
+            public void resultChanged(LookupEvent arg0) {
+                paymentDetail.setPayees(UIContext.getDefault().getPayees());
+            }
+        });
+        
         
     }
 
@@ -66,7 +71,7 @@ public class PaymentTaskPanel extends javax.swing.JPanel
 
    public void resultChanged(LookupEvent lookupEvent) {
        Lookup.Result r = (Lookup.Result) lookupEvent.getSource();
-        Collection c = r.allInstances();
+       Collection c = r.allInstances();
         if (!c.isEmpty()) {
             System.out.println("setting payment");
             Payment payment = (Payment) c.iterator().next();

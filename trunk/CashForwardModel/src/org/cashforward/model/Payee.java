@@ -80,8 +80,7 @@ public class Payee implements Serializable {
 
     @Override
     public String toString() {
-        return "org.cashforward.Payee[id=" + id + 
-                ";name:"+name+"]";
+        return name;
     }
 
 }

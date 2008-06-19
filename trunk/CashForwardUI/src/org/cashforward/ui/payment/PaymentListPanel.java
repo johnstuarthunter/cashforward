@@ -36,6 +36,9 @@ import org.openide.windows.TopComponent;
  */
 public class PaymentListPanel extends TopComponent {
 
+    //hook into the Lookup.Result and get
+    //changes to the lists that way
+    
     private EventList payments;
     private SortedList sortedItems;
     private FilterList filteredList;
@@ -44,31 +47,27 @@ public class PaymentListPanel extends TopComponent {
     
     private LoadScheduledPaymentsAction loadScheduledPayments;
     private LoadCurrentPaymentsAction loadCurrentPayments;
-
+ 
     /** Creates new form PaymentListPanel */
     public PaymentListPanel() {
         initComponents();
     }
 
     public void setPayments(final EventList payments) {
-        this.payments = payments;
+        //this.payments = payments;
+        
         //set up model
         sortedItems =
                 new SortedList(payments, new PaymentComparator());
 
         //filteredList = new FilterList(sortedItems,
         //        matcherFactory.createMatcher(songs,this));
-        payments.addListEventListener(new ListEventListener() {
-
-            public void listChanged(ListEvent event) {
-                System.out.println(event);
-            }
-        });
+        
         loadCurrentPayments = new LoadCurrentPaymentsAction(payments);
         loadScheduledPayments = new LoadScheduledPaymentsAction(payments);
         btnCurrent.setAction(loadCurrentPayments);
         btnScheduled.setAction(loadScheduledPayments);
-        
+    
         selectionModel = new EventSelectionModel(sortedItems);
         tableModel = new EventTableModel(payments, new PaymentTableFormat());
         paymentTable.setModel(tableModel);
@@ -87,7 +86,17 @@ public class PaymentListPanel extends TopComponent {
                         //content.set(Collections.singleton (payment), null);
                         UIContext.getDefault().setPayment(payment);
                     }
-                });
+         });
+         
+         payments.addListEventListener(new ListEventListener() {
+
+            public void listChanged(ListEvent event) {
+                System.out.println("i detect somthing..");
+                tableModel.fireTableDataChanged();
+            }
+        });
+        
+        payments.add(new Payment());
 
     }
 
@@ -183,7 +192,10 @@ private void btnCurrentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             //initially sort by date, earliest is more important
             Date itemADate = itemA.getStartDate();
             Date itemBDate = itemB.getStartDate();
-
+            if (itemADate == null)
+                return itemBDate == null ? 0 : 1;
+            else if (itemADate != null)
+                 return itemBDate == null ? 1 : 0;
             return itemADate.compareTo(itemBDate);
         }
     }
@@ -204,7 +216,15 @@ private void btnCurrentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         
         public Object getColumnValue(Object baseObject, int column) {
             Payment payment = (Payment)baseObject;
+            
+            if (payment == null)
+                return null;
+            
             Payee payee = payment.getPayee();
+            
+            if (payee == null)
+                return null;
+            
             Date paymentDate = payment.getStartDate();
             float amount = payment.getAmount();
             

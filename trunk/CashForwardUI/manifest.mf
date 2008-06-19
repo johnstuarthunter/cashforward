@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.cashforward.ui
+OpenIDE-Module-Install: org/cashforward/ui/internal/Installer.class
 OpenIDE-Module-Layer: org/cashforward/ui/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/cashforward/ui/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
