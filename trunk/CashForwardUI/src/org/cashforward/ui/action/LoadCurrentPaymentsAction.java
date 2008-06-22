@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.UIDefaults;
 import org.cashforward.model.Payment;
 import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
@@ -21,12 +20,10 @@ import org.cashforward.ui.adapter.PaymentServiceAdapter;
 public class LoadCurrentPaymentsAction extends AbstractAction {
     
     PaymentServiceAdapter serviceAdapter;
-    List<Payment> paymentList;
     
-    
-    public LoadCurrentPaymentsAction(List<Payment> paymentList){
+    public LoadCurrentPaymentsAction(){
         super("Current");
-        this.paymentList = paymentList;
+        
         putValue(Action.SHORT_DESCRIPTION, "Current");
     }
     
@@ -35,9 +32,14 @@ public class LoadCurrentPaymentsAction extends AbstractAction {
         if (serviceAdapter == null)
             serviceAdapter = new PaymentServiceAdapter();
         
+        List<Payment> paymentList =
+                UIContext.getDefault().getCurrentPayments();
+        
         List allPayments = serviceAdapter.getCurrentPayments();
         paymentList.clear();
         paymentList.addAll(allPayments);
+        
+        UIContext.getDefault().setPaymentOccurence(Payment.Occurence.NONE);
         
     }
     

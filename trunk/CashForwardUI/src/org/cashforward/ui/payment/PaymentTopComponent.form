@@ -15,17 +15,29 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="paymentListPanel" alignment="0" pref="395" max="32767" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <Component id="paymentListPanel" pref="478" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="paymentDetailPanel" min="-2" pref="307" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="paymentListPanel" alignment="0" pref="297" max="32767" attributes="0"/>
+          <Component id="paymentListPanel" alignment="0" pref="440" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="paymentDetailPanel" min="-2" pref="418" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
     <Component class="org.cashforward.ui.payment.PaymentListPanel" name="paymentListPanel">
+    </Component>
+    <Component class="org.cashforward.ui.payment.PaymentDetailPanel" name="paymentDetailPanel">
     </Component>
   </SubComponents>
 </Form>

@@ -6,9 +6,12 @@
 package org.cashforward.ui.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Calendar;
 import java.util.List;
 import javax.swing.AbstractAction;
 import org.cashforward.model.Payment;
+import org.cashforward.model.PaymentSearchCriteria;
+import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
 
 /**
@@ -18,11 +21,8 @@ import org.cashforward.ui.adapter.PaymentServiceAdapter;
 public class LoadSpecificPaymentsAction extends AbstractAction {
     
     PaymentServiceAdapter serviceAdapter;
-    List<Payment> paymentList;
     
-    
-    public LoadSpecificPaymentsAction(List<Payment> paymentList){
-        this.paymentList = paymentList;
+    public LoadSpecificPaymentsAction(){
     }
     
     //TODO threading
@@ -30,10 +30,26 @@ public class LoadSpecificPaymentsAction extends AbstractAction {
         if (serviceAdapter == null)
             serviceAdapter = new PaymentServiceAdapter();
         
-        List allPayments = serviceAdapter.getScheduledPayments();
+        List<Payment> paymentList =
+                UIContext.getDefault().getCurrentPayments();
+                
+        Calendar start = Calendar.getInstance();
+        start.set(Calendar.MONTH, Calendar.FEBRUARY);
+        start.set(Calendar.DAY_OF_MONTH, 1);
+        
+        Calendar end = Calendar.getInstance();
+        end.set(Calendar.MONTH, Calendar.DECEMBER);
+        end.set(Calendar.DAY_OF_MONTH, 1);
+        end.set(Calendar.YEAR, 2010);
+        
+        PaymentSearchCriteria criteria = new PaymentSearchCriteria();
+        criteria.setDateStart(start.getTime());
+        criteria.setDateEnd(end.getTime());
+        
+        List allPayments = serviceAdapter.getPayments(criteria);
         paymentList.clear();
         paymentList.addAll(allPayments);
-        
+
     }
     
 }
