@@ -54,6 +54,7 @@ import org.cashforward.model.Payment.Occurence;
 public class Payment implements Serializable {
             
     public enum Occurence {
+        NONE(-1,-1),
         ONCE(0,Calendar.DAY_OF_YEAR),
         DAILY(1,Calendar.DAY_OF_YEAR),
         WEEKLY(7,Calendar.DAY_OF_YEAR),

@@ -4,14 +4,15 @@
  */
 package org.cashforward.ui.payment;
 
-import ca.odell.glazedlists.BasicEventList;
-import ca.odell.glazedlists.EventList;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
+import org.cashforward.model.Label;
+import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
+import org.cashforward.model.PaymentSearchCriteria;
 import org.cashforward.ui.UIContext;
-import org.cashforward.ui.action.LoadScheduledPaymentsAction;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -23,25 +24,48 @@ import org.openide.windows.WindowManager;
  * Top component which displays something.
  */
 final class PaymentTopComponent extends TopComponent {
-    
-    static {
-        com.jidesoft.utils.Lm.verifyLicense(
-                "Bill Snyder", "CashForward",
-                "U4Fnx9Ak6M1DGKsRXc2fNF8nTG0c2aC");
-    }
+   
     private static PaymentTopComponent instance;
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "PaymentTopComponent";
-    Lookup.Result paymentNotifier =
+    
+    private Lookup.Result paymentNotifier =
             UIContext.getDefault().lookupResult(Payment.class);
-    private EventList<Payment> paymentList = new BasicEventList();
-
+    private Lookup.Result payeeNotifier = 
+            UIContext.getDefault().lookupResult(Payee.class);
+    private Lookup.Result filterNotifier = 
+            UIContext.getDefault().lookupResult(Payment.Occurence.class);
+    
     private PaymentTopComponent() {
         initComponents();
         setName(NbBundle.getMessage(PaymentTopComponent.class, "CTL_PaymentTopComponent"));
         setToolTipText(NbBundle.getMessage(PaymentTopComponent.class, "HINT_PaymentTopComponent"));
 //        setIcon(Utilities.loadImage(ICON_PATH, true));
+        
+        
+        filterNotifier.addLookupListener(new LookupListener() {
+            public void resultChanged(LookupEvent event) {
+                Lookup.Result r = (Lookup.Result) event.getSource();
+                Collection c = r.allInstances();
+                if (!c.isEmpty()) {
+                    Payment.Occurence occurence = 
+                            (Payment.Occurence) c.iterator().next();
+                    if (occurence == Payment.Occurence.NONE)
+                        paymentListPanel.setPayments(
+                                UIContext.getDefault().getCurrentPayments());
+                    else
+                        paymentListPanel.setPayments(
+                                UIContext.getDefault().getScheduledPayments());
+                } 
+            }
+        });
+        
+        payeeNotifier.addLookupListener(new LookupListener() {
+            public void resultChanged(LookupEvent arg0) {
+                paymentDetailPanel.setPayees(UIContext.getDefault().getPayees());
+            }
+        });
         
         paymentNotifier.addLookupListener(new LookupListener() {
 
@@ -51,7 +75,7 @@ final class PaymentTopComponent extends TopComponent {
                 if (!c.isEmpty()) {
                     Payment payment = (Payment) c.iterator().next();
                     System.out.println("setting payment:" + payment);
-                    //paymentDetail.setPayment(payment);
+                    paymentDetailPanel.setPayment(payment);
                 }                
             }
         });
@@ -66,19 +90,29 @@ final class PaymentTopComponent extends TopComponent {
     private void initComponents() {
 
         paymentListPanel = new org.cashforward.ui.payment.PaymentListPanel();
+        paymentDetailPanel = new org.cashforward.ui.payment.PaymentDetailPanel();
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(paymentListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(paymentListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(paymentDetailPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(paymentListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+            .addComponent(paymentListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(paymentDetailPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.cashforward.ui.payment.PaymentDetailPanel paymentDetailPanel;
     private org.cashforward.ui.payment.PaymentListPanel paymentListPanel;
     // End of variables declaration//GEN-END:variables
     /**

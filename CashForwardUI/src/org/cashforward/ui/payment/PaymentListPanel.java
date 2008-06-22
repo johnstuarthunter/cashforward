@@ -5,7 +5,6 @@
  */
 package org.cashforward.ui.payment;
 
-import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
@@ -16,18 +15,13 @@ import ca.odell.glazedlists.gui.AdvancedTableFormat;
 import ca.odell.glazedlists.gui.WritableTableFormat;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 import ca.odell.glazedlists.swing.EventTableModel;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import org.cashforward.ui.UIContext;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
 import org.cashforward.ui.UIContext;
-import org.cashforward.ui.action.LoadCurrentPaymentsAction;
-import org.cashforward.ui.action.LoadScheduledPaymentsAction;
 import org.openide.windows.TopComponent;
 
 /**
@@ -39,22 +33,19 @@ public class PaymentListPanel extends TopComponent {
     //hook into the Lookup.Result and get
     //changes to the lists that way
     
-    private EventList payments;
+    private EventList<Payment> payments;
     private SortedList sortedItems;
     private FilterList filteredList;
     private EventTableModel tableModel;
     private EventSelectionModel selectionModel;
     
-    private LoadScheduledPaymentsAction loadScheduledPayments;
-    private LoadCurrentPaymentsAction loadCurrentPayments;
- 
     /** Creates new form PaymentListPanel */
     public PaymentListPanel() {
         initComponents();
     }
 
     public void setPayments(final EventList payments) {
-        //this.payments = payments;
+        this.payments = payments;
         
         //set up model
         sortedItems =
@@ -63,11 +54,6 @@ public class PaymentListPanel extends TopComponent {
         //filteredList = new FilterList(sortedItems,
         //        matcherFactory.createMatcher(songs,this));
         
-        loadCurrentPayments = new LoadCurrentPaymentsAction(payments);
-        loadScheduledPayments = new LoadScheduledPaymentsAction(payments);
-        btnCurrent.setAction(loadCurrentPayments);
-        btnScheduled.setAction(loadScheduledPayments);
-    
         selectionModel = new EventSelectionModel(sortedItems);
         tableModel = new EventTableModel(payments, new PaymentTableFormat());
         paymentTable.setModel(tableModel);
@@ -77,8 +63,9 @@ public class PaymentListPanel extends TopComponent {
 
                     public void valueChanged(ListSelectionEvent e) {
                         if (e.getValueIsAdjusting() ||
-                                paymentTable.getSelectedRow() > 
-                                payments.size()) {
+                                payments.size() >
+                                paymentTable.getSelectedRow() 
+                                ) {
                             return;
                         } 
                         Payment payment = (Payment) 
@@ -98,6 +85,17 @@ public class PaymentListPanel extends TopComponent {
         
         payments.add(new Payment());
 
+    }
+    
+    private float getBalance(int toIndex){
+        float balance = 0f;
+        
+        //int count = payments.size();
+        for (int i = 0; i <= toIndex; i++) {
+            balance += payments.get(i).getAmount();
+        }
+        
+        return balance;
     }
 
     /** This method is called from within the constructor to
@@ -216,7 +214,7 @@ private void btnCurrentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         
         public Object getColumnValue(Object baseObject, int column) {
             Payment payment = (Payment)baseObject;
-            
+            System.out.println("index of object:"+payments.indexOf(baseObject));
             if (payment == null)
                 return null;
             
@@ -231,6 +229,9 @@ private void btnCurrentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             if (column == 0) return paymentDate;
             else if (column == 1) return payee.getName();
             else if (column == 2) return Float.valueOf(amount);
+            
+            else if (column == 3)
+                return getBalance(payments.indexOf(baseObject));
             else
                 return "";
         }

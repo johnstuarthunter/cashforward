@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.cashforward.model.Payment;
+import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
 
 /**
@@ -19,13 +20,10 @@ import org.cashforward.ui.adapter.PaymentServiceAdapter;
 public class LoadScheduledPaymentsAction extends AbstractAction {
     
     PaymentServiceAdapter serviceAdapter;
-    List<Payment> paymentList;
     
-    
-    public LoadScheduledPaymentsAction(List<Payment> paymentList){
+    public LoadScheduledPaymentsAction(){
         super("Scheduled");
-        this.paymentList = paymentList;
-         putValue(Action.SHORT_DESCRIPTION, "Scheduled");
+        putValue(Action.SHORT_DESCRIPTION, "Scheduled");
     }
     
     //TODO threading
@@ -33,10 +31,14 @@ public class LoadScheduledPaymentsAction extends AbstractAction {
         if (serviceAdapter == null)
             serviceAdapter = new PaymentServiceAdapter();
         
+        List<Payment> paymentList = 
+                UIContext.getDefault().getScheduledPayments();
+        
         List allPayments = serviceAdapter.getScheduledPayments();
         paymentList.clear();
         paymentList.addAll(allPayments);
         
+        UIContext.getDefault().setPaymentOccurence(Payment.Occurence.ONCE);
     }
     
 }
