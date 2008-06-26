@@ -1,0 +1,10 @@
+***Draft***
+
+= Overview =
+
+The NetBeans Platform provides out of the box functionality for building applications.
+Below is an overview of how CashForward benefits from the NetBeans Platform
+
+
+= Lookup: A central application bus =
+
