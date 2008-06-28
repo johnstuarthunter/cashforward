@@ -1,0 +1,13 @@
+Scheduled Payments
+
+   * Enabled repeat entry of payments at specific intervals
+   * Override specific scheduled payment intervals
+   * Enter scheduled payment into register
+   * Skip next occurrence of scheduled payment
+   * Show only scheduled payments
+   * CRUD scheduled payments
+
+Current Payments
+
+   * Convert current payment to scheduled payment
+   * CRUD current payments
