@@ -3,7 +3,6 @@
  *
  * Created on May 17, 2008, 9:49 PM
  */
-
 package org.cashforward.ui.payment;
 
 import ca.odell.glazedlists.EventList;
@@ -22,72 +21,88 @@ import org.cashforward.model.Payment;
 public class PaymentDetailPanel extends javax.swing.JPanel {
 
     Payment payment;
-    EventList<Payee> payees;
-    
-    
+
     /** Creates new form PaymentDetailPanel */
     public PaymentDetailPanel() {
         initComponents();
     }
-    
-    public void setPayees(EventList<Payee>payees){
+
+    public void setPayees(EventList<Payee> payees) {
         payeeCombo.setModel(new EventListComboBoxModel(payees));
     }
 
-    public void setLabels(EventList<Label>labels){
-        
+    public void setLabels(EventList<Label> labels) {
+        this.labelList.setModel(new EventListComboBoxModel(labels));
     }
-    
-    public void setOccurences(List<Label>occurences){
-        
+
+    public void setOccurences(List<Label> occurences) {
     }
-     
+
     public void setPayment(Payment payment) {
-       this.payment = payment;
-       descriptionText.setText(payment.getDescription());
-       paymentAmountCombo.getCalculator().setDisplayText(
-               Float.toString(payment.getAmount()));
-       payeeCombo.setEditable(true);
-       payeeCombo.setSelectedItem(payment.getPayee());
-       paymentDateChooser.setDate(payment.getStartDate());
+        this.payment = payment;
+        descriptionText.setText(payment.getDescription());
+        paymentAmountCombo.getCalculator().setDisplayText(
+                Float.toString(payment.getAmount()));
+        payeeCombo.setEditable(true);
+        payeeCombo.setSelectedItem(payment.getPayee());
+        paymentDateChooser.setDate(payment.getStartDate());
+        labelList.setSelectedObjects(payment.getLabels().toArray());
     }
-    
-    public Payment getPayment(){
+
+    public Payment getPayment() {
         //set up the payment
-       payment.setDescription(descriptionText.getText());
-       payment.setAmount(Float.parseFloat(
-               paymentAmountCombo.getCalculator().getDisplayText()));
-       
-       payment.setPayee((Payee) payeeCombo.getSelectedItem());
-       payment.setStartDate(paymentDateChooser.getDate());
-       return this.payment;
+        payment.setDescription(descriptionText.getText());
+        payment.setAmount(Float.parseFloat(
+                paymentAmountCombo.getCalculator().getDisplayText()));
+
+        //set payee
+        Object payee = payeeCombo.getSelectedItem();
+        if (payee instanceof String) {
+            payee = new Payee(payee.toString());
+        }
+        payment.setPayee((Payee) payee);
+
+        //set label
+        Object[] selectedLabels = labelList.getSelectedObjects();
+        for (int i = 0; i < selectedLabels.length; i++) {
+            if (selectedLabels[i] instanceof Label)
+                payment.addLabel((Label) selectedLabels[i]);
+            else 
+                payment.addLabel(new Label((String)selectedLabels[i]));
+        }
+
+
+        payment.setStartDate(paymentDateChooser.getDate());
+        return this.payment;
     }
-    
-    private class EventListComboBoxModel extends DefaultComboBoxModel{
+
+    private class EventListComboBoxModel extends DefaultComboBoxModel {
+
         EventList source;
-        public EventListComboBoxModel(EventList source){
+
+        public EventListComboBoxModel(EventList source) {
             super();
             this.source = source;
-            source.addListEventListener(new ListEventListener<Payee> () {
+            source.addListEventListener(new ListEventListener<Payee>() {
+
                 public void listChanged(ListEvent<Payee> arg0) {
                     EventListComboBoxModel.this.fireContentsChanged(
-                            EventListComboBoxModel.this, 0, 0);
+                            EventListComboBoxModel.this, -1, -1);
                 }
             });
         }
-        
+
         public Object getElementAt(int index) {
             Object retValue;
             retValue = source.get(index);
             return retValue;
         }
-        
+
         public int getSize() {
             int retValue;
             retValue = source.size();
             return retValue;
         }
-        
     }
 
     /** This method is called from within the constructor to
@@ -100,34 +115,22 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        paymentAmountCombo = new com.jidesoft.combobox.CalculatorComboBox();
+        jLabel2 = new javax.swing.JLabel();
+        descriptionText = new javax.swing.JTextField();
+        payeeCombo = new com.jidesoft.swing.AutoCompletionComboBox();
+        paymentDateChooser = new com.jidesoft.combobox.DateComboBox();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        paymentAmountCombo = new com.jidesoft.combobox.CalculatorComboBox();
-        paymentDateChooser = new com.jidesoft.combobox.DateComboBox();
-        payeeCombo = new com.jidesoft.swing.AutoCompletionComboBox();
-        jXTitledSeparator1 = new org.jdesktop.swingx.JXTitledSeparator();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        checkBoxList1 = new com.jidesoft.swing.CheckBoxList();
-        descriptionText = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        labelList = new com.jidesoft.combobox.CheckBoxListComboBox();
+        jLabel4 = new javax.swing.JLabel();
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Payment Detail"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jPanel1.border.title"))); // NOI18N
 
-        jLabel3.setText(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jLabel3.text")); // NOI18N
-
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jLabel1.text")); // NOI18N
+        paymentAmountCombo.setPreferredSize(new java.awt.Dimension(119, 20));
 
         jLabel2.setText(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jLabel2.text")); // NOI18N
-
-        jXTitledSeparator1.setTitle(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jXTitledSeparator1.title")); // NOI18N
-
-        checkBoxList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(checkBoxList1);
 
         descriptionText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,62 +138,64 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
             }
         });
 
+        payeeCombo.setStrict(false);
+
+        paymentDateChooser.setPreferredSize(new java.awt.Dimension(92, 20));
+
+        jLabel3.setText(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jLabel3.text")); // NOI18N
+
+        jLabel1.setText(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jLabel1.text")); // NOI18N
+
         jLabel5.setText(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jLabel5.text")); // NOI18N
+
+        labelList.setPreferredSize(new java.awt.Dimension(119, 20));
+
+        jLabel4.setText(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jLabel4.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(descriptionText, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-                            .addComponent(payeeCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelList, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                    .addComponent(descriptionText, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(paymentDateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(paymentDateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
-                            .addComponent(paymentAmountCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jXTitledSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)))
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(paymentAmountCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))
+                    .addComponent(payeeCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(paymentAmountCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(paymentDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(payeeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(paymentDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(descriptionText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(paymentAmountCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jXTitledSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(payeeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(descriptionText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -205,7 +210,7 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -215,21 +220,17 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
 private void descriptionTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_descriptionTextActionPerformed
 // TODO add your handling code here:
 }//GEN-LAST:event_descriptionTextActionPerformed
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.jidesoft.swing.CheckBoxList checkBoxList1;
     private javax.swing.JTextField descriptionText;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private org.jdesktop.swingx.JXTitledSeparator jXTitledSeparator1;
+    private com.jidesoft.combobox.CheckBoxListComboBox labelList;
     private com.jidesoft.swing.AutoCompletionComboBox payeeCombo;
     private com.jidesoft.combobox.CalculatorComboBox paymentAmountCombo;
     private com.jidesoft.combobox.DateComboBox paymentDateChooser;
     // End of variables declaration//GEN-END:variables
-
 }

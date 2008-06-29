@@ -9,12 +9,11 @@ import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.SortedList;
-import ca.odell.glazedlists.event.ListEvent;
-import ca.odell.glazedlists.event.ListEventListener;
 import ca.odell.glazedlists.gui.AdvancedTableFormat;
 import ca.odell.glazedlists.gui.WritableTableFormat;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 import ca.odell.glazedlists.swing.EventTableModel;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import javax.swing.event.ListSelectionEvent;
@@ -22,6 +21,9 @@ import javax.swing.event.ListSelectionListener;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
 import org.cashforward.ui.UIContext;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 
 /**
@@ -39,9 +41,28 @@ public class PaymentListPanel extends TopComponent {
     private EventTableModel tableModel;
     private EventSelectionModel selectionModel;
     
+    private Lookup.Result paymentNotifier =
+            UIContext.getDefault().lookupResult(Payment.class);
+    
     /** Creates new form PaymentListPanel */
     public PaymentListPanel() {
         initComponents();
+        
+        paymentNotifier.addLookupListener(new LookupListener() {
+            public void resultChanged(LookupEvent event) {
+                Lookup.Result r = (Lookup.Result) event.getSource();
+                Collection c = r.allInstances();
+                if (!c.isEmpty()) {
+                    Payment payment = (Payment) c.iterator().next();
+                    int index = payments.indexOf(payment);
+                    System.out.println(index);
+                    if (!selectionModel.getValueIsAdjusting()) {
+                        paymentTable.scrollRowToVisible(index);
+                        selectionModel.setSelectionInterval(index,index);
+                    }
+                }      
+            }
+        });
     }
 
     public void setPayments(final EventList payments) {
@@ -62,8 +83,8 @@ public class PaymentListPanel extends TopComponent {
                 new ListSelectionListener() {
 
                     public void valueChanged(ListSelectionEvent e) {
-                        if (e.getValueIsAdjusting() ||
-                                payments.size() >
+                        if (e.getValueIsAdjusting() || paymentTable.getSelectedRow() < 0 ||
+                                payments.size() <
                                 paymentTable.getSelectedRow() 
                                 ) {
                             return;
@@ -74,17 +95,15 @@ public class PaymentListPanel extends TopComponent {
                         UIContext.getDefault().setPayment(payment);
                     }
          });
-         
+         /* NOT NEEDED?
          payments.addListEventListener(new ListEventListener() {
 
             public void listChanged(ListEvent event) {
-                System.out.println("i detect somthing..");
+                System.out.println("i detect somthing.." + event);
                 tableModel.fireTableDataChanged();
             }
         });
-        
-        payments.add(new Payment());
-
+        */
     }
     
     private float getBalance(int toIndex){
@@ -108,23 +127,10 @@ public class PaymentListPanel extends TopComponent {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        paymentTable = new javax.swing.JTable();
         btnCurrent = new javax.swing.JToggleButton();
         btnScheduled = new javax.swing.JToggleButton();
-
-        paymentTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(paymentTable);
+        jScrollPane1 = new javax.swing.JScrollPane();
+        paymentTable = new com.jidesoft.grid.SortableTable();
 
         buttonGroup1.add(btnCurrent);
         btnCurrent.setText(org.openide.util.NbBundle.getMessage(PaymentListPanel.class, "PaymentListPanel.btnCurrent.text_2")); // NOI18N
@@ -142,27 +148,28 @@ public class PaymentListPanel extends TopComponent {
             }
         });
 
+        jScrollPane1.setViewportView(paymentTable);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(234, Short.MAX_VALUE)
+                .addContainerGap(306, Short.MAX_VALUE)
                 .addComponent(btnScheduled)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCurrent)
                 .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCurrent)
                     .addComponent(btnScheduled))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -179,7 +186,7 @@ private void btnCurrentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JToggleButton btnScheduled;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable paymentTable;
+    private com.jidesoft.grid.SortableTable paymentTable;
     // End of variables declaration//GEN-END:variables
     class PaymentComparator implements Comparator {
 
@@ -214,7 +221,6 @@ private void btnCurrentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         
         public Object getColumnValue(Object baseObject, int column) {
             Payment payment = (Payment)baseObject;
-            System.out.println("index of object:"+payments.indexOf(baseObject));
             if (payment == null)
                 return null;
             

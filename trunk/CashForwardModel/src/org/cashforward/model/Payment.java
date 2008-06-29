@@ -52,7 +52,11 @@ import org.cashforward.model.Payment.Occurence;
         query = "SELECT p FROM Payment p WHERE p.occurence = :occurence")})
     
 public class Payment implements Serializable {
-            
+
+    public void setOccurence(Occurence NONE) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
     public enum Occurence {
         NONE(-1,-1),
         ONCE(0,Calendar.DAY_OF_YEAR),
@@ -227,6 +231,10 @@ public class Payment implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public boolean isScheduled() {
+        return Occurence.valueOf(occurence) != Occurence.NONE;
     }
 
     @Override

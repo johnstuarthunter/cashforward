@@ -5,6 +5,7 @@
 
 package org.cashforward.service;
 
+import org.cashforward.model.Label;
 import org.cashforward.model.PaymentSearchCriteria;
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,8 +81,38 @@ public class PaymentService {
         return persistenceService.removePayment(oldPayment);
     }
     
+    public Payment enterNextPayment(Payment scheduledPayment) throws Exception {
+        Payment newPayment = new Payment(scheduledPayment.getAmount(), 
+                scheduledPayment.getPayee(), scheduledPayment.getStartDate());
+        newPayment.setOccurence(Payment.Occurence.NONE.name());
+        newPayment.setEndDate(newPayment.getStartDate());
+        
+        if (persistenceService.addOrUpdatePayment(newPayment)){
+            scheduledPayment.setStartDate(
+                    paymentCalculator.getNextPaymentDate(scheduledPayment, 
+                    new Date()));
+            persistenceService.addOrUpdatePayment(scheduledPayment);
+                
+        }
+        
+        return newPayment;
+        
+    }
+    
+    public boolean skipNextPayment(Payment scheduledPayment) throws Exception {
+            scheduledPayment.setStartDate(
+                    paymentCalculator.getNextPaymentDate(scheduledPayment, 
+                    new Date()));
+            return persistenceService.addOrUpdatePayment(scheduledPayment);
+        
+    }
+    
     public List<Payee> getPayees() throws Exception {
         return persistenceService.getPayees();
+    }
+    
+    public List<Label> getLabels() throws Exception {
+        return persistenceService.getLabels();
     }
     
 }

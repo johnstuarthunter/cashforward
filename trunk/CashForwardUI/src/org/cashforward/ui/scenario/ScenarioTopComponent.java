@@ -5,7 +5,10 @@
 
 package org.cashforward.ui.scenario;
 
+import org.cashforward.ui.UIContext;
+import ca.odell.glazedlists.EventList;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.logging.Logger;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
@@ -28,6 +31,9 @@ final class ScenarioTopComponent extends TopComponent {
         setName(NbBundle.getMessage(ScenarioTopComponent.class, "CTL_ScenarioTopComponent"));
         setToolTipText(NbBundle.getMessage(ScenarioTopComponent.class, "HINT_ScenarioTopComponent"));
 //        setIcon(Utilities.loadImage(ICON_PATH, true));
+    
+        EventList payments = UIContext.getDefault().getCurrentPayments();
+        scenarioPanel.setPayments(null, new Date(), payments);
     }
 
     /** This method is called from within the constructor to
@@ -38,20 +44,23 @@ final class ScenarioTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        scenarioPanel = new org.cashforward.ui.scenario.ScenarioPanel();
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(scenarioPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(scenarioPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.cashforward.ui.scenario.ScenarioPanel scenarioPanel;
     // End of variables declaration//GEN-END:variables
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,

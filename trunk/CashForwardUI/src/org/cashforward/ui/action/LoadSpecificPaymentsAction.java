@@ -5,6 +5,7 @@
 
 package org.cashforward.ui.action;
 
+import ca.odell.glazedlists.EventList;
 import java.awt.event.ActionEvent;
 import java.util.Calendar;
 import java.util.List;
@@ -30,7 +31,7 @@ public class LoadSpecificPaymentsAction extends AbstractAction {
         if (serviceAdapter == null)
             serviceAdapter = new PaymentServiceAdapter();
         
-        List<Payment> paymentList =
+       EventList<Payment> paymentList =
                 UIContext.getDefault().getCurrentPayments();
                 
         Calendar start = Calendar.getInstance();
@@ -47,8 +48,10 @@ public class LoadSpecificPaymentsAction extends AbstractAction {
         criteria.setDateEnd(end.getTime());
         
         List allPayments = serviceAdapter.getPayments(criteria);
+        paymentList.getReadWriteLock().writeLock().lock();
         paymentList.clear();
         paymentList.addAll(allPayments);
+        paymentList.getReadWriteLock().writeLock().unlock();
 
     }
     

@@ -5,6 +5,7 @@
 
 package org.cashforward.ui.action;
 
+import ca.odell.glazedlists.EventList;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -31,12 +32,14 @@ public class LoadScheduledPaymentsAction extends AbstractAction {
         if (serviceAdapter == null)
             serviceAdapter = new PaymentServiceAdapter();
         
-        List<Payment> paymentList = 
+        EventList<Payment> paymentList = 
                 UIContext.getDefault().getScheduledPayments();
         
         List allPayments = serviceAdapter.getScheduledPayments();
+        paymentList.getReadWriteLock().writeLock().lock();
         paymentList.clear();
         paymentList.addAll(allPayments);
+        paymentList.getReadWriteLock().writeLock().unlock();
         
         UIContext.getDefault().setPaymentOccurence(Payment.Occurence.ONCE);
     }

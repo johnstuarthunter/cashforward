@@ -76,6 +76,7 @@ public class PaymentServiceTest {
         criteria.setDateStart(start.getTime());
         criteria.setDateEnd(end.getTime());
         
+        
         PaymentService instance = new PaymentService();
         List<Payment> result = instance.getPayments(criteria);
         assertTrue("calculator is working", result.size() > 0);

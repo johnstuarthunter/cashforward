@@ -79,7 +79,7 @@ public class Label implements Serializable {
 
     @Override
     public String toString() {
-        return "cashfxpersistence.Label[id=" + id + "]";
+        return name;//"cashfxpersistence.Label[id=" + id + "]";
     }
 
 }
