@@ -116,7 +116,7 @@ public class PersistenceServiceTest {
             
             Label updatedLabel = pservice.getLabelByID(label.getId());
             assertEquals(label.getName(), updatedLabel.getName());
-            
+            System.out.println(label);
         } catch (Exception ex) {
             Logger.getLogger(PersistenceServiceTest.class.getName()).log(Level.SEVERE, null, ex);
         }

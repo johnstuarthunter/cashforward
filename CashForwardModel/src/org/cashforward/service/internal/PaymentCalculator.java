@@ -68,6 +68,28 @@ public class PaymentCalculator {
         return payments;
 
     }
+    
+    public Date getNextPaymentDate(Payment payment, Date start){
+        Date paymentStart = payment.getStartDate();
+        Date nextPaymentDate = null;
+
+        Occurence occurence = Occurence.valueOf(payment.getOccurence());
+        int offsetStart = DateUtilities.daysBetween(start,paymentStart);
+        System.out.println("offsetStart:"+offsetStart);
+        if (offsetStart > -1 )
+            nextPaymentDate = paymentStart;
+        else if (occurence != Occurence.ONCE)
+            nextPaymentDate = 
+                    DateUtilities.getDateAfterPeriod(start, 
+                        occurence.period(), offsetStart % occurence.unit());
+                            
+        if (occurence != Occurence.ONCE)
+                    nextPaymentDate = 
+                        DateUtilities.getDateAfterPeriod(nextPaymentDate,
+                            occurence.period(), occurence.unit());
+        
+        return nextPaymentDate;
+    }
 
     private Payment createPayment(Payment base, Date nextDate) {
         Payment newPayment = null;

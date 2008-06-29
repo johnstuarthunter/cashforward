@@ -30,10 +30,37 @@ public class PaymentServiceAdapter {
             return false;
         }
     }
+    
+    public Payment enterNextPayment(Payment scheduledPayment) {
+        try {
+            return paymentService.enterNextPayment(scheduledPayment);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public boolean skipNextPayment(Payment scheduledPayment) {
+        try {
+            return paymentService.skipNextPayment(scheduledPayment);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public List getPayees() {
        try {
             return paymentService.getPayees();
+        } catch (Exception e) {
+        }
+        
+        return null;
+    }
+    
+    public List getLabels() {
+       try {
+            return paymentService.getLabels();
         } catch (Exception e) {
         }
         

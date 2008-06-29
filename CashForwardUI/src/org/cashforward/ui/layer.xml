@@ -3,7 +3,9 @@
 <filesystem>
     <folder name="Actions">
         <folder name="Payment">
+            <file name="org-cashforward-ui-action-EnterScheduledPaymentAction.instance"/>
             <file name="org-cashforward-ui-action-NewPaymentAction.instance"/>
+            <file name="org-cashforward-ui-action-SkipScheduledPaymentAction.instance"/>
         </folder>
         <folder name="Window">
             <file name="org-cashforward-ui-payment-PaymentAction.instance"/>
@@ -26,9 +28,17 @@
     </folder>
     <folder name="Toolbars">
         <folder name="File">
+            <file name="org-cashforward-ui-action-EnterScheduledPaymentAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Payment/org-cashforward-ui-action-EnterScheduledPaymentAction.instance"/>
+                <attr name="position" intvalue="200"/>
+            </file>
             <file name="org-cashforward-ui-action-NewPaymentAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Payment/org-cashforward-ui-action-NewPaymentAction.instance"/>
                 <attr name="position" intvalue="300"/>
+            </file>
+            <file name="org-cashforward-ui-action-SkipScheduledPaymentAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Payment/org-cashforward-ui-action-SkipScheduledPaymentAction.instance"/>
+                <attr name="position" intvalue="100"/>
             </file>
         </folder>
     </folder>
