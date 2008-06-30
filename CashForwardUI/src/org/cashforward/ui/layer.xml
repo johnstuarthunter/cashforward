@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
 <filesystem>
+    <attr name="Actions\Edit\position" intvalue="200"/>
+    <attr name="Actions\Help\position" intvalue="300"/>
+    <attr name="Actions\Other\position" intvalue="400"/>
+    <attr name="Actions\System\position" intvalue="500"/>
+    <attr name="Actions\Tools\position" intvalue="600"/>
+    <attr name="Actions\View\position" intvalue="700"/>
     <folder name="Actions">
         <folder name="Payment">
+            <attr name="position" intvalue="100"/>
             <file name="org-cashforward-ui-action-EnterScheduledPaymentAction.instance"/>
             <file name="org-cashforward-ui-action-NewPaymentAction.instance"/>
             <file name="org-cashforward-ui-action-SkipScheduledPaymentAction.instance"/>
         </folder>
         <folder name="Window">
+            <attr name="position" intvalue="800"/>
             <file name="org-cashforward-ui-payment-PaymentAction.instance"/>
             <file name="org-cashforward-ui-scenario-ScenarioAction.instance"/>
             <file name="org-cashforward-ui-task-TaskAction.instance"/>
         </folder>
     </folder>
     <folder name="Menu">
+        <file name="GoTo_hidden"/>
+        <folder name="Tools">
+            <file name="Separator1.instance_hidden"/>
+            <file name="Separator2.instance_hidden"/>
+            <file name="Separator3.instance_hidden"/>
+        </folder>
+        <file name="View_hidden"/>
         <folder name="Window">
+            <file name="Output_hidden"/>
             <file name="PaymentAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/org-cashforward-ui-payment-PaymentAction.instance"/>
             </file>
@@ -24,7 +40,12 @@
             <file name="TaskAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/org-cashforward-ui-task-TaskAction.instance"/>
             </file>
+            <file name="org-netbeans-core-actions-GlobalPropertiesAction.shadow_hidden"/>
         </folder>
+    </folder>
+    <folder name="OptionsDialog">
+        <file name="Advanced.instance_hidden"/>
+        <file name="Advanced_hidden"/>
     </folder>
     <folder name="Toolbars">
         <folder name="File">

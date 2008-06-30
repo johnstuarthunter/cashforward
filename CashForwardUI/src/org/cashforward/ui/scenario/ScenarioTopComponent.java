@@ -5,11 +5,18 @@
 
 package org.cashforward.ui.scenario;
 
-import org.cashforward.ui.UIContext;
+import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
+import org.cashforward.ui.UIContext;
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Collection;
 import java.util.logging.Logger;
+import org.cashforward.model.Payment;
+import org.cashforward.model.PaymentSearchCriteria;
+import org.cashforward.ui.adapter.PaymentServiceAdapter;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -24,6 +31,11 @@ final class ScenarioTopComponent extends TopComponent {
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
 
+    Lookup.Result filterNotifier =
+            UIContext.getDefault().lookupResult(PaymentSearchCriteria.class);    
+    PaymentSearchCriteria paymentFilter =
+            UIContext.getDefault().getPaymentFilter();
+    
     private static final String PREFERRED_ID = "ScenarioTopComponent";
 
     private ScenarioTopComponent() {
@@ -32,8 +44,31 @@ final class ScenarioTopComponent extends TopComponent {
         setToolTipText(NbBundle.getMessage(ScenarioTopComponent.class, "HINT_ScenarioTopComponent"));
 //        setIcon(Utilities.loadImage(ICON_PATH, true));
     
-        EventList payments = UIContext.getDefault().getCurrentPayments();
-        scenarioPanel.setPayments(null, new Date(), payments);
+        PaymentServiceAdapter service = new PaymentServiceAdapter();
+        PaymentSearchCriteria filter = 
+                UIContext.getDefault().getPaymentFilter();
+        EventList<Payment> payments = new BasicEventList();
+        payments.addAll(service.getPayments(filter));
+        scenarioPanel.setPayments(payments);
+        scenarioPanel.setPaymentFilter(paymentFilter);
+         filterNotifier.addLookupListener(new LookupListener() {
+
+            public void resultChanged(LookupEvent event) {
+                Lookup.Result r = (Lookup.Result) event.getSource();
+                Collection c = r.allInstances();
+                if (!c.isEmpty()) {
+                    PaymentSearchCriteria filter = 
+                            (PaymentSearchCriteria) c.iterator().next();
+                    //now what? set dates? only if non-null 
+                    if (filter.getDateEnd() != null){
+                       ScenarioTopComponent.this.
+                               scenarioPanel.setPaymentFilter(paymentFilter);
+                    }
+                    
+                }
+            }
+        });
+        
     }
 
     /** This method is called from within the constructor to
@@ -50,11 +85,11 @@ final class ScenarioTopComponent extends TopComponent {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scenarioPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+            .addComponent(scenarioPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scenarioPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(scenarioPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
