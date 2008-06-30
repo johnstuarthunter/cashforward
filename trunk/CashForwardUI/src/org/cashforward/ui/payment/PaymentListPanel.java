@@ -13,11 +13,18 @@ import ca.odell.glazedlists.gui.AdvancedTableFormat;
 import ca.odell.glazedlists.gui.WritableTableFormat;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 import ca.odell.glazedlists.swing.EventTableModel;
+import ca.odell.glazedlists.swing.TableComparatorChooser;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
+import javax.swing.JLabel;
+import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
 import org.cashforward.ui.UIContext;
@@ -32,12 +39,18 @@ import org.openide.windows.TopComponent;
  */
 public class PaymentListPanel extends TopComponent {
 
-    //hook into the Lookup.Result and get
-    //changes to the lists that way
+    //behavior
+    //scenario - cannot sort
+    //need to track payments along graph
+    
+    //current payments - sort by date
+    
+    //scheduled payments - sort by everything
+    //- hide balance
     
     private EventList<Payment> payments;
-    private SortedList sortedItems;
-    private FilterList filteredList;
+    private SortedList<Payment> sortedItems;
+    private FilterList<Payment> filteredList;
     private EventTableModel tableModel;
     private EventSelectionModel selectionModel;
     
@@ -54,10 +67,11 @@ public class PaymentListPanel extends TopComponent {
                 Collection c = r.allInstances();
                 if (!c.isEmpty()) {
                     Payment payment = (Payment) c.iterator().next();
-                    int index = payments.indexOf(payment);
+                    int index = sortedItems.indexOf(payment);
                     System.out.println(index);
                     if (!selectionModel.getValueIsAdjusting()) {
-                        paymentTable.scrollRowToVisible(index);
+                        paymentTable.scrollRectToVisible(
+                                paymentTable.getCellRect(index, 0, true));
                         selectionModel.setSelectionInterval(index,index);
                     }
                 }      
@@ -76,21 +90,32 @@ public class PaymentListPanel extends TopComponent {
         //        matcherFactory.createMatcher(songs,this));
         
         selectionModel = new EventSelectionModel(sortedItems);
-        tableModel = new EventTableModel(payments, new PaymentTableFormat());
+        selectionModel.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
+        tableModel = new EventTableModel(sortedItems, new PaymentTableFormat());
         paymentTable.setModel(tableModel);
         paymentTable.setSelectionModel(selectionModel);
+        
+        PaymentCellRenderer pcr = new PaymentCellRenderer();
+        //paymentTable.getColumnModel().getColumn(0).setCellRenderer(pcr);
+        //paymentTable.getColumnModel().getColumn(1).setCellRenderer(pcr);
+        paymentTable.getColumnModel().getColumn(2).setCellRenderer(pcr);
+        paymentTable.getColumnModel().getColumn(3).setCellRenderer(pcr);
+        
+        TableComparatorChooser tableSorter = new
+                TableComparatorChooser(paymentTable, sortedItems, true);
+        
         paymentTable.getSelectionModel().addListSelectionListener(
                 new ListSelectionListener() {
 
                     public void valueChanged(ListSelectionEvent e) {
                         if (e.getValueIsAdjusting() || paymentTable.getSelectedRow() < 0 ||
-                                payments.size() <
+                                sortedItems.size() <
                                 paymentTable.getSelectedRow() 
                                 ) {
                             return;
                         } 
                         Payment payment = (Payment) 
-                                payments.get(paymentTable.getSelectedRow());
+                                sortedItems.get(paymentTable.getSelectedRow());
                         //content.set(Collections.singleton (payment), null);
                         UIContext.getDefault().setPayment(payment);
                     }
@@ -106,12 +131,16 @@ public class PaymentListPanel extends TopComponent {
         */
     }
     
+    JTable getTableComponent() {
+        return this.paymentTable;
+    }
+    
     private float getBalance(int toIndex){
         float balance = 0f;
         
         //int count = payments.size();
         for (int i = 0; i <= toIndex; i++) {
-            balance += payments.get(i).getAmount();
+            balance += sortedItems.get(i).getAmount();
         }
         
         return balance;
@@ -127,66 +156,41 @@ public class PaymentListPanel extends TopComponent {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        btnCurrent = new javax.swing.JToggleButton();
-        btnScheduled = new javax.swing.JToggleButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        paymentTable = new com.jidesoft.grid.SortableTable();
+        paymentTable = new javax.swing.JTable();
 
-        buttonGroup1.add(btnCurrent);
-        btnCurrent.setText(org.openide.util.NbBundle.getMessage(PaymentListPanel.class, "PaymentListPanel.btnCurrent.text_2")); // NOI18N
-        btnCurrent.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCurrentActionPerformed(evt);
+        paymentTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        });
-
-        buttonGroup1.add(btnScheduled);
-        btnScheduled.setText(org.openide.util.NbBundle.getMessage(PaymentListPanel.class, "PaymentListPanel.btnScheduled.text_3")); // NOI18N
-        btnScheduled.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnScheduledActionPerformed(evt);
-            }
-        });
-
+        ));
+        paymentTable.setIntercellSpacing(new java.awt.Dimension(0, 1));
+        paymentTable.setShowHorizontalLines(false);
+        paymentTable.setShowVerticalLines(false);
         jScrollPane1.setViewportView(paymentTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(306, Short.MAX_VALUE)
-                .addComponent(btnScheduled)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCurrent)
-                .addContainerGap())
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCurrent)
-                    .addComponent(btnScheduled))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
-private void btnScheduledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScheduledActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_btnScheduledActionPerformed
-
-private void btnCurrentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCurrentActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_btnCurrentActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton btnCurrent;
-    private javax.swing.JToggleButton btnScheduled;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JScrollPane jScrollPane1;
-    private com.jidesoft.grid.SortableTable paymentTable;
+    private javax.swing.JTable paymentTable;
     // End of variables declaration//GEN-END:variables
     class PaymentComparator implements Comparator {
 
@@ -202,6 +206,29 @@ private void btnCurrentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             else if (itemADate != null)
                  return itemBDate == null ? 1 : 0;
             return itemADate.compareTo(itemBDate);
+        }
+    }
+    
+    class DateComparator implements Comparator {
+
+        public int compare(Object a, Object b) {
+            Date itemADate = (Date) a;
+            Date itemBDate = (Date) b;
+            
+            //initially sort by date, earliest is more important
+            if (itemADate == null)
+                return itemBDate == null ? 0 : 1;
+            else if (itemADate != null)
+                 return itemBDate == null ? 1 : 0;
+            
+            return itemADate.compareTo(itemBDate);
+        }
+    }
+     
+    class AlwaysTheSameComparator implements Comparator {
+
+        public int compare(Object a, Object b) {
+            return 0;
         }
     }
 
@@ -237,7 +264,7 @@ private void btnCurrentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             else if (column == 2) return Float.valueOf(amount);
             
             else if (column == 3)
-                return getBalance(payments.indexOf(baseObject));
+                return getBalance(sortedItems.indexOf(baseObject));
             else
                 return "";
         }
@@ -245,32 +272,64 @@ private void btnCurrentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         public Class getColumnClass(int i) {
             if (i == 0)
                 return Date.class;
-            else if (i == 2)
+            else if (i == 2 || i == 3)
                 return Float.class;
-            else
+            else if (i == 4)
+                return Boolean.class;
+            else 
                 return String.class;
         }
         
         public Comparator getColumnComparator(int column) {
-            if (column == 0) return GlazedLists.booleanComparator();
+            if (column == 0) return GlazedLists.comparableComparator();
             else if (column == 1) return GlazedLists.caseInsensitiveComparator();
-            else if (column == 2) return GlazedLists.caseInsensitiveComparator();
+            else if (column == 2) return GlazedLists.comparableComparator();
             //else if (column == 3) return new AuctionItemCostComparator();
             //else if (column == 4) return new AuctionItemCostComparator();
             //else if (column == 5) return GlazedLists.comparableComparator();
             //else if (column == 6) return GlazedLists.comparableComparator();
-            else return GlazedLists.caseInsensitiveComparator();
+            else return new AlwaysTheSameComparator();
         }
         
         public boolean isEditable(Object o, int i) {
-            if (i == 0) return true;
-            else return false;
+            //if (i == 4) return true;
+            return false;
         }
         
         public Object setColumnValue(Object baseObject, Object editedObject, int i ) {
-            //if ( i == 0 )
+            //if ( i == 4 ){
+            //    System.out.println("show/hide detail");
+            //}
+              //fire the expand here?  
             //    ((AuctionItem)baseObject).setStarred( (Boolean)editedObject );
             return baseObject;
         }
     }
+    
+    class PaymentCellRenderer extends DefaultTableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component r =  super.getTableCellRendererComponent(
+                    table, value, isSelected, hasFocus, row, column);
+            JLabel newr = (JLabel)r;
+            Font f = newr.getFont();
+            newr.setHorizontalAlignment(JLabel.RIGHT);
+            
+            if (column == 3 || column == 4){
+                if ((Float)value < 0)
+                    newr.setForeground(Color.RED);
+                else
+                    newr.setForeground(Color.BLACK);
+            } 
+            if (column == 0){
+                Font newf = new Font(f.getName(),Font.BOLD,f.getStyle());
+                newr.setFont(newf);
+            }
+            
+            return newr;
+        }
+        
+    }
+    
 }

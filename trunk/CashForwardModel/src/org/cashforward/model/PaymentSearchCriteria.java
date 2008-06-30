@@ -59,4 +59,8 @@ public class PaymentSearchCriteria {
         this.labels = labels;
     }
     
+    public String toString(){
+        return "dateStart:" +dateStart + ";dateEnd:"+dateEnd;
+    }
+    
 }

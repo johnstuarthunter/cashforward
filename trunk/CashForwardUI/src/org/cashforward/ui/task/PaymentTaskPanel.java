@@ -55,7 +55,8 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
             }
         });
         
-        
+        //remember what was last selected? //should be an object
+        groupList1.setSelectedIndex(1);
 
     }
 

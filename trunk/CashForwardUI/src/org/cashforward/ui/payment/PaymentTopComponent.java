@@ -18,6 +18,13 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 import com.jidesoft.pane.CollapsiblePane;
 //import org.openide.util.Utilities;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 /**
  * Top component which displays something.
  */
@@ -41,8 +48,31 @@ final class PaymentTopComponent extends TopComponent {
         setToolTipText(NbBundle.getMessage(PaymentTopComponent.class, "HINT_PaymentTopComponent"));
 //        setIcon(Utilities.loadImage(ICON_PATH, true));
         
-        paymentDetailPanel.setPayees(UIContext.getDefault().getPayees());
-        paymentDetailPanel.setLabels(UIContext.getDefault().getLabels());
+        Icon icon = new ImageIcon(
+                PaymentListPanel.class.getResource(
+                    "/org/cashforward/ui/payment/info.GIF"));
+        JLabel infoLabel = new JLabel(icon);
+        paymentDetailContainer.setTitleComponent(infoLabel);
+        
+        final JTable paymentTable = paymentListPanel.getTableComponent();
+        paymentTable.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(MouseEvent e) {
+                if (paymentTable.columnAtPoint(e.getPoint()) == 4){
+                    try {
+                        if (PaymentTopComponent.this.paymentDetailContainer.isCollapsed())
+                            PaymentTopComponent.this.paymentDetailContainer.setCollapsed(false);
+                        else 
+                            PaymentTopComponent.this.paymentDetailContainer.setCollapsed(true);
+                    } catch (Exception ex) {ex.printStackTrace();/*who cares*/}
+                }
+            }
+
+        });
+        
+        
+        paymentCompositePanel.setPayees(UIContext.getDefault().getPayees());
+        paymentCompositePanel.setLabels(UIContext.getDefault().getLabels());
         
         filterNotifier.addLookupListener(new LookupListener() {
             public void resultChanged(LookupEvent event) {
@@ -63,7 +93,7 @@ final class PaymentTopComponent extends TopComponent {
         
         payeeNotifier.addLookupListener(new LookupListener() {
             public void resultChanged(LookupEvent arg0) {
-                paymentDetailPanel.setPayees(UIContext.getDefault().getPayees());
+                paymentCompositePanel.setPayees(UIContext.getDefault().getPayees());
             }
         });
         
@@ -74,7 +104,7 @@ final class PaymentTopComponent extends TopComponent {
                 Collection c = r.allInstances();
                 if (!c.isEmpty()) {
                     Payment payment = (Payment) c.iterator().next();
-                    paymentDetailPanel.setPayment(payment);
+                    paymentCompositePanel.setPayment(payment);
                 }                
             }
         });
@@ -89,65 +119,9 @@ final class PaymentTopComponent extends TopComponent {
     private void initComponents() {
 
         paymentListPanel = new org.cashforward.ui.payment.PaymentListPanel();
-        paymentScheduleForm = new org.cashforward.ui.payment.PaymentScheduleForm();
-        paymentComposite = new javax.swing.JPanel();
-        paymentDetailInnerContainer = new com.jidesoft.pane.CollapsiblePane();
-        scheduleDetailContainer = new com.jidesoft.pane.CollapsiblePane();
-        paymentDetailPanel = new org.cashforward.ui.payment.PaymentDetailPanel();
+        paymentCompositePanel = new org.cashforward.ui.payment.PaymentCompositePanel();
         paymentListContainer = new com.jidesoft.pane.CollapsiblePane();
         paymentDetailContainer = new com.jidesoft.pane.CollapsiblePane();
-
-        paymentDetailInnerContainer.setStyle(CollapsiblePane.PLAIN_STYLE);
-        paymentDetailInnerContainer.setTitle(org.openide.util.NbBundle.getMessage(PaymentTopComponent.class, "PaymentTopComponent.paymentDetailInnerContainer.title")); // NOI18N
-
-        javax.swing.GroupLayout paymentDetailInnerContainerLayout = new javax.swing.GroupLayout(paymentDetailInnerContainer.getContentPane());
-        paymentDetailInnerContainer.getContentPane().setLayout(paymentDetailInnerContainerLayout);
-        paymentDetailInnerContainerLayout.setHorizontalGroup(
-            paymentDetailInnerContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
-        );
-        paymentDetailInnerContainerLayout.setVerticalGroup(
-            paymentDetailInnerContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 116, Short.MAX_VALUE)
-        );
-
-        try {
-            scheduleDetailContainer.setCollapsed(true);
-        } catch (java.beans.PropertyVetoException e1) {
-            e1.printStackTrace();
-        }
-        scheduleDetailContainer.setStyle(CollapsiblePane.PLAIN_STYLE);
-
-        javax.swing.GroupLayout scheduleDetailContainerLayout = new javax.swing.GroupLayout(scheduleDetailContainer.getContentPane());
-        scheduleDetailContainer.getContentPane().setLayout(scheduleDetailContainerLayout);
-        scheduleDetailContainerLayout.setHorizontalGroup(
-            scheduleDetailContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
-        );
-        scheduleDetailContainerLayout.setVerticalGroup(
-            scheduleDetailContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        paymentDetailInnerContainer.setContentAreaFilled(true);
-        paymentDetailInnerContainer.setContentPane(paymentDetailPanel);
-        scheduleDetailContainer.setContentAreaFilled(true);
-        scheduleDetailContainer.setContentPane(paymentScheduleForm);
-
-        javax.swing.GroupLayout paymentCompositeLayout = new javax.swing.GroupLayout(paymentComposite);
-        paymentComposite.setLayout(paymentCompositeLayout);
-        paymentCompositeLayout.setHorizontalGroup(
-            paymentCompositeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(paymentDetailInnerContainer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(scheduleDetailContainer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        paymentCompositeLayout.setVerticalGroup(
-            paymentCompositeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(paymentCompositeLayout.createSequentialGroup()
-                .addComponent(paymentDetailInnerContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(scheduleDetailContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         paymentListContainer.setShowExpandButton(false);
         paymentListContainer.setShowTitleBar(false);
@@ -158,7 +132,7 @@ final class PaymentTopComponent extends TopComponent {
         paymentListContainer.getContentPane().setLayout(paymentListContainerLayout);
         paymentListContainerLayout.setHorizontalGroup(
             paymentListContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 255, Short.MAX_VALUE)
+            .addGap(0, 272, Short.MAX_VALUE)
         );
         paymentListContainerLayout.setVerticalGroup(
             paymentListContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -170,25 +144,26 @@ final class PaymentTopComponent extends TopComponent {
         } catch (java.beans.PropertyVetoException e1) {
             e1.printStackTrace();
         }
+        paymentDetailContainer.setShowExpandButton(false);
         paymentDetailContainer.setStyle(CollapsiblePane.PLAIN_STYLE);
-        paymentDetailContainer.setSlidingDirection(7);
+        paymentDetailContainer.setSlidingDirection(SwingConstants.WEST);
 
         javax.swing.GroupLayout paymentDetailContainerLayout = new javax.swing.GroupLayout(paymentDetailContainer.getContentPane());
         paymentDetailContainer.getContentPane().setLayout(paymentDetailContainerLayout);
         paymentDetailContainerLayout.setHorizontalGroup(
             paymentDetailContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 4, Short.MAX_VALUE)
         );
         paymentDetailContainerLayout.setVerticalGroup(
             paymentDetailContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 210, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         paymentListContainer.setSlidingDirection(CollapsiblePane.WEST);
         paymentListContainer.setContentPane(paymentListPanel);
         paymentListContainer.setContentAreaFilled(true);
-        paymentDetailContainer.setSlidingDirection(CollapsiblePane.WEST);
-        paymentDetailContainer.setContentPane(paymentComposite);
+        paymentDetailContainer.setSlidingDirection(SwingConstants.EAST);
+        paymentDetailContainer.setContentPane(paymentCompositePanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -208,14 +183,10 @@ final class PaymentTopComponent extends TopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel paymentComposite;
+    private org.cashforward.ui.payment.PaymentCompositePanel paymentCompositePanel;
     private com.jidesoft.pane.CollapsiblePane paymentDetailContainer;
-    private com.jidesoft.pane.CollapsiblePane paymentDetailInnerContainer;
-    private org.cashforward.ui.payment.PaymentDetailPanel paymentDetailPanel;
     private com.jidesoft.pane.CollapsiblePane paymentListContainer;
     private org.cashforward.ui.payment.PaymentListPanel paymentListPanel;
-    private org.cashforward.ui.payment.PaymentScheduleForm paymentScheduleForm;
-    private com.jidesoft.pane.CollapsiblePane scheduleDetailContainer;
     // End of variables declaration//GEN-END:variables
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,

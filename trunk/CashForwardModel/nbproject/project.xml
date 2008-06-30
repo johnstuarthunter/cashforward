@@ -55,6 +55,7 @@
             <public-packages>
                 <package>org.cashforward.model</package>
                 <package>org.cashforward.service</package>
+                <package>org.cashforward.util</package>
             </public-packages>
         </data>
     </configuration>
