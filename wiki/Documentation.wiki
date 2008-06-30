@@ -1,0 +1,10 @@
+CashForward Documentation Central
+
+= CashForward Users =
+
+This is a placeholder for user documentation
+
+
+= CashForward Developers =
+
+This is a placeholder for developer documentation
