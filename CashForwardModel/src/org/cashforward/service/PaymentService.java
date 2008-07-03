@@ -70,6 +70,9 @@ public class PaymentService {
             allPayments.addAll(newPayments);
         }
         
+        //now add current for now
+        allPayments.addAll(persistenceService.getPayments(criteria));
+        
         return allPayments;
     }
     

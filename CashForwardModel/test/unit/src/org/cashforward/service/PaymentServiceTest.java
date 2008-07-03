@@ -5,6 +5,7 @@
 
 package org.cashforward.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import org.cashforward.model.Payment;
@@ -65,12 +66,10 @@ public class PaymentServiceTest {
     public void testGetPayments() throws Exception {
         System.out.println("getPayments");
         Calendar start = Calendar.getInstance();
-        start.set(Calendar.MONTH, Calendar.MAY);
-        start.set(Calendar.DAY_OF_MONTH, 1);
+        start.set(Calendar.DAY_OF_YEAR, start.getMinimum(Calendar.DAY_OF_YEAR));
         
         Calendar end = Calendar.getInstance();
-        end.set(Calendar.MONTH, Calendar.DECEMBER);
-        end.set(Calendar.DAY_OF_MONTH, 1);
+        end.set(Calendar.DAY_OF_YEAR, start.getMaximum(Calendar.DAY_OF_YEAR));
         
         PaymentSearchCriteria criteria = new PaymentSearchCriteria();
         criteria.setDateStart(start.getTime());
@@ -92,29 +91,12 @@ public class PaymentServiceTest {
      */
     @Test
     public void testAddOrUpdatePayment() throws Exception {
-        System.out.println("addOrUpdatePayment");
-        Payment newPayment = null;
-        PaymentService instance = new PaymentService();
-        boolean expResult = false;
-        boolean result = instance.addOrUpdatePayment(newPayment);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-
     /**
      * Test of removePayment method, of class PaymentService.
      */
     @Test
     public void testRemovePayment() throws Exception {
-        System.out.println("removePayment");
-        Payment oldPayment = null;
-        PaymentService instance = new PaymentService();
-        boolean expResult = false;
-        boolean result = instance.removePayment(oldPayment);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
 }

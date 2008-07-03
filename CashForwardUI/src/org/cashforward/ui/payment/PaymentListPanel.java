@@ -42,107 +42,112 @@ public class PaymentListPanel extends TopComponent {
     //behavior
     //scenario - cannot sort
     //need to track payments along graph
-    
     //current payments - sort by date
-    
     //scheduled payments - sort by everything
     //- hide balance
-    
     private EventList<Payment> payments;
     private SortedList<Payment> sortedItems;
     private FilterList<Payment> filteredList;
     private EventTableModel tableModel;
     private EventSelectionModel selectionModel;
-    
     private Lookup.Result paymentNotifier =
             UIContext.getDefault().lookupResult(Payment.class);
-    
+    protected static final Color BACKGROUND1 = new Color(253, 253, 244);
+    protected static final Color BACKGROUND2 = new Color(230, 230, 255);
+    protected static final Color BACKGROUND3 = new Color(210, 255, 210);
+
+    protected static final Color FOREGROUND1 = new Color(0, 0, 10);
+
+    protected static final Color BACKGROUND4 = new Color(0, 128, 0);
+    protected static final Color FOREGROUND4 = new Color(255, 255, 255);
+
     /** Creates new form PaymentListPanel */
     public PaymentListPanel() {
         initComponents();
-        
+
         paymentNotifier.addLookupListener(new LookupListener() {
+
             public void resultChanged(LookupEvent event) {
                 Lookup.Result r = (Lookup.Result) event.getSource();
                 Collection c = r.allInstances();
                 if (!c.isEmpty()) {
                     Payment payment = (Payment) c.iterator().next();
                     int index = sortedItems.indexOf(payment);
-                    System.out.println(index);
+                    //System.out.println(index);
                     if (!selectionModel.getValueIsAdjusting()) {
                         paymentTable.scrollRectToVisible(
                                 paymentTable.getCellRect(index, 0, true));
-                        selectionModel.setSelectionInterval(index,index);
+                        selectionModel.setSelectionInterval(index, index);
                     }
-                }      
+                }
             }
         });
     }
 
     public void setPayments(final EventList payments) {
         this.payments = payments;
-        
+
         //set up model
         sortedItems =
                 new SortedList(payments, new PaymentComparator());
 
         //filteredList = new FilterList(sortedItems,
         //        matcherFactory.createMatcher(songs,this));
-        
+
         selectionModel = new EventSelectionModel(sortedItems);
         selectionModel.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
         tableModel = new EventTableModel(sortedItems, new PaymentTableFormat());
         paymentTable.setModel(tableModel);
         paymentTable.setSelectionModel(selectionModel);
-        
+
         PaymentCellRenderer pcr = new PaymentCellRenderer();
         //paymentTable.getColumnModel().getColumn(0).setCellRenderer(pcr);
         //paymentTable.getColumnModel().getColumn(1).setCellRenderer(pcr);
         paymentTable.getColumnModel().getColumn(2).setCellRenderer(pcr);
         paymentTable.getColumnModel().getColumn(3).setCellRenderer(pcr);
-        
-        TableComparatorChooser tableSorter = new
-                TableComparatorChooser(paymentTable, sortedItems, true);
-        
+
+        TableComparatorChooser tableSorter = new TableComparatorChooser(paymentTable, sortedItems, true);
+
         paymentTable.getSelectionModel().addListSelectionListener(
                 new ListSelectionListener() {
 
                     public void valueChanged(ListSelectionEvent e) {
-                        if (e.getValueIsAdjusting() || paymentTable.getSelectedRow() < 0 ||
-                                sortedItems.size() <
-                                paymentTable.getSelectedRow() 
-                                ) {
+                        if (e.getValueIsAdjusting()) {
                             return;
-                        } 
-                        Payment payment = (Payment) 
-                                sortedItems.get(paymentTable.getSelectedRow());
+                        } else if (paymentTable.getSelectedRow() < 0 ||
+                                sortedItems.size() <
+                                paymentTable.getSelectedRow()) {
+                            UIContext.getDefault().clearPayment();
+                            return;
+                        }
+                        Payment payment = (Payment) sortedItems.get(paymentTable.getSelectedRow());
                         //content.set(Collections.singleton (payment), null);
                         UIContext.getDefault().setPayment(payment);
                     }
-         });
-         /* NOT NEEDED?
-         payments.addListEventListener(new ListEventListener() {
-
-            public void listChanged(ListEvent event) {
-                System.out.println("i detect somthing.." + event);
-                tableModel.fireTableDataChanged();
-            }
-        });
-        */
-    }
+                });
+    /* NOT NEEDED?
+    payments.addListEventListener(new ListEventListener() {
     
+    public void listChanged(ListEvent event) {
+    System.out.println("i detect somthing.." + event);
+    tableModel.fireTableDataChanged();
+    }
+    });
+     */
+    }
+
     JTable getTableComponent() {
         return this.paymentTable;
     }
-    
-    private float getBalance(int toIndex){
+
+    private float getBalance(int toIndex) {
         float balance = 0f;
-        
+
         //int count = payments.size();
         for (int i = 0; i <= toIndex; i++) {
             balance += sortedItems.get(i).getAmount();
         }
-        
+
         return balance;
     }
 
@@ -155,9 +160,11 @@ public class PaymentListPanel extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
+        rowStripeCellStyleProvider1 = new com.jidesoft.grid.RowStripeCellStyleProvider();
         jScrollPane1 = new javax.swing.JScrollPane();
-        paymentTable = new javax.swing.JTable();
+        paymentTable = new com.jidesoft.grid.CellStyleTable();
+
+        rowStripeCellStyleProvider1.setAlternativeBackgroundColors(new Color[]{BACKGROUND1,BACKGROUND2});
 
         paymentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -170,9 +177,7 @@ public class PaymentListPanel extends TopComponent {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        paymentTable.setIntercellSpacing(new java.awt.Dimension(0, 1));
-        paymentTable.setShowHorizontalLines(false);
-        paymentTable.setShowVerticalLines(false);
+        paymentTable.setCellStyleProvider(rowStripeCellStyleProvider1);
         jScrollPane1.setViewportView(paymentTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -188,9 +193,9 @@ public class PaymentListPanel extends TopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable paymentTable;
+    private com.jidesoft.grid.CellStyleTable paymentTable;
+    private com.jidesoft.grid.RowStripeCellStyleProvider rowStripeCellStyleProvider1;
     // End of variables declaration//GEN-END:variables
     class PaymentComparator implements Comparator {
 
@@ -201,30 +206,31 @@ public class PaymentListPanel extends TopComponent {
             //initially sort by date, earliest is more important
             Date itemADate = itemA.getStartDate();
             Date itemBDate = itemB.getStartDate();
-            if (itemADate == null)
+            if (itemADate == null) {
                 return itemBDate == null ? 0 : 1;
-            else if (itemADate != null)
-                 return itemBDate == null ? 1 : 0;
+            } else if (itemADate != null) {
+                return itemBDate == null ? 1 : 0;
+            }
             return itemADate.compareTo(itemBDate);
         }
     }
-    
+
     class DateComparator implements Comparator {
 
         public int compare(Object a, Object b) {
             Date itemADate = (Date) a;
             Date itemBDate = (Date) b;
-            
+
             //initially sort by date, earliest is more important
-            if (itemADate == null)
+            if (itemADate == null) {
                 return itemBDate == null ? 0 : 1;
-            else if (itemADate != null)
-                 return itemBDate == null ? 1 : 0;
-            
+            } else if (itemADate != null) {
+                return itemBDate == null ? 1 : 0;
+            }
             return itemADate.compareTo(itemBDate);
         }
     }
-     
+
     class AlwaysTheSameComparator implements Comparator {
 
         public int compare(Object a, Object b) {
@@ -232,104 +238,110 @@ public class PaymentListPanel extends TopComponent {
         }
     }
 
-    class PaymentTableFormat implements AdvancedTableFormat, WritableTableFormat  {
-        
+    class PaymentTableFormat implements AdvancedTableFormat, WritableTableFormat {
         //table setup
-        final String[] colNames = new String[] {
-             "Date","Payee", "Amount", "Balance"};
-        
+        final String[] colNames = new String[]{
+            "Date", "Payee", "Amount", "Balance"
+        };
+
         public int getColumnCount() {
             return colNames.length;
         }
-        
+
         public String getColumnName(int column) {
             return colNames[column];
         }
-        
+
         public Object getColumnValue(Object baseObject, int column) {
-            Payment payment = (Payment)baseObject;
-            if (payment == null)
+            Payment payment = (Payment) baseObject;
+            if (payment == null) {
                 return null;
-            
+            }
             Payee payee = payment.getPayee();
-            
-            if (payee == null)
+
+            if (payee == null) {
                 return null;
-            
+            }
             Date paymentDate = payment.getStartDate();
             float amount = payment.getAmount();
-            
-            if (column == 0) return paymentDate;
-            else if (column == 1) return payee.getName();
-            else if (column == 2) return Float.valueOf(amount);
-            
-            else if (column == 3)
+
+            if (column == 0) {
+                return paymentDate;
+            } else if (column == 1) {
+                return payee.getName();
+            } else if (column == 2) {
+                return Float.valueOf(amount);
+            } else if (column == 3) {
                 return getBalance(sortedItems.indexOf(baseObject));
-            else
+            } else {
                 return "";
+            }
         }
-        
+
         public Class getColumnClass(int i) {
-            if (i == 0)
+            if (i == 0) {
                 return Date.class;
-            else if (i == 2 || i == 3)
+            } else if (i == 2 || i == 3) {
                 return Float.class;
-            else if (i == 4)
-                return Boolean.class;
-            else 
+            } else {
                 return String.class;
+            }
         }
-        
+
         public Comparator getColumnComparator(int column) {
-            if (column == 0) return GlazedLists.comparableComparator();
-            else if (column == 1) return GlazedLists.caseInsensitiveComparator();
-            else if (column == 2) return GlazedLists.comparableComparator();
+            if (column == 0) {
+                return GlazedLists.comparableComparator();
+            } else if (column == 1) {
+                return GlazedLists.caseInsensitiveComparator();
+            } else if (column == 2) {
+                return GlazedLists.comparableComparator();
             //else if (column == 3) return new AuctionItemCostComparator();
             //else if (column == 4) return new AuctionItemCostComparator();
             //else if (column == 5) return GlazedLists.comparableComparator();
             //else if (column == 6) return GlazedLists.comparableComparator();
-            else return new AlwaysTheSameComparator();
+            } else {
+                return new AlwaysTheSameComparator();
+            }
         }
-        
+
         public boolean isEditable(Object o, int i) {
             //if (i == 4) return true;
             return false;
         }
-        
-        public Object setColumnValue(Object baseObject, Object editedObject, int i ) {
+
+        public Object setColumnValue(Object baseObject, Object editedObject, int i) {
             //if ( i == 4 ){
             //    System.out.println("show/hide detail");
             //}
-              //fire the expand here?  
+            //fire the expand here?  
             //    ((AuctionItem)baseObject).setStarred( (Boolean)editedObject );
             return baseObject;
         }
     }
-    
+
     class PaymentCellRenderer extends DefaultTableCellRenderer {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            Component r =  super.getTableCellRendererComponent(
+            Component r = super.getTableCellRendererComponent(
                     table, value, isSelected, hasFocus, row, column);
-            JLabel newr = (JLabel)r;
+            JLabel newr = (JLabel) r;
             Font f = newr.getFont();
             newr.setHorizontalAlignment(JLabel.RIGHT);
-            
-            if (column == 3 || column == 4){
-                if ((Float)value < 0)
+
+            if (column == 3 || column == 4) {
+                if ((Float) value < 0) {
                     newr.setForeground(Color.RED);
-                else
+                } else {
                     newr.setForeground(Color.BLACK);
-            } 
-            if (column == 0){
-                Font newf = new Font(f.getName(),Font.BOLD,f.getStyle());
+                }
+            }
+            if (column == 0) {
+                Font newf = new Font(f.getName(), Font.BOLD, f.getStyle());
                 newr.setFont(newf);
             }
-            
+
             return newr;
         }
-        
     }
-    
 }

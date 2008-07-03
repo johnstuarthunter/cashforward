@@ -8,6 +8,7 @@
  */
 package org.cashforward.persistence;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import org.cashforward.*;
 import java.util.Calendar;
@@ -18,7 +19,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import org.cashforward.model.Label;
 import org.cashforward.model.Label;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
@@ -152,23 +152,24 @@ public class PersistenceService {
 
     public List<Payment> getPayments(PaymentSearchCriteria criteria)
              throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         List<Payment> payments = new ArrayList();
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
         try {
             StringBuffer queryString = new StringBuffer();
             queryString.append("SELECT p FROM Payment p WHERE ");
-            
+            System.out.println(sdf.format(criteria.getDateStart()));
             if (criteria != null){
                 if (criteria.getDateStart() != null)  
-                    queryString.append("p.startDate >= " 
-                        + criteria.getDateStart()); 
+                    queryString.append("p.startDate >= '" 
+                        + sdf.format(criteria.getDateStart())+"'"); 
                 if (criteria.getDateEnd() != null)  
-                    queryString.append("p.endDate <= " 
-                        + criteria.getDateEnd()); 
-                if (criteria.getAmountHigh() > -1)  
-                    queryString.append("p.startDate >= " 
-                        + criteria.getDateStart()); 
+                    queryString.append(" and p.endDate <= '" 
+                        + sdf.format(criteria.getDateEnd())+"'"); 
+                
+                 queryString.append(" and p.occurence = '" 
+                        + Payment.Occurence.NONE.name()+"'");
             }
             
             Query query = manager.createQuery(queryString.toString());

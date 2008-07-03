@@ -51,7 +51,7 @@ final class ScenarioTopComponent extends TopComponent {
         payments.addAll(service.getPayments(filter));
         scenarioPanel.setPayments(payments);
         scenarioPanel.setPaymentFilter(paymentFilter);
-         filterNotifier.addLookupListener(new LookupListener() {
+        filterNotifier.addLookupListener(new LookupListener() {
 
             public void resultChanged(LookupEvent event) {
                 Lookup.Result r = (Lookup.Result) event.getSource();
