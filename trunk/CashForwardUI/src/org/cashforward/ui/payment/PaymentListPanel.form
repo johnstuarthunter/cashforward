@@ -2,7 +2,12 @@
 
 <Form version="1.5" maxVersion="1.6" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <NonVisualComponents>
-    <Component class="javax.swing.ButtonGroup" name="buttonGroup1">
+    <Component class="com.jidesoft.grid.RowStripeCellStyleProvider" name="rowStripeCellStyleProvider1">
+      <Properties>
+        <Property name="alternativeBackgroundColors" type="[Ljava.awt.Color;" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new Color[]{BACKGROUND1,BACKGROUND2}" type="code"/>
+        </Property>
+      </Properties>
     </Component>
   </NonVisualComponents>
   <AuxValues>
@@ -36,7 +41,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="paymentTable">
+        <Component class="com.jidesoft.grid.CellStyleTable" name="paymentTable">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="4" rowCount="4">
@@ -46,11 +51,9 @@
                 <Column editable="true" title="Title 4" type="java.lang.Object"/>
               </Table>
             </Property>
-            <Property name="intercellSpacing" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[0, 1]"/>
+            <Property name="cellStyleProvider" type="com.jidesoft.grid.CellStyleProvider" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="rowStripeCellStyleProvider1"/>
             </Property>
-            <Property name="showHorizontalLines" type="boolean" value="false"/>
-            <Property name="showVerticalLines" type="boolean" value="false"/>
           </Properties>
         </Component>
       </SubComponents>
