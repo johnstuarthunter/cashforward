@@ -2,36 +2,49 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.cashforward.ui.action;
 
-import java.awt.event.ActionEvent;
-import java.util.List;
-import javax.swing.AbstractAction;
 import org.cashforward.model.Payment;
+import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
+import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
+import org.openide.util.actions.CallableSystemAction;
 
-/**
- * 
- * @author Bill 
- */
-public class SavePaymentAction extends AbstractAction {
-    private Payment payment;
-     List<Payment> payments;
-    private PaymentServiceAdapter adapter;
+public final class SavePaymentAction extends CallableSystemAction {
+    private PaymentServiceAdapter paymentService = 
+            new PaymentServiceAdapter();
     
-    public SavePaymentAction(Payment payment, List<Payment> payments){
-        this.payment = payment;
-        this.payments = payments;
+    public void performAction() {
+        Payment payment = UIContext.getDefault().getPayment();
+        System.out.println("saving payment:"+payment);
+        if (payment == null)
+            return;
+        if (paymentService.addOrUpdatePayment(payment)){
+            //what?
+            UIContext.getDefault().setPayment(payment);
+        } else {
+            //what/
+        }
     }
-    
-    public void actionPerformed(ActionEvent e) {
-        if (adapter == null)
-            adapter = new PaymentServiceAdapter();
-    
-        adapter.addOrUpdatePayment(payment);    
+
+    public String getName() {
+        return NbBundle.getMessage(SavePaymentAction.class, "CTL_SavePaymentAction");
     }
-    
-    
-    
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+        // see org.openide.util.actions.SystemAction.iconResource() Javadoc for more details
+        putValue("noIconInMenu", Boolean.TRUE);
+    }
+
+    public HelpCtx getHelpCtx() {
+        return HelpCtx.DEFAULT_HELP;
+    }
+
+    @Override
+    protected boolean asynchronous() {
+        return false;
+    }
 }

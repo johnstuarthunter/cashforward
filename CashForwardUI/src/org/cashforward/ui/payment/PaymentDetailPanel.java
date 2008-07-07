@@ -8,6 +8,8 @@ package org.cashforward.ui.payment;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
 import ca.odell.glazedlists.event.ListEventListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import org.cashforward.model.Label;
@@ -63,9 +65,10 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
         payment.setPayee((Payee) payee);
 
         //set label
+        payment.getLabels().clear();
         Object[] selectedLabels = labelList.getSelectedObjects();
         for (int i = 0; i < selectedLabels.length; i++) {
-            if (selectedLabels[i] instanceof Label)
+            if (selectedLabels[i] instanceof Label) 
                 payment.addLabel((Label) selectedLabels[i]);
             else 
                 payment.addLabel(new Label((String)selectedLabels[i]));
@@ -75,7 +78,7 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
         payment.setStartDate(paymentDateChooser.getDate());
         return this.payment;
     }
-
+    
     private class EventListComboBoxModel extends DefaultComboBoxModel {
 
         EventList source;

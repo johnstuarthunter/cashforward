@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
+import org.cashforward.model.Scenario;
 import org.cashforward.persistence.PersistenceService;
 import org.cashforward.service.internal.PaymentCalculator;
 
@@ -44,6 +45,36 @@ public class PaymentService {
             throw new IllegalArgumentException("PersistenceService cannot be null.");
         this.persistenceService = persistenceService;
     }
+
+    public boolean createScenario(Scenario currentScenario, 
+            Scenario newScenario) throws Exception {
+        //payment serivce then copies all payments from base to new
+        /*
+         * impl:
+         * get all payments where scenario.id = baseScenario.id
+         * then just ADD the newScenario label to that!!!
+         * 
+         */
+        
+         PaymentSearchCriteria baseLookup = 
+                 new PaymentSearchCriteria();
+         baseLookup.getLabels().add(currentScenario);
+         
+         List<Payment> basePayments = //needs fixing, labels, occurences
+                 persistenceService.getPayments(baseLookup);
+          
+         return persistenceService.applyLabel(newScenario, basePayments);
+         
+        /*
+         * then, when 
+         * adding, just add scenarion (from context) to payment
+         * updating, just keep scenarios the same
+         * deleting - trickiest - 
+         *      delete payment only if scenario is only scenario
+         *      otherwise, just delete the scenario label
+         * 
+         */
+    }
     
     public List<Payment> getScheduledPayments() 
         throws Exception {
@@ -63,10 +94,11 @@ public class PaymentService {
         
         List<Payment> allPayments = new ArrayList();    
         List<Payment> payments = persistenceService.getSchdeuledPayments();
+        System.out.println(payments.size() + " scheduled payments");
         for (Payment payment : payments) {
             List newPayments = 
                     paymentCalculator.calculatePayments(payment, start, end);
-            //System.out.println(newPayments.size());
+            System.out.println("generated " + newPayments.size());
             allPayments.addAll(newPayments);
         }
         
@@ -108,6 +140,11 @@ public class PaymentService {
                     new Date()));
             return persistenceService.addOrUpdatePayment(scheduledPayment);
         
+    }
+    
+    public List<Payment> getCalculatedPayments(Payment payment, 
+            Date startDate, Date endDate) throws Exception {
+        return paymentCalculator.calculatePayments(payment, startDate, endDate);
     }
     
     public List<Payee> getPayees() throws Exception {

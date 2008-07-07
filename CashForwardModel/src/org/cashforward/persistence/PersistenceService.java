@@ -24,6 +24,7 @@ import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
 import org.cashforward.model.PaymentOverride;
 import org.cashforward.model.PaymentSearchCriteria;
+import org.cashforward.model.Scenario;
 
 /**
  *
@@ -74,11 +75,14 @@ public class PersistenceService {
         factory.close();
     }
     
-    public boolean addOrUpdateLabel(Label groceries) {
+    public boolean addOrUpdateLabel(Label label) {
         EntityTransaction tx = manager.getTransaction();
         try {
             tx.begin();
-            manager.persist(groceries);
+            if (label.getId() < 1)
+                manager.persist(label);
+            else
+                manager.merge(label);
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,10 +97,10 @@ public class PersistenceService {
                 addOrUpdatePayee(payment.getPayee());
             }
             tx.begin();
-            //if (payment.getId() < 0)
+            if (payment.getId() < 1)
                 manager.persist(payment);
-            //else
-            //    manager.merge(payment);
+            else
+                manager.merge(payment);
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -290,7 +294,10 @@ public class PersistenceService {
         EntityTransaction tx = manager.getTransaction();
         try {
             tx.begin();
-            manager.persist(payee);
+            if (payee.getId() < 1)
+                manager.persist(payee);
+            else
+                manager.merge(payee);
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -313,7 +320,60 @@ public class PersistenceService {
         
         return payees;
     }
-
+    
+    //bulk operation
+    public boolean applyLabel(Label newLabel, List<Payment> payments){
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        try {
+            for (Payment payment : payments) {
+            payment.addLabel(newLabel);
+            if (payment.getId() < 1)
+                manager.persist(payment);
+            else
+                manager.merge(payment);
+            }
+            tx.commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public List<Scenario> getScenarios(){
+        List<Scenario> scenarios = new ArrayList();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        try {
+            Query query = manager.createNamedQuery("Scenario.findAll");
+            scenarios = query.getResultList();
+            tx.commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            return scenarios;
+        }
+        
+        return scenarios;
+    }
+    
+    public boolean addOrUpdateScenario(Scenario scenario) throws Exception {
+        EntityTransaction tx = manager.getTransaction();
+        try {
+            tx.begin();
+            if (scenario.getId() < 1)
+                manager.persist(scenario);
+            else
+                manager.merge(scenario);
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -359,5 +419,6 @@ public class PersistenceService {
 //        service.addOrUpdatePayment(firstPayment);
         service.shutdown();
     }
+
 
 }

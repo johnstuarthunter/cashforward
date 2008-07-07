@@ -5,10 +5,11 @@
 
 package org.cashforward.ui.adapter;
 
-import ca.odell.glazedlists.EventList;
+import java.util.Date;
 import java.util.List;
 import org.cashforward.model.Payment;
 import org.cashforward.model.PaymentSearchCriteria;
+import org.cashforward.model.Scenario;
 import org.cashforward.service.PaymentService;
 
 /**
@@ -21,11 +22,22 @@ public class PaymentServiceAdapter {
     public PaymentServiceAdapter(){
         paymentService = new PaymentService();
     }
-
+    
     public boolean addOrUpdatePayment(Payment payment) {
-        try {
+        try { 
             return paymentService.addOrUpdatePayment(payment);
         } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean createScenario(Scenario currentScenario, 
+            Scenario newScenario) {
+        try {
+            return paymentService.createScenario(currentScenario,
+                    newScenario);
+        } catch (Exception e){
             e.printStackTrace();
             return false;
         }
@@ -91,6 +103,17 @@ public class PaymentServiceAdapter {
         } catch (Exception e) {
         }
         
+        return null;
+    }
+    
+    public List<Payment> getScheduledPayments(Payment payment, Date startDate,
+            Date endDate){
+        try {
+            return paymentService.getCalculatedPayments(payment, 
+                    startDate, endDate);
+        } catch (Exception e){
+            
+        }
         return null;
     }
 }

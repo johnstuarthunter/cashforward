@@ -13,6 +13,7 @@ import javax.swing.Action;
 import org.cashforward.model.Payment;
 import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
+import org.cashforward.ui.task.PaymentFilter;
 
 /**
  * 
@@ -41,7 +42,9 @@ public class LoadScheduledPaymentsAction extends AbstractAction {
         paymentList.addAll(allPayments);
         paymentList.getReadWriteLock().writeLock().unlock();
         
-        UIContext.getDefault().setPaymentOccurence(Payment.Occurence.ONCE);
+        PaymentFilter filter = UIContext.getDefault().getPaymentFilter();
+        filter.setPaymentType(PaymentFilter.TYPE_SCHEDULED);
+        UIContext.getDefault().setPaymentFilter(filter);
     }
     
 }
