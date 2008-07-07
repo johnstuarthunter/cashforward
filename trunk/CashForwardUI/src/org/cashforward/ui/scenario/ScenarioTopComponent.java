@@ -5,15 +5,12 @@
 
 package org.cashforward.ui.scenario;
 
-import ca.odell.glazedlists.BasicEventList;
-import ca.odell.glazedlists.EventList;
 import org.cashforward.ui.UIContext;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.logging.Logger;
-import org.cashforward.model.Payment;
 import org.cashforward.model.PaymentSearchCriteria;
-import org.cashforward.ui.adapter.PaymentServiceAdapter;
+import org.cashforward.ui.task.PaymentFilter;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -32,8 +29,8 @@ final class ScenarioTopComponent extends TopComponent {
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
 
     Lookup.Result filterNotifier =
-            UIContext.getDefault().lookupResult(PaymentSearchCriteria.class);    
-    PaymentSearchCriteria paymentFilter =
+            UIContext.getDefault().lookupResult(PaymentFilter.class);    
+    PaymentFilter paymentFilter =
             UIContext.getDefault().getPaymentFilter();
     
     private static final String PREFERRED_ID = "ScenarioTopComponent";
@@ -44,21 +41,17 @@ final class ScenarioTopComponent extends TopComponent {
         setToolTipText(NbBundle.getMessage(ScenarioTopComponent.class, "HINT_ScenarioTopComponent"));
 //        setIcon(Utilities.loadImage(ICON_PATH, true));
     
-        PaymentServiceAdapter service = new PaymentServiceAdapter();
-        PaymentSearchCriteria filter = 
-                UIContext.getDefault().getPaymentFilter();
-        EventList<Payment> payments = new BasicEventList();
-        payments.addAll(service.getPayments(filter));
-        scenarioPanel.setPayments(payments);
+        scenarioPanel.setPayments(UIContext.getDefault().getFilteredPayments());
         scenarioPanel.setPaymentFilter(paymentFilter);
+        
         filterNotifier.addLookupListener(new LookupListener() {
 
             public void resultChanged(LookupEvent event) {
                 Lookup.Result r = (Lookup.Result) event.getSource();
                 Collection c = r.allInstances();
                 if (!c.isEmpty()) {
-                    PaymentSearchCriteria filter = 
-                            (PaymentSearchCriteria) c.iterator().next();
+                    PaymentFilter filter = 
+                            (PaymentFilter) c.iterator().next();
                     //now what? set dates? only if non-null 
                     if (filter.getDateEnd() != null){
                        ScenarioTopComponent.this.
@@ -70,6 +63,7 @@ final class ScenarioTopComponent extends TopComponent {
         });
         
     }
+    
 
     /** This method is called from within the constructor to
      * initialize the form.

@@ -5,7 +5,6 @@
 
 package org.cashforward.service;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import org.cashforward.model.Payment;

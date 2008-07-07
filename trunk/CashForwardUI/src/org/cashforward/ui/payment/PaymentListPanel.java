@@ -9,6 +9,8 @@ import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.SortedList;
+import ca.odell.glazedlists.event.ListEvent;
+import ca.odell.glazedlists.event.ListEventListener;
 import ca.odell.glazedlists.gui.AdvancedTableFormat;
 import ca.odell.glazedlists.gui.WritableTableFormat;
 import ca.odell.glazedlists.swing.EventSelectionModel;
@@ -55,9 +57,7 @@ public class PaymentListPanel extends TopComponent {
     protected static final Color BACKGROUND1 = new Color(253, 253, 244);
     protected static final Color BACKGROUND2 = new Color(230, 230, 255);
     protected static final Color BACKGROUND3 = new Color(210, 255, 210);
-
     protected static final Color FOREGROUND1 = new Color(0, 0, 10);
-
     protected static final Color BACKGROUND4 = new Color(0, 128, 0);
     protected static final Color FOREGROUND4 = new Color(255, 255, 255);
 
@@ -73,11 +73,14 @@ public class PaymentListPanel extends TopComponent {
                 if (!c.isEmpty()) {
                     Payment payment = (Payment) c.iterator().next();
                     int index = sortedItems.indexOf(payment);
-                    //System.out.println(index);
                     if (!selectionModel.getValueIsAdjusting()) {
-                        paymentTable.scrollRectToVisible(
+                        if (index == selectionModel.getAnchorSelectionIndex()){
+                            tableModel.fireTableRowsUpdated(index, index);
+                        } else {
+                            paymentTable.scrollRectToVisible(
                                 paymentTable.getCellRect(index, 0, true));
-                        selectionModel.setSelectionInterval(index, index);
+                            selectionModel.setSelectionInterval(index, index);
+                        }
                     }
                 }
             }
@@ -125,15 +128,7 @@ public class PaymentListPanel extends TopComponent {
                         UIContext.getDefault().setPayment(payment);
                     }
                 });
-    /* NOT NEEDED?
-    payments.addListEventListener(new ListEventListener() {
-    
-    public void listChanged(ListEvent event) {
-    System.out.println("i detect somthing.." + event);
-    tableModel.fireTableDataChanged();
-    }
-    });
-     */
+                
     }
 
     JTable getTableComponent() {

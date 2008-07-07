@@ -11,6 +11,8 @@ import com.jidesoft.swing.PartialSide;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
@@ -34,29 +36,37 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
     /** Creates new form PaymentTaskPanel */
     public PaymentTaskPanel() {
         initComponents();
+
         loadCurrentPayments = new LoadCurrentPaymentsAction();
         loadScheduledPayments = new LoadScheduledPaymentsAction();
         loadSpecificPayments = new LoadSpecificPaymentsAction();
         this.groupList1.setModel(new PaymentListFilterModel());
         this.groupList1.setGroupCellRenderer(new GroupCellRenderer());
         this.groupList1.addListSelectionListener(new ListSelectionListener() {
+
             public void valueChanged(ListSelectionEvent e) {
-                if (e.getValueIsAdjusting()) return;
+                if (e.getValueIsAdjusting()) {
+                    return;
+                }
+                if (!(PaymentTaskPanel.this.groupList1.getSelectedValue() 
+                        instanceof PaymentFilter))
+                    return;
                 
-                String filter = //for now a string
-                        (String)PaymentTaskPanel.this.groupList1.getSelectedValue();
+                PaymentFilter filter = //for now a string
+                        (PaymentFilter) PaymentTaskPanel.this.groupList1.getSelectedValue();
                 //System.out.println(filter);
-                if ("Current".equals(filter))
+                if (filter.getPaymentType() == PaymentFilter.TYPE_CURRENT) {
                     PaymentTaskPanel.this.loadCurrentPayments.actionPerformed(null);
-                else if ("Scheduled".equals(filter))
+                } else if (filter.getPaymentType() == PaymentFilter.TYPE_SCHEDULED) {
                     PaymentTaskPanel.this.loadScheduledPayments.actionPerformed(null);
-                else if ("Default".equals(filter))
+                } else if (filter.getPaymentType() == PaymentFilter.TYPE_CALCULATED) {
                     PaymentTaskPanel.this.loadSpecificPayments.actionPerformed(null);
+                }
             }
         });
-        
-        //remember what was last selected? //should be an object
-        groupList1.setSelectedIndex(1);
+
+    //remember what was last selected? //should be an object
+    //groupList1.setSelectedIndex(1);
 
     }
 
@@ -95,7 +105,7 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
     static class PaymentListFilterModel extends AbstractGroupableListModel {
 
         private static String[] GROUP_NAMES = {
-            "Scenarios","Payments", "Labels"
+            "Scenarios", "Payments", "Labels"
         };
         private static final String[] scenarios = {
             "Default"
@@ -107,6 +117,34 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
             "Auto", "Entertainment", "Food"
         };
 
+        private List<PaymentFilter> scenario = new ArrayList();
+        private List<PaymentFilter> types = new ArrayList();
+        private List<PaymentFilter> label = new ArrayList();
+        public PaymentListFilterModel() {
+            //create our filters, probably should be a customizable by user
+            PaymentFilter defaultScenario = new PaymentFilter("This Year");
+            defaultScenario.setPaymentType(PaymentFilter.TYPE_CALCULATED);
+            scenario.add(defaultScenario);
+
+            PaymentFilter scheduled = new PaymentFilter("Scheduled");
+            scheduled.setPaymentType(PaymentFilter.TYPE_SCHEDULED);
+            types.add(scheduled);
+
+            PaymentFilter current = new PaymentFilter("Current");
+            current.setPaymentType(PaymentFilter.TYPE_CURRENT);
+            types.add(current);
+            
+            PaymentFilter auto = new PaymentFilter("Auto");
+            label.add(auto);
+
+            PaymentFilter fun = new PaymentFilter("Entertainment");
+            label.add(fun);
+
+            PaymentFilter food = new PaymentFilter("Food");
+            label.add(food);
+        
+        }
+
         public int getSize() {
             //System.out.println("getSize:"+scenarios.length + payments.length + labels.length);
             return scenarios.length + payments.length + labels.length;
@@ -116,13 +154,13 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
             //System.out.println("getElementAt:"+index);
             if (index < scenarios.length) {
                 //System.out.println("scenarios:"+(scenarios.length));
-                return scenarios[index];
+                return scenario.get(index);//return scenarios[index];
             } else if (index < scenarios.length + payments.length) {
                 //System.out.println("scenarios and payments:"+(index - scenarios.length));
-                return payments[index - scenarios.length];
+                return types.get(index - scenarios.length);//return payments[index - scenarios.length];
             } else {
                 //System.out.println("scenarios and payments and labels:"+(index - scenarios.length - payments.length));
-                return labels[index - (scenarios.length + payments.length)];
+                return label.get(index - (scenarios.length + payments.length));//labels[index - (scenarios.length + payments.length)];
             }
         }
 
@@ -146,22 +184,21 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
             }
         }
     }
-    
+
     class GroupCellRenderer extends DefaultListCellRenderer {
 
-    @Override
-    public Component getListCellRendererComponent(
-            JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        @Override
+        public Component getListCellRendererComponent(
+                JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 
-        JLabel label = (JLabel) super.getListCellRendererComponent(
-                list, value, index, isSelected, cellHasFocus);
-        label.setBackground(isSelected ? list.getSelectionBackground() : new Color(221, 231, 238));
-        label.setForeground(new Color(0, 21, 110));
-        label.setFont(label.getFont().deriveFont(Font.BOLD));
-        label.setBorder(BorderFactory.createCompoundBorder(new PartialLineBorder(Color.LIGHT_GRAY, 1, PartialSide.SOUTH),
-                BorderFactory.createEmptyBorder(2, 6, 2, 2)));
-        return label;
+            JLabel label = (JLabel) super.getListCellRendererComponent(
+                    list, value, index, isSelected, cellHasFocus);
+            label.setBackground(isSelected ? list.getSelectionBackground() : new Color(221, 231, 238));
+            label.setForeground(new Color(0, 21, 110));
+            label.setFont(label.getFont().deriveFont(Font.BOLD));
+            label.setBorder(BorderFactory.createCompoundBorder(new PartialLineBorder(Color.LIGHT_GRAY, 1, PartialSide.SOUTH),
+                    BorderFactory.createEmptyBorder(2, 6, 2, 2)));
+            return label;
+        }
     }
-}
-
 }

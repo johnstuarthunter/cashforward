@@ -48,9 +48,9 @@ public class PaymentCalculator {
             //System.out.println("nextPaymentDate:"+nextPaymentDate);
             
             //after we have the nextPaymentDate, 
-            //keep adding 7 days while we are before the range and payment end
+            //keep adding the time period while still before the range and payment end
             while (nextPaymentDate != null && nextPaymentDate.before(end) && 
-                    nextPaymentDate.before(paymentEnd)) {
+                    (paymentEnd == null || nextPaymentDate.before(paymentEnd) ) ) {
                 
                 payments.add(createPayment(payment, nextPaymentDate));
                 

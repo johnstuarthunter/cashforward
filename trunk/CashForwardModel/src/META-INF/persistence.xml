@@ -6,14 +6,14 @@
     <class>org.cashforward.model.Label</class>
     <class>org.cashforward.model.Payment</class>
     <class>org.cashforward.model.Payee</class>
+    <class>org.cashforward.model.Scenario</class>
     <properties>
-      <property name="hibernate.connection.username" value="sa"/>
-      <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
-      <property name="hibernate.connection.password" value=""/>
-      <property name="hibernate.connection.url" value="jdbc:h2:~/.cashforward/data;FILE_LOCK=NO"/>
+      <property name="hibernate.connection.username" value="app"/>
+      <property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.ClientDriver"/>
+      <property name="hibernate.connection.password" value="app"/>
+      <property name="hibernate.connection.url" value="jdbc:derby://localhost:1527/sample"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
       <property name="hibernate.show_sql" value="false"/>
-      <property name="hibernate.hbm2ddl.auto" value="update"/>
     </properties>
   </persistence-unit>
   <persistence-unit name="CashForwardPersistenceDev" transaction-type="RESOURCE_LOCAL">
@@ -22,6 +22,7 @@
     <class>org.cashforward.model.Label</class>
     <class>org.cashforward.model.Payment</class>
     <class>org.cashforward.model.Payee</class>
+    <class>org.cashforward.model.Scenario</class>
     <properties>
       <property name="hibernate.connection.username" value="sa"/>
       <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
@@ -29,6 +30,7 @@
       <property name="hibernate.connection.url" value="jdbc:h2:~/.cashforward/dev_data;FILE_LOCK=NO"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
       <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
     </properties>
   </persistence-unit>
   <persistence-unit name="CashForwardPersistenceTest" transaction-type="RESOURCE_LOCAL">
@@ -37,6 +39,7 @@
     <class>org.cashforward.model.Label</class>
     <class>org.cashforward.model.Payment</class>
     <class>org.cashforward.model.Payee</class>
+    <class>org.cashforward.model.Scenario</class>
     <properties>
       <property name="hibernate.connection.username" value="sa"/>
       <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>

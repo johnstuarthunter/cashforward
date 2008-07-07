@@ -12,6 +12,9 @@
             <attr name="position" intvalue="100"/>
             <file name="org-cashforward-ui-action-EnterScheduledPaymentAction.instance"/>
             <file name="org-cashforward-ui-action-NewPaymentAction.instance"/>
+            <file name="org-cashforward-ui-action-NewScenarioAction.instance"/>
+            <file name="org-cashforward-ui-action-RemovePaymentAction.instance"/>
+            <file name="org-cashforward-ui-action-SavePaymentAction.instance"/>
             <file name="org-cashforward-ui-action-SkipScheduledPaymentAction.instance"/>
         </folder>
         <folder name="Window">
@@ -56,6 +59,14 @@
             <file name="org-cashforward-ui-action-NewPaymentAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Payment/org-cashforward-ui-action-NewPaymentAction.instance"/>
                 <attr name="position" intvalue="300"/>
+            </file>
+            <file name="org-cashforward-ui-action-NewScenarioAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Payment/org-cashforward-ui-action-NewScenarioAction.instance"/>
+                <attr name="position" intvalue="0"/>
+            </file>
+            <file name="org-cashforward-ui-action-RemovePaymentAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Payment/org-cashforward-ui-action-RemovePaymentAction.instance"/>
+                <attr name="position" intvalue="350"/>
             </file>
             <file name="org-cashforward-ui-action-SkipScheduledPaymentAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Payment/org-cashforward-ui-action-SkipScheduledPaymentAction.instance"/>

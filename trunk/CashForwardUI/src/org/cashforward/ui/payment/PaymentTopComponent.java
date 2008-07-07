@@ -25,6 +25,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import org.cashforward.ui.task.PaymentFilter;
 /**
  * Top component which displays something.
  */
@@ -39,8 +40,8 @@ final class PaymentTopComponent extends TopComponent {
             UIContext.getDefault().lookupResult(Payment.class);
     private Lookup.Result payeeNotifier = 
             UIContext.getDefault().lookupResult(Payee.class);
-    private Lookup.Result filterNotifier = 
-            UIContext.getDefault().lookupResult(Payment.Occurence.class);
+    private Lookup.Result paymentFilterNotifier = 
+            UIContext.getDefault().lookupResult(PaymentFilter.class);
     
     private PaymentTopComponent() {
         initComponents();
@@ -74,17 +75,20 @@ final class PaymentTopComponent extends TopComponent {
         paymentCompositePanel.setPayees(UIContext.getDefault().getPayees());
         paymentCompositePanel.setLabels(UIContext.getDefault().getLabels());
         
-        filterNotifier.addLookupListener(new LookupListener() {
+        paymentFilterNotifier.addLookupListener(new LookupListener() {
             public void resultChanged(LookupEvent event) {
                 Lookup.Result r = (Lookup.Result) event.getSource();
                 Collection c = r.allInstances();
                 if (!c.isEmpty()) {
-                    Payment.Occurence occurence = 
-                            (Payment.Occurence) c.iterator().next();
-                    if (occurence == Payment.Occurence.NONE)
+                    PaymentFilter filter = (PaymentFilter) c.iterator().next();
+                    int type = filter.getPaymentType();
+                    if (type == PaymentFilter.TYPE_CALCULATED)
+                        paymentListPanel.setPayments(
+                                UIContext.getDefault().getFilteredPayments());
+                    else if (type == PaymentFilter.TYPE_CURRENT)
                         paymentListPanel.setPayments(
                                 UIContext.getDefault().getCurrentPayments());
-                    else
+                    else if (type == PaymentFilter.TYPE_SCHEDULED)
                         paymentListPanel.setPayments(
                                 UIContext.getDefault().getScheduledPayments());
                 } 
