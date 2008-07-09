@@ -2,43 +2,34 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.cashforward.ui.task;
 
+import ca.odell.glazedlists.EventList;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.logging.Logger;
-import org.cashforward.model.Payment;
-import org.openide.util.Lookup;
-import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
+import org.cashforward.ui.UIContext;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
-import org.openide.util.lookup.AbstractLookup;
-import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 //import org.openide.util.Utilities;
-
 /**
  * Top component which displays something.
  */
-final class TaskTopComponent extends TopComponent implements LookupListener {
+final class TaskTopComponent extends TopComponent {
 
     private static TaskTopComponent instance;
-   
-
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
-
     private static final String PREFERRED_ID = "TaskTopComponent";
-     private Lookup.Result result = null;
-     private final InstanceContent content = new InstanceContent();
+
     private TaskTopComponent() {
         initComponents();
         setName(NbBundle.getMessage(TaskTopComponent.class, "CTL_TaskTopComponent"));
         setToolTipText(NbBundle.getMessage(TaskTopComponent.class, "HINT_TaskTopComponent"));
 //        setIcon(Utilities.loadImage(ICON_PATH, true));
+        
+        EventList scenarios = UIContext.getDefault().getScenarios();
+        paymentTaskPanel.setScenarios(scenarios);
     }
 
     /** This method is called from within the constructor to
@@ -49,23 +40,21 @@ final class TaskTopComponent extends TopComponent implements LookupListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        paymentTaskPanel1 = new org.cashforward.ui.task.PaymentTaskPanel();
+        paymentTaskPanel = new org.cashforward.ui.task.PaymentTaskPanel();
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(paymentTaskPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(paymentTaskPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(paymentTaskPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+            .addComponent(paymentTaskPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.cashforward.ui.task.PaymentTaskPanel paymentTaskPanel1;
+    private org.cashforward.ui.task.PaymentTaskPanel paymentTaskPanel;
     // End of variables declaration//GEN-END:variables
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
@@ -105,22 +94,10 @@ final class TaskTopComponent extends TopComponent implements LookupListener {
 
     @Override
     public void componentOpened() {
-       Lookup.Template tpl = new Lookup.Template (Payment.class);
-        result = Utilities.actionsGlobalContext().lookup(tpl);
-        result.addLookupListener (this);
-        System.out.println("adding lul");
-        associateLookup (new AbstractLookup (content));
-        content.set(Collections.singleton (new Payment()), null);
     }
 
     @Override
     public void componentClosed() {
-       
-    }
-    
-    public void resultChanged(LookupEvent lookupEvent) {
-       System.out.println("got a result from tasktt"); 
-      
     }
 
     /** replaces this in object stream */
@@ -142,5 +119,4 @@ final class TaskTopComponent extends TopComponent implements LookupListener {
             return TaskTopComponent.getDefault();
         }
     }
-
 }

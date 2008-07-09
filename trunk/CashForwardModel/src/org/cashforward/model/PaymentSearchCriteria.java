@@ -5,6 +5,7 @@
 
 package org.cashforward.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +16,8 @@ import java.util.List;
 public class PaymentSearchCriteria {
     Date dateStart;
     Date dateEnd;
-    List labels;
+    List labels = new ArrayList();
+    Scenario scenario;
     float amountLow;
     float amountHigh;
 
@@ -58,6 +60,16 @@ public class PaymentSearchCriteria {
     public void setLabels(List labels) {
         this.labels = labels;
     }
+
+    public Scenario getScenario() {
+        return scenario;
+    }
+
+    public void setScenario(Scenario scenario) {
+        this.scenario = scenario;
+    }
+    
+    
     
     public String toString(){
         return "dateStart:" +dateStart + ";dateEnd:"+dateEnd;

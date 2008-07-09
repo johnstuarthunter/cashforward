@@ -11,6 +11,7 @@ import org.cashforward.model.Payment;
 import org.cashforward.model.PaymentSearchCriteria;
 import org.cashforward.model.Scenario;
 import org.cashforward.service.PaymentService;
+import org.openide.util.Exceptions;
 
 /**
  * 
@@ -48,6 +49,15 @@ public class PaymentServiceAdapter {
             return paymentService.enterNextPayment(scheduledPayment);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List getScenarios() {
+        try {
+            return paymentService.getScenarios();
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex); 
             return null;
         }
     }

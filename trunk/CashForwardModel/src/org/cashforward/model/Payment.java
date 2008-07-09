@@ -116,12 +116,7 @@ public class Payment implements Serializable {
     inverseJoinColumns = {@JoinColumn(name = "PAYMENT_ID")})
     private List<Label> labels = new ArrayList();
     
-    @ManyToMany(targetEntity = Scenario.class,
-    cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "PAYMENT_LABEL",
-    joinColumns = {@JoinColumn(name = "LABEL_ID")},
-    inverseJoinColumns = {@JoinColumn(name = "PAYMENT_ID")})
-    private List<Scenario> scenarios = new ArrayList();
+    private transient List<Scenario> scenarios = new ArrayList();
 
     public Payment() {
     }
@@ -214,11 +209,12 @@ public class Payment implements Serializable {
         return labels;
     }
     
-    public void setScenarios(List<Scenario> scenarios) {
-        this.scenarios = scenarios;
-    }
-
     public List<Scenario> getScenarios() {
+        scenarios.clear();
+        for (Label label : labels) {
+            if (label instanceof Scenario)
+                scenarios.add((Scenario) label);
+        }
         return scenarios;
     }
 
@@ -300,13 +296,11 @@ public class Payment implements Serializable {
     }
     
     public void addScenario(Scenario scenario) {
-        if (!scenarios.contains(scenario)) {
-            this.scenarios.add(scenario);
-        }
+        addLabel(scenario);
     }
 
     public void removeScenario(Scenario scenario) {
-        this.scenarios.remove(scenario);
+        removeLabel(scenario);
     }
 
     public void addPaymentOverride(PaymentOverride override) {
