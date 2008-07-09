@@ -37,6 +37,9 @@ public class LoadScheduledPaymentsAction extends AbstractAction {
                 UIContext.getDefault().getScheduledPayments();
         
         List allPayments = serviceAdapter.getScheduledPayments();
+        if (allPayments == null)
+            return;
+        
         paymentList.getReadWriteLock().writeLock().lock();
         paymentList.clear();
         paymentList.addAll(allPayments);

@@ -38,6 +38,9 @@ public class LoadCurrentPaymentsAction extends AbstractAction {
                 UIContext.getDefault().getCurrentPayments();
         
         List allPayments = serviceAdapter.getCurrentPayments();
+        if (allPayments == null)
+            return;
+        
         paymentList.getReadWriteLock().writeLock().lock();
         paymentList.clear();
         paymentList.addAll(allPayments);

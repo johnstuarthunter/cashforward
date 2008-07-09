@@ -35,7 +35,6 @@ public class PersistenceService {
     public static String STORAGE_MAIN = "CashForwardPersistence";
     public static String STORAGE_DEV = "CashForwardPersistenceDev";
     public static String STORAGE_TEST = "CashForwardPersistenceTest";
-    
     EntityManagerFactory factory;
     EntityManager manager;
     private static PersistenceService instance;
@@ -59,7 +58,6 @@ public class PersistenceService {
         return instance;
     }
 
-
     public void startup(String unit) {
         if (factory != null) {
             return;
@@ -67,22 +65,23 @@ public class PersistenceService {
 
         factory = Persistence.createEntityManagerFactory(unit);
         manager = factory.createEntityManager();
-        //manager.setFlushMode(FlushModeType.COMMIT);
+    //manager.setFlushMode(FlushModeType.COMMIT);
     }
 
     public void shutdown() {
         manager.close();
         factory.close();
     }
-    
+
     public boolean addOrUpdateLabel(Label label) {
         EntityTransaction tx = manager.getTransaction();
         try {
             tx.begin();
-            if (label.getId() < 1)
+            if (label.getId() < 1) {
                 manager.persist(label);
-            else
+            } else {
                 manager.merge(label);
+            }
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,14 +92,15 @@ public class PersistenceService {
     public boolean addOrUpdatePayment(Payment payment) throws Exception {
         EntityTransaction tx = manager.getTransaction();
         try {
-            if (payment.getPayee().getId() < 1){
+            if (payment.getPayee().getId() < 1) {
                 addOrUpdatePayee(payment.getPayee());
             }
             tx.begin();
-            if (payment.getId() < 1)
+            if (payment.getId() < 1) {
                 manager.persist(payment);
-            else
+            } else {
                 manager.merge(payment);
+            }
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,7 +108,7 @@ public class PersistenceService {
         }
         return true;
     }
-    
+
     public boolean removePayment(Payment payment) throws Exception {
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
@@ -116,13 +116,13 @@ public class PersistenceService {
             manager.remove(payment);
             tx.commit();
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
-    
-     public List<Payment> getCurrentPayments() throws Exception {
+
+    public List<Payment> getCurrentPayments() throws Exception {
         List<Payment> payments = new ArrayList();
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
@@ -130,32 +130,32 @@ public class PersistenceService {
             Query query = manager.createNamedQuery("Payment.findAll");
             payments = query.getResultList();
             tx.commit();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return payments;
         }
-        
+
         return payments;
     }
-     
+
     public List<Payment> getSchdeuledPayments() {
-         List<Payment> payments = new ArrayList();
+        List<Payment> payments = new ArrayList();
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
         try {
             Query query = manager.createNamedQuery("Payment.findAllScheduled");
             payments = query.getResultList();
             tx.commit();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return payments;
         }
-        
+
         return payments;
     }
 
     public List<Payment> getPayments(PaymentSearchCriteria criteria)
-             throws Exception {
+            throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         List<Payment> payments = new ArrayList();
         EntityTransaction tx = manager.getTransaction();
@@ -163,44 +163,60 @@ public class PersistenceService {
         try {
             StringBuffer queryString = new StringBuffer();
             queryString.append("SELECT p FROM Payment p WHERE ");
-            System.out.println(sdf.format(criteria.getDateStart()));
-            if (criteria != null){
-                if (criteria.getDateStart() != null)  
-                    queryString.append("p.startDate >= '" 
-                        + sdf.format(criteria.getDateStart())+"'"); 
-                if (criteria.getDateEnd() != null)  
-                    queryString.append(" and p.endDate <= '" 
-                        + sdf.format(criteria.getDateEnd())+"'"); 
+
+            if (criteria != null) {
+                if (criteria.getDateStart() != null) {
+                    queryString.append("p.startDate >= '" + sdf.format(criteria.getDateStart()) + "'");
+                }
+                if (criteria.getDateEnd() != null) {
+                    if (criteria.getDateStart() != null) {
+                        queryString.append(" and ");
+                    }
+                    queryString.append(" p.endDate <= '" + sdf.format(criteria.getDateEnd()) + "'");
+                }
+
+                if (criteria.getDateStart() != null ||
+                        criteria.getDateEnd() != null) {
+                    queryString.append(" and ");
+                }
+                queryString.append(" p.occurence = '" + Payment.Occurence.NONE.name() + "'");
+                //filter out labels
+                //if (criteria.getLabels().size() > 0)
+                //    queryString.append(" and :labels MEMBER OF p.labels");
                 
-                 queryString.append(" and p.occurence = '" 
-                        + Payment.Occurence.NONE.name()+"'");
+                if (criteria.getScenario() != null)
+                    queryString.append(" and :scenario MEMBER OF p.labels");
+                //queryString.append(" and p.occurence = '" + Payment.Occurence.NONE.name() + "'");
             }
-            
+
             Query query = manager.createQuery(queryString.toString());
+            if (criteria.getScenario() != null)
+                query.setParameter("scenario", criteria.getScenario());
             payments = query.getResultList();
             tx.commit();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
+            tx.rollback();
             return payments;
         }
-        
+
         return payments;
     }
-    
+
     public Payee getPayeeByID(long id) throws Exception {
         EntityTransaction tx = manager.getTransaction();
         Payee a = null;
         tx.begin();
         try {
-            a = manager.find(Payee.class,id);
+            a = manager.find(Payee.class, id);
             tx.commit();
             return a;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return a;
         }
     }
-    
+
     public Payee findOrCreateNewPayee(String payeeName) throws Exception {
         EntityTransaction tx = manager.getTransaction();
         Payee a = null;
@@ -209,7 +225,7 @@ public class PersistenceService {
             Query query = manager.createQuery("SELECT p FROM Payee p WHERE p.name = :name");
             query.setParameter("name", payeeName);
             List results = query.getResultList();
-            if (results != null && results.size() > 0){
+            if (results != null && results.size() > 0) {
                 a = (Payee) results.get(0);
             } else {
                 a = new Payee(payeeName);
@@ -217,35 +233,69 @@ public class PersistenceService {
             }
             tx.commit();
             return a;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return a;
         }
     }
-    
+
     public Label getLabelByID(long id) throws Exception {
         EntityTransaction tx = manager.getTransaction();
         Label a = null;
         tx.begin();
         try {
-            a = manager.find(Label.class,id);
+            a = manager.find(Label.class, id);
             tx.commit();
             return a;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return a;
         }
     }
     
+    public Scenario getScenarioByID(long id) throws Exception {
+        EntityTransaction tx = manager.getTransaction();
+        Scenario a = null;
+        tx.begin();
+        try {
+            a = manager.find(Scenario.class, id);
+            tx.commit();
+            return a;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return a;
+        }
+    }
+    
+    public Scenario getScenarioByName(String name) throws Exception {
+        EntityTransaction tx = manager.getTransaction();
+        Scenario a = null;
+        tx.begin();
+        try {
+            Query query = manager.createQuery("SELECT p FROM Scenario p WHERE p.name = :name");
+            query.setParameter("name", name);
+            List results = query.getResultList();
+            
+            if (results != null && results.size() > 0) 
+                a = (Scenario) results.get(0);
+             
+            tx.commit();
+            return a;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return a;
+        }
+    }
+
     public Label findOrCreateNewLabel(String labelName) throws Exception {
         EntityTransaction tx = manager.getTransaction();
         Label a = null;
         tx.begin();
         try {
-            Query query = manager.createQuery("SELECT p FROM Label p WHERE p.name = :name");
+            Query query = manager.createNamedQuery("Label.findByName");
             query.setParameter("name", labelName);
             List results = query.getResultList();
-            if (results != null && results.size() > 0){
+            if (results != null && results.size() > 0) {
                 a = (Label) results.get(0);
             } else {
                 a = new Label(labelName);
@@ -253,13 +303,13 @@ public class PersistenceService {
             }
             tx.commit();
             return a;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return a;
         }
     }
-    
-    public List<Label> getLabels(){
+
+    public List<Label> getLabels() {
         List<Label> labels = new ArrayList();
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
@@ -267,37 +317,37 @@ public class PersistenceService {
             Query query = manager.createNamedQuery("Label.findAll");
             labels = query.getResultList();
             tx.commit();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return labels;
         }
-        
+
         return labels;
     }
 
-    
     public Payment getPaymentByID(long id) throws Exception {
         EntityTransaction tx = manager.getTransaction();
         Payment a = null;
         tx.begin();
         try {
-            a = manager.find(Payment.class,id);
+            a = manager.find(Payment.class, id);
             tx.commit();
             return a;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return a;
         }
     }
-    
+
     public boolean addOrUpdatePayee(Payee payee) throws Exception {
         EntityTransaction tx = manager.getTransaction();
         try {
             tx.begin();
-            if (payee.getId() < 1)
+            if (payee.getId() < 1) {
                 manager.persist(payee);
-            else
+            } else {
                 manager.merge(payee);
+            }
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -305,7 +355,7 @@ public class PersistenceService {
         return true;
     }
 
-    public List<Payee> getPayees(){
+    public List<Payee> getPayees() {
         List<Payee> payees = new ArrayList();
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
@@ -313,36 +363,36 @@ public class PersistenceService {
             Query query = manager.createNamedQuery("Payee.findAll");
             payees = query.getResultList();
             tx.commit();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return payees;
         }
-        
+
         return payees;
     }
-    
     //bulk operation
-    public boolean applyLabel(Label newLabel, List<Payment> payments){
+    public boolean applyLabel(Label newLabel, List<Payment> payments) {
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
         try {
             for (Payment payment : payments) {
-            payment.addLabel(newLabel);
-            if (payment.getId() < 1)
-                manager.persist(payment);
-            else
-                manager.merge(payment);
+                payment.addLabel(newLabel);
+                if (payment.getId() < 1) {
+                    manager.persist(payment);
+                } else {
+                    manager.merge(payment);
+                }
             }
             tx.commit();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        
+
         return true;
     }
-    
-    public List<Scenario> getScenarios(){
+
+    public List<Scenario> getScenarios() {
         List<Scenario> scenarios = new ArrayList();
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
@@ -350,22 +400,23 @@ public class PersistenceService {
             Query query = manager.createNamedQuery("Scenario.findAll");
             scenarios = query.getResultList();
             tx.commit();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return scenarios;
         }
-        
+
         return scenarios;
     }
-    
+
     public boolean addOrUpdateScenario(Scenario scenario) throws Exception {
         EntityTransaction tx = manager.getTransaction();
         try {
             tx.begin();
-            if (scenario.getId() < 1)
+            if (scenario.getId() < 1) {
                 manager.persist(scenario);
-            else
+            } else {
                 manager.merge(scenario);
+            }
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -373,12 +424,12 @@ public class PersistenceService {
         }
         return true;
     }
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-        PersistenceService service = 
+        PersistenceService service =
                 PersistenceService.getInstance(PersistenceService.STORAGE_MAIN);
 //        Payee walmart = new Payee();
 //        walmart.setName("Wal-Mart");
@@ -395,7 +446,7 @@ public class PersistenceService {
 //        ok = service.addOrUpdatePayment(firstPayment);
 //        System.out.println("added first payment: " + firstPayment.getId());
         Payment firstPayment = service.getPaymentByID(1);
-          System.out.println("found first payment: " + firstPayment.getAmount());
+        System.out.println("found first payment: " + firstPayment.getAmount());
         List<Label> labels = firstPayment.getLabels();
         if (labels != null) {
             for (Label label : labels) {
@@ -419,6 +470,4 @@ public class PersistenceService {
 //        service.addOrUpdatePayment(firstPayment);
         service.shutdown();
     }
-
-
 }

@@ -46,6 +46,10 @@ public class PaymentService {
         this.persistenceService = persistenceService;
     }
 
+    public void addOrUpdateScenario(Scenario newScenario) throws Exception  {
+        persistenceService.addOrUpdateScenario(newScenario);
+    }
+
     public boolean createScenario(Scenario currentScenario, 
             Scenario newScenario) throws Exception {
         //payment serivce then copies all payments from base to new
@@ -74,6 +78,10 @@ public class PaymentService {
          *      otherwise, just delete the scenario label
          * 
          */
+    }
+
+    public List<Scenario> getScenarios() throws Exception{
+        return persistenceService.getScenarios();
     }
     
     public List<Payment> getScheduledPayments() 

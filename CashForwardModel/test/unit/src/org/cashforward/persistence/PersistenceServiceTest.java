@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.cashforward.model.PaymentSearchCriteria;
 import org.cashforward.model.Scenario;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -324,6 +325,38 @@ public class PersistenceServiceTest {
 
             walmart = pservice.getPayeeByID(walmart.getId());
             assertNotNull(walmart);
+
+        } catch (Exception ex) {
+            Logger.getLogger(PersistenceServiceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+     @Test
+    public void testGetPaymentsWithCriteria() {
+        try {
+            Date now = Calendar.getInstance().getTime();
+            Scenario scenario = new Scenario("Testing");
+            pservice.addOrUpdateScenario(scenario);
+            
+            Label groceries = pservice.findOrCreateNewLabel("Dining");
+            Payee walmart = pservice.findOrCreateNewPayee("Chipotle");
+            Payment payment = new Payment(6.75f, walmart, now);
+            payment.addScenario(scenario);
+            payment.setOccurence("NONE");
+            payment.addLabel(groceries);
+            pservice.addOrUpdatePayment(payment);
+            System.out.println("Payment was added:" + payment.getId());
+            assertTrue("Payment was added.", payment.getId() > 0);
+
+            scenario = pservice.getScenarioByName(scenario.getName());
+            assertNotNull(scenario);
+            PaymentSearchCriteria criteria =
+                    new PaymentSearchCriteria();
+            criteria.setScenario(scenario);
+            
+            List payments = pservice.getPayments(criteria);
+            System.out.println(payments.size());
+            assertTrue("Got payments by criteria",payments.size() == 1);
 
         } catch (Exception ex) {
             Logger.getLogger(PersistenceServiceTest.class.getName()).log(Level.SEVERE, null, ex);
