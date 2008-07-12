@@ -35,9 +35,8 @@ import org.cashforward.ui.action.LoadSpecificPaymentsAction;
  */
 public class PaymentTaskPanel extends javax.swing.JPanel {
 
-    private static EventList<PaymentFilter> scenarioFilters = new BasicEventList();
+    private static EventList<Scenario> scenarios = new BasicEventList();
     private static EventList<PaymentFilter> types = new BasicEventList();
-    
     private LoadScheduledPaymentsAction loadScheduledPayments;
     private LoadCurrentPaymentsAction loadCurrentPayments;
     private LoadSpecificPaymentsAction loadSpecificPayments;
@@ -49,6 +48,24 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
         loadCurrentPayments = new LoadCurrentPaymentsAction();
         loadScheduledPayments = new LoadScheduledPaymentsAction();
         loadSpecificPayments = new LoadSpecificPaymentsAction();
+        this.scenarioList.setModel(new ScenarioListFilterModel());
+        this.scenarioList.setGroupCellRenderer(new GroupCellRenderer());
+        this.scenarioList.addListSelectionListener(new ListSelectionListener() {
+
+            public void valueChanged(ListSelectionEvent e) {
+                if (e.getValueIsAdjusting()) {
+                    return;
+                } else if (PaymentTaskPanel.this.scenarioList.getSelectedIndex() < 0){
+                    UIContext.getDefault().clearScenario();
+                    return;
+                }
+
+                Scenario scenario = (Scenario) scenarioList.getSelectedValue();
+                UIContext.getDefault().setScenario(scenario);
+                loadSpecificPayments.actionPerformed(null);
+            }
+        });
+        
         this.filterList.setModel(new PaymentListFilterModel());
         this.filterList.setGroupCellRenderer(new GroupCellRenderer());
         this.filterList.addListSelectionListener(new ListSelectionListener() {
@@ -56,13 +73,14 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) {
                     return;
-                } else if (!(PaymentTaskPanel.this.filterList.getSelectedValue()
-                        instanceof PaymentFilter)) {
+                } else if (PaymentTaskPanel.this.filterList.getSelectedIndex() < 0){
+                    UIContext.getDefault().clearScenario();
                     return;
-                }
-                
-                PaymentFilter filter = (PaymentFilter)
-                        filterList.getSelectedValue();
+                }else if (!(PaymentTaskPanel.this.filterList.getSelectedValue() instanceof PaymentFilter)) {
+                    return;
+                } 
+
+                PaymentFilter filter = (PaymentFilter) filterList.getSelectedValue();
                 processFilter(filter);
             }
         });
@@ -73,24 +91,37 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
     }
 
     private void processFilter(PaymentFilter filter) {
+        filter.setScenario(UIContext.getDefault().getScenario());
+        UIContext.getDefault().setPaymentFilter(filter);
         if (filter.getPaymentType() == PaymentFilter.TYPE_CURRENT) {
             loadCurrentPayments.actionPerformed(null);
         } else if (filter.getPaymentType() == PaymentFilter.TYPE_SCHEDULED) {
             loadScheduledPayments.actionPerformed(null);
-        } else if (filter.getPaymentType() == PaymentFilter.TYPE_CALCULATED) {
-            UIContext.getDefault().setScenario(filter.getScenario());
-            loadSpecificPayments.actionPerformed(null);
-        }
+        } 
     }
 
     public void setScenarios(EventList<Scenario> scenarios) {
-        PaymentFilter scenarioFilter = null;
         for (Scenario scenario : scenarios) {
-            scenarioFilter = new PaymentFilter(scenario);
-            scenarioFilter.setPaymentType(PaymentFilter.TYPE_CALCULATED);
-            scenarioFilters.add(scenarioFilter);
+            PaymentTaskPanel.scenarios.add(scenario);
         }
+        scenarios.addListEventListener(new ListEventListener() {
+            //TODO handle remove
+            public void listChanged(ListEvent event) {
+                if (event.getType() == ListEvent.INSERT) {
+                    EventList<Scenario> source = event.getSourceList();
+                    Scenario scenario = source.get(event.getIndex());
+                    PaymentTaskPanel.scenarios.add(scenario);
+                } else if (event.getType() == ListEvent.DELETE) {
+                    EventList<Scenario> source = event.getSourceList();
+                    Scenario scenario = source.get(event.getIndex());
+                    PaymentTaskPanel.scenarios.remove(scenario);
+                } else if (event.getType() == ListEvent.UPDATE) {
+                    
+                }
+            }
+        });
     }
+       
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -104,18 +135,26 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jScrollPane1 = new javax.swing.JScrollPane();
         filterList = new com.jidesoft.list.GroupList();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        scenarioList = new com.jidesoft.list.GroupList();
 
         jScrollPane1.setViewportView(filterList);
+
+        jScrollPane2.setViewportView(scenarioList);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -123,11 +162,49 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroup1;
     private com.jidesoft.list.GroupList filterList;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private com.jidesoft.list.GroupList scenarioList;
     // End of variables declaration//GEN-END:variables
+    static class ScenarioListFilterModel extends AbstractGroupableListModel {
+
+        private static String[] GROUP_NAMES = {
+            "Scenarios"
+        };
+
+        public ScenarioListFilterModel() {
+            scenarios.addListEventListener(new ListEventListener() {
+
+                public void listChanged(ListEvent event) {
+                    fireGroupChanged(scenarios);
+                }
+            });
+
+        }
+
+        public int getSize() {
+            //System.out.println("getSize:"+scenarios.length + payments.length + labels.length);
+            return scenarios.size();
+        }
+
+        public Object getElementAt(int index) {
+            return scenarios.get(index);//return scenarios[index];
+        }
+
+        @Override
+        public Object[] getGroups() {
+            return GROUP_NAMES;
+        }
+
+        @Override
+        public Object getGroupAt(int index) {
+            return GROUP_NAMES[0];
+        }
+    }
+    
     static class PaymentListFilterModel extends AbstractGroupableListModel {
 
         private static String[] GROUP_NAMES = {
-            "Scenarios", "Payments", "Labels"
+            "Payments", "Labels"
         };
         private static final String[] payments = {
             "Scheduled", "Current"
@@ -135,16 +212,9 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
         private static final String[] labels = {
             "Auto", "Entertainment", "Food"
         };
-        
         private List<PaymentFilter> label = new ArrayList();
 
         public PaymentListFilterModel() {
-            scenarioFilters.addListEventListener(new ListEventListener(){
-                public void listChanged(ListEvent event) {
-                    fireGroupChanged(scenarioFilters);
-                }
-            });
-            
             //create our filters, probably should be a customizable by user
             PaymentFilter scheduled = new PaymentFilter("Scheduled");
             scheduled.setPaymentType(PaymentFilter.TYPE_SCHEDULED);
@@ -167,20 +237,17 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
 
         public int getSize() {
             //System.out.println("getSize:"+scenarios.length + payments.length + labels.length);
-            return scenarioFilters.size() + payments.length + labels.length;
+            return payments.length + labels.length;
         }
 
         public Object getElementAt(int index) {
             //System.out.println("getElementAt:"+index);
-            if (index < scenarioFilters.size()) {
-                //System.out.println("scenarios:"+(scenarios.length));
-                return scenarioFilters.get(index);//return scenarios[index];
-            } else if (index < scenarioFilters.size() + payments.length) {
+            if (index < payments.length) {
                 //System.out.println("scenarios and payments:"+(index - scenarios.length));
-                return types.get(index - scenarioFilters.size());//return payments[index - scenarios.length];
+                return types.get(index);//return payments[index - scenarios.length];
             } else {
                 //System.out.println("scenarios and payments and labels:"+(index - scenarios.length - payments.length));
-                return label.get(index - (scenarioFilters.size() + payments.length));//labels[index - (scenarios.length + payments.length)];
+                return label.get(index - (payments.length));//labels[index - (scenarios.length + payments.length)];
             }
         }
 
@@ -192,18 +259,14 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
         @Override
         public Object getGroupAt(int index) {
             //System.out.println("getGroupAt:"+index);
-            if (index < scenarioFilters.size()) {
-                //System.out.println("scenarios:"+(scenarios.length));
-                return GROUP_NAMES[0];
-            } else if (index < scenarioFilters.size() + payments.length) {
+            if (index < payments.length) {
                 //System.out.println("scenarios and payments:"+(index - scenarios.length));
-                return GROUP_NAMES[1];
+                return GROUP_NAMES[0];
             } else {
                 //System.out.println("scenarios and payments and labels:"+(index - scenarios.length - payments.length));
-                return GROUP_NAMES[2];
+                return GROUP_NAMES[1];
             }
         }
-       
     }
 
     class GroupCellRenderer extends DefaultListCellRenderer {
