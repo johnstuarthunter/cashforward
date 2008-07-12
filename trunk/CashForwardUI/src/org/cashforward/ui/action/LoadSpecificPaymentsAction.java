@@ -36,6 +36,8 @@ public class LoadSpecificPaymentsAction extends AbstractAction {
         EventList<Payment> paymentList =
                 UIContext.getDefault().getFilteredPayments();
 
+        filter.setScenario(UIContext.getDefault().getScenario());
+        
         List allPayments = serviceAdapter.getPayments(
                 filter.getPaymentSearchCriteria());
         
