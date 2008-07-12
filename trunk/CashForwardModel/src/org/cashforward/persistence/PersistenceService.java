@@ -122,12 +122,13 @@ public class PersistenceService {
         }
     }
 
-    public List<Payment> getCurrentPayments() throws Exception {
+    public List<Payment> getCurrentPayments(Scenario scenario) throws Exception {
         List<Payment> payments = new ArrayList();
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
         try {
             Query query = manager.createNamedQuery("Payment.findAll");
+            query.setParameter("scenario", scenario);
             payments = query.getResultList();
             tx.commit();
         } catch (Exception e) {
@@ -372,6 +373,9 @@ public class PersistenceService {
     }
     //bulk operation
     public boolean applyLabel(Label newLabel, List<Payment> payments) {
+       if (!addOrUpdateLabel(newLabel)){
+                return false;
+        } 
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
         try {

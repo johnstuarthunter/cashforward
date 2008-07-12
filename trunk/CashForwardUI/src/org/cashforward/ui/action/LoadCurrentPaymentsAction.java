@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.cashforward.model.Payment;
+import org.cashforward.model.Scenario;
 import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
 import org.cashforward.ui.task.PaymentFilter;
@@ -37,7 +38,10 @@ public class LoadCurrentPaymentsAction extends AbstractAction {
         EventList<Payment> paymentList = (EventList)
                 UIContext.getDefault().getCurrentPayments();
         
-        List allPayments = serviceAdapter.getCurrentPayments();
+        Scenario scenario = 
+                UIContext.getDefault().getScenario();
+        
+        List allPayments = serviceAdapter.getCurrentPayments(scenario);
         if (allPayments == null)
             return;
         
