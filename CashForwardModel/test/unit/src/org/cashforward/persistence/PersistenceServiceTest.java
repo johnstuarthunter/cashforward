@@ -228,7 +228,8 @@ public class PersistenceServiceTest {
             System.out.println("Payment was added:" + payment.getId());
             assertTrue("Payment was added.", payment.getId() > 0);
 
-            List<Payment> allpayments = pservice.getCurrentPayments();
+            Scenario s = null;
+            List<Payment> allpayments = pservice.getCurrentPayments(s);
             assertTrue(allpayments.size() > 0);
         } catch (Exception ex) {
             Logger.getLogger(PersistenceServiceTest.class.getName()).log(Level.SEVERE, null, ex);

@@ -89,9 +89,9 @@ public class PaymentService {
             return persistenceService.getSchdeuledPayments();
     }
     
-    public List<Payment> getCurrentPayments() 
+    public List<Payment> getCurrentPayments(Scenario scenario) 
         throws Exception {
-            return persistenceService.getCurrentPayments();
+            return persistenceService.getCurrentPayments(scenario);
     }
     
     public List<Payment> getPayments(PaymentSearchCriteria criteria) 

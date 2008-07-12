@@ -35,7 +35,7 @@ import org.cashforward.model.Payment.Occurence;
 @Table(name = "PAYMENT")
 @NamedQueries({
     @NamedQuery(name = "Payment.findAll",
-    query = "SELECT p FROM Payment p where p.occurence = 'NONE' order by p.startDate asc"),
+    query = "SELECT p FROM Payment p where p.occurence = 'NONE' and :scenario MEMBER OF p.labels order by p.startDate asc"),
     @NamedQuery(name = "Payment.findAllScheduled",
     query = "SELECT p FROM Payment p where p.occurence != 'NONE' order by p.startDate asc"),
     @NamedQuery(name = "Payment.findById",
