@@ -28,6 +28,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
 import org.cashforward.ui.UIContext;
+import org.cashforward.ui.internal.filter.MatcherFactory;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -52,6 +53,8 @@ public class PaymentListPanel extends TopComponent {
     private EventSelectionModel selectionModel;
     private Lookup.Result paymentNotifier =
             UIContext.getDefault().lookupResult(Payment.class);
+    private MatcherFactory matcherFactory = 
+            MatcherFactory.getInstance();
     protected static final Color BACKGROUND1 = new Color(253, 253, 244);
     protected static final Color BACKGROUND2 = new Color(230, 230, 255);
     protected static final Color BACKGROUND3 = new Color(210, 255, 210);
@@ -70,7 +73,7 @@ public class PaymentListPanel extends TopComponent {
                 Collection c = r.allInstances();
                 if (!c.isEmpty()) {
                     Payment payment = (Payment) c.iterator().next();
-                    int index = sortedItems.indexOf(payment);
+                    int index = filteredList.indexOf(payment);
                     if (!selectionModel.getValueIsAdjusting()) {
                         if (index == selectionModel.getAnchorSelectionIndex()){
                             tableModel.fireTableRowsUpdated(index, index);
@@ -91,13 +94,13 @@ public class PaymentListPanel extends TopComponent {
         //set up model
         sortedItems =
                 new SortedList(payments, new PaymentComparator());
+        
+        filteredList = new FilterList(sortedItems,
+                matcherFactory.createLabelMatcher());
 
-        //filteredList = new FilterList(sortedItems,
-        //        matcherFactory.createMatcher(songs,this));
-
-        selectionModel = new EventSelectionModel(sortedItems);
+        selectionModel = new EventSelectionModel(filteredList);
         selectionModel.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
-        tableModel = new EventTableModel(sortedItems, new PaymentTableFormat());
+        tableModel = new EventTableModel(filteredList, new PaymentTableFormat());
         paymentTable.setModel(tableModel);
         paymentTable.setSelectionModel(selectionModel);
 
@@ -107,7 +110,8 @@ public class PaymentListPanel extends TopComponent {
         paymentTable.getColumnModel().getColumn(2).setCellRenderer(pcr);
         paymentTable.getColumnModel().getColumn(3).setCellRenderer(pcr);
 
-        TableComparatorChooser tableSorter = new TableComparatorChooser(paymentTable, sortedItems, true);
+        TableComparatorChooser tableSorter = 
+                new TableComparatorChooser(paymentTable, sortedItems, true);
 
         paymentTable.getSelectionModel().addListSelectionListener(
                 new ListSelectionListener() {
@@ -116,12 +120,12 @@ public class PaymentListPanel extends TopComponent {
                         if (e.getValueIsAdjusting()) {
                             return;
                         } else if (paymentTable.getSelectedRow() < 0 ||
-                                sortedItems.size() <
+                                filteredList.size() <
                                 paymentTable.getSelectedRow()) {
                             UIContext.getDefault().clearPayment();
                             return;
                         }
-                        Payment payment = (Payment) sortedItems.get(paymentTable.getSelectedRow());
+                        Payment payment = (Payment) filteredList.get(paymentTable.getSelectedRow());
                         //content.set(Collections.singleton (payment), null);
                         UIContext.getDefault().setPayment(payment);
                     }
@@ -138,7 +142,7 @@ public class PaymentListPanel extends TopComponent {
 
         //int count = payments.size();
         for (int i = 0; i <= toIndex; i++) {
-            balance += sortedItems.get(i).getAmount();
+            balance += filteredList.get(i).getAmount();
         }
 
         return balance;
@@ -265,7 +269,7 @@ public class PaymentListPanel extends TopComponent {
             } else if (column == 2) {
                 return Float.valueOf(amount);
             } else if (column == 3) {
-                return getBalance(sortedItems.indexOf(baseObject));
+                return getBalance(filteredList.indexOf(baseObject));
             } else {
                 return "";
             }

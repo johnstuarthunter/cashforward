@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
+import org.cashforward.model.Scenario;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -61,14 +62,17 @@ public class PaymentServiceAdapterTest {
      */
     @Test
     public void testGetAllPayments() {
+
         System.out.println("getAllPayments");
         PaymentServiceAdapter instance = new PaymentServiceAdapter();
+        Scenario base = instance.getDefaultScenario();
+        
         Payment payment
             = new Payment(4.01f,new Payee("Starbucks"),new Date());
         payment.setOccurence("daily");
         boolean ok = instance.addOrUpdatePayment(payment);
         assertTrue("Payment added/updated", ok);
-        List<Payment> result = instance.getScheduledPayments();
+        List<Payment> result = instance.getScheduledPayments(base);
         assertTrue("Got all payments.",result.size() > 1);
     }
 

@@ -8,8 +8,6 @@ package org.cashforward.ui.payment;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
 import ca.odell.glazedlists.event.ListEventListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import org.cashforward.model.Label;
@@ -87,10 +85,9 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
             super();
             this.source = source;
             source.addListEventListener(new ListEventListener<Payee>() {
-
-                public void listChanged(ListEvent<Payee> arg0) {
+                public void listChanged(ListEvent<Payee> event) {
                     EventListComboBoxModel.this.fireContentsChanged(
-                            EventListComboBoxModel.this, -1, -1);
+                            EventListComboBoxModel.this,0,event.getSourceList().size());
                 }
             });
         }
