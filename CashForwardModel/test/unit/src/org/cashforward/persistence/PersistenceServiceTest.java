@@ -219,17 +219,18 @@ public class PersistenceServiceTest {
     @Test
     public void testGetCurrentPayments() {
         try {
+            Scenario base = getDefaultScenario();
             Date now = Calendar.getInstance().getTime();
             Label groceries = new Label("Groceries");
             Payee walmart = new Payee("Wal-Mart");
             Payment payment = new Payment(45.22f, walmart, now);
             payment.setOccurence("NONE");
+            payment.addScenario(base);
             pservice.addOrUpdatePayment(payment);
             System.out.println("Payment was added:" + payment.getId());
             assertTrue("Payment was added.", payment.getId() > 0);
 
-            Scenario s = null;
-            List<Payment> allpayments = pservice.getCurrentPayments(s);
+            List<Payment> allpayments = pservice.getCurrentPayments(base);
             assertTrue(allpayments.size() > 0);
         } catch (Exception ex) {
             Logger.getLogger(PersistenceServiceTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -239,10 +240,12 @@ public class PersistenceServiceTest {
     @Test
     public void testGetAllScheduledPayments() {
         try {
+            Scenario base = getDefaultScenario();
             Date now = Calendar.getInstance().getTime();
             Label groceries = new Label("Groceries");
             Payee walmart = new Payee("Wal-Mart");
             Payment payment = new Payment(45.22f, walmart, now);
+            payment.addScenario(base);
             payment.setOccurence("ONCE");
             pservice.addOrUpdatePayment(payment);
             System.out.println("Payment was added:" + payment.getId());
@@ -250,11 +253,12 @@ public class PersistenceServiceTest {
 
             Payment payment2 = new Payment(190f, walmart, now);
             payment2.setOccurence("ONCE");
+            payment2.addScenario(base);
             pservice.addOrUpdatePayment(payment2);
             System.out.println("Payment was added:" + payment2.getId());
             assertTrue("Payment was added.", payment2.getId() > 0);
 
-            List<Payment> allpayments = pservice.getSchdeuledPayments();
+            List<Payment> allpayments = pservice.getSchdeuledPayments(base);
             assertTrue(allpayments.size() > 0);
         } catch (Exception ex) {
             Logger.getLogger(PersistenceServiceTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -362,5 +366,15 @@ public class PersistenceServiceTest {
         } catch (Exception ex) {
             Logger.getLogger(PersistenceServiceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private Scenario getDefaultScenario() {
+        Scenario s = new Scenario("Current");
+        try {
+            pservice.addOrUpdateScenario(s);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return s;
     }
 }

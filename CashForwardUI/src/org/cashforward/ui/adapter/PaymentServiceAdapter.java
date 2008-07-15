@@ -54,13 +54,12 @@ public class PaymentServiceAdapter {
     }
 
     public Scenario getDefaultScenario() {
-        Scenario s = new Scenario("Current");
         try {
-            paymentService.addOrUpdateScenario(s);
+            return paymentService.getDefaultScenario();
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         }
-        return s;
+        return null;
     }
 
     public List getScenarios() {
@@ -117,9 +116,9 @@ public class PaymentServiceAdapter {
         return null;
     }
     
-    public List<Payment> getScheduledPayments(){
+    public List<Payment> getScheduledPayments(Scenario scenario){
         try {
-            return paymentService.getScheduledPayments();
+            return paymentService.getScheduledPayments(scenario);
         } catch (Exception e) {
         }
         
@@ -135,5 +134,16 @@ public class PaymentServiceAdapter {
             
         }
         return null;
+    }
+
+    public boolean addScenario(Scenario base) {
+        try {
+            paymentService.addOrUpdateScenario(base);
+            return true;
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        return false;
     }
 }

@@ -46,6 +46,16 @@ public class PaymentService {
         this.persistenceService = persistenceService;
     }
 
+    public Scenario getDefaultScenario() {
+        Scenario s = new Scenario("Current");
+        try {
+            addOrUpdateScenario(s);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return s;
+    }
+
     public void addOrUpdateScenario(Scenario newScenario) throws Exception  {
         persistenceService.addOrUpdateScenario(newScenario);
     }
@@ -84,9 +94,9 @@ public class PaymentService {
         return persistenceService.getScenarios();
     }
     
-    public List<Payment> getScheduledPayments() 
+    public List<Payment> getScheduledPayments(Scenario scenario) 
         throws Exception {
-            return persistenceService.getSchdeuledPayments();
+            return persistenceService.getSchdeuledPayments(scenario);
     }
     
     public List<Payment> getCurrentPayments(Scenario scenario) 
@@ -100,8 +110,10 @@ public class PaymentService {
         Date start = criteria.getDateStart();
         Date end = criteria.getDateEnd();
         
+        Scenario scenario = criteria.getScenario();
+        
         List<Payment> allPayments = new ArrayList();    
-        List<Payment> payments = persistenceService.getSchdeuledPayments();
+        List<Payment> payments = persistenceService.getSchdeuledPayments(scenario);
         System.out.println(payments.size() + " scheduled payments");
         for (Payment payment : payments) {
             List newPayments = 

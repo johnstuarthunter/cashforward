@@ -37,7 +37,7 @@ import org.cashforward.model.Payment.Occurence;
     @NamedQuery(name = "Payment.findAll",
     query = "SELECT p FROM Payment p where p.occurence = 'NONE' and :scenario MEMBER OF p.labels order by p.startDate asc"),
     @NamedQuery(name = "Payment.findAllScheduled",
-    query = "SELECT p FROM Payment p where p.occurence != 'NONE' order by p.startDate asc"),
+    query = "SELECT p FROM Payment p where p.occurence != 'NONE' and :scenario MEMBER OF p.labels order by p.startDate asc"),
     @NamedQuery(name = "Payment.findById",
     query = "SELECT p FROM Payment p WHERE p.id = :id"),
     @NamedQuery(name = "Payment.findByPayeeId",
@@ -110,7 +110,7 @@ public class Payment implements Serializable {
     private List<PaymentOverride> overrides = new ArrayList();
     
     @ManyToMany(targetEntity = Label.class,
-    cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "PAYMENT_LABEL",
     joinColumns = {@JoinColumn(name = "LABEL_ID")},
     inverseJoinColumns = {@JoinColumn(name = "PAYMENT_ID")})

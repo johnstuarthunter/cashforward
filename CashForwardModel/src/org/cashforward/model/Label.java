@@ -30,8 +30,8 @@ import javax.persistence.Table;
     @NamedQuery(name = "Label.findByName", 
         query = "SELECT l FROM Label l WHERE l.name = :name"),
     @NamedQuery(name = "Label.findAll", 
-        query = "SELECT l FROM Label l")})
-public class Label implements Serializable {
+        query = "SELECT l FROM Label l where l.internal = false")})
+public class Label implements Comparable,Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +39,8 @@ public class Label implements Serializable {
     private long id;
     @Column(name = "NAME", nullable = false)
     private String name;
+    @Column(name = "INTERNAL", nullable = false)
+    protected boolean internal;
 
     public Label() {
     }
@@ -53,6 +55,14 @@ public class Label implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+    
+    public void setInternal(boolean internal){
+        //no overrriding hack
+    }
+    
+    public boolean isInternal(){
+        return internal;
     }
 
     public String getName() {
@@ -73,19 +83,30 @@ public class Label implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Label)) {
+        if (object == null)
+            return false;
+        
+        if (!(object.getClass().isAssignableFrom(getClass()))) {
             return false;
         }
         Label other = (Label) object;
         if (this.id != other.id) {
             return false;
-        }
-        return true;
+        } else
+            return this.name.equals(other.getName());
+        
     }
 
     @Override
     public String toString() {
         return name;//"cashfxpersistence.Label[id=" + id + "]";
+    }
+
+    public int compareTo(Object o) {
+        if (o instanceof Label){
+            return this.name.compareTo(((Label)o).getName());
+        } else 
+            return 1;
     }
 
 }

@@ -28,6 +28,7 @@ import org.cashforward.ui.UIContext;
 import org.cashforward.ui.action.LoadCurrentPaymentsAction;
 import org.cashforward.ui.action.LoadScheduledPaymentsAction;
 import org.cashforward.ui.action.LoadSpecificPaymentsAction;
+import org.cashforward.util.DateUtilities;
 
 /**
  *
@@ -55,17 +56,27 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) {
                     return;
-                } else if (PaymentTaskPanel.this.scenarioList.getSelectedIndex() < 0){
+                } else if (PaymentTaskPanel.this.scenarioList.getSelectedIndex() < 0) {
                     UIContext.getDefault().clearScenario();
+                    return;
+                }
+                
+                if (e.getFirstIndex() != e.getLastIndex()){
+                    //update graph with scenario
+                    
                     return;
                 }
 
                 Scenario scenario = (Scenario) scenarioList.getSelectedValue();
                 UIContext.getDefault().setScenario(scenario);
-                loadSpecificPayments.actionPerformed(null);
+                //loadSpecificPayments.actionPerformed(null);
+                PaymentFilter filter = (PaymentFilter) filterList.getSelectedValue();
+                if (filter != null) {
+                    processFilter(filter);
+                }
             }
         });
-        
+
         this.filterList.setModel(new PaymentListFilterModel());
         this.filterList.setGroupCellRenderer(new GroupCellRenderer());
         this.filterList.addListSelectionListener(new ListSelectionListener() {
@@ -73,12 +84,12 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) {
                     return;
-                } else if (PaymentTaskPanel.this.filterList.getSelectedIndex() < 0){
+                } else if (PaymentTaskPanel.this.filterList.getSelectedIndex() < 0) {
                     UIContext.getDefault().clearScenario();
                     return;
-                }else if (!(PaymentTaskPanel.this.filterList.getSelectedValue() instanceof PaymentFilter)) {
+                } else if (!(PaymentTaskPanel.this.filterList.getSelectedValue() instanceof PaymentFilter)) {
                     return;
-                } 
+                }
 
                 PaymentFilter filter = (PaymentFilter) filterList.getSelectedValue();
                 processFilter(filter);
@@ -90,6 +101,11 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
 
     }
 
+    public JList getLabelListComponent() {
+        return this.filterList;
+    }
+    //alternatively, this would just be filtered automatically
+    //using the glazed lists matchers
     private void processFilter(PaymentFilter filter) {
         filter.setScenario(UIContext.getDefault().getScenario());
         UIContext.getDefault().setPaymentFilter(filter);
@@ -97,7 +113,9 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
             loadCurrentPayments.actionPerformed(null);
         } else if (filter.getPaymentType() == PaymentFilter.TYPE_SCHEDULED) {
             loadScheduledPayments.actionPerformed(null);
-        } 
+        } else if (filter.getPaymentType() == PaymentFilter.TYPE_CALCULATED) {
+            loadSpecificPayments.actionPerformed(null);
+        }
     }
 
     public void setScenarios(EventList<Scenario> scenarios) {
@@ -107,21 +125,22 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
         scenarios.addListEventListener(new ListEventListener() {
             //TODO handle remove
             public void listChanged(ListEvent event) {
-                if (event.getType() == ListEvent.INSERT) {
-                    EventList<Scenario> source = event.getSourceList();
-                    Scenario scenario = source.get(event.getIndex());
-                    PaymentTaskPanel.scenarios.add(scenario);
-                } else if (event.getType() == ListEvent.DELETE) {
-                    EventList<Scenario> source = event.getSourceList();
-                    Scenario scenario = source.get(event.getIndex());
-                    PaymentTaskPanel.scenarios.remove(scenario);
-                } else if (event.getType() == ListEvent.UPDATE) {
-                    
+                while (event.next()) {
+                    if (event.getType() == ListEvent.INSERT) {
+                        EventList<Scenario> source = event.getSourceList();
+                        Scenario scenario = source.get(event.getIndex());
+                        PaymentTaskPanel.scenarios.add(scenario);
+                    } else if (event.getType() == ListEvent.DELETE) {
+                        EventList<Scenario> source = event.getSourceList();
+                        Scenario scenario = source.get(event.getIndex());
+                        PaymentTaskPanel.scenarios.remove(scenario);
+                    } else if (event.getType() == ListEvent.UPDATE) {
+                    }
                 }
+
             }
         });
     }
-       
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -132,7 +151,6 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         jScrollPane1 = new javax.swing.JScrollPane();
         filterList = new com.jidesoft.list.GroupList();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -159,7 +177,6 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
     private com.jidesoft.list.GroupList filterList;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -200,17 +217,17 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
             return GROUP_NAMES[0];
         }
     }
-    
+
     static class PaymentListFilterModel extends AbstractGroupableListModel {
 
         private static String[] GROUP_NAMES = {
             "Payments", "Labels"
         };
         private static final String[] payments = {
-            "Scheduled", "Current"
+            "Scheduled", "Current", "Projected"
         };
         private static final String[] labels = {
-            "Auto", "Entertainment", "Food"
+            "Auto", "Fun", "Food"
         };
         private List<PaymentFilter> label = new ArrayList();
 
@@ -224,10 +241,18 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
             current.setPaymentType(PaymentFilter.TYPE_CURRENT);
             types.add(current);
 
+            PaymentFilter projected = new PaymentFilter("Projected");
+            projected.getPaymentSearchCriteria().setDateStart(
+                    DateUtilities.firstOfThisYear());
+            projected.getPaymentSearchCriteria().setDateEnd(
+                    DateUtilities.endOfThisYear());
+            projected.setPaymentType(PaymentFilter.TYPE_CALCULATED);
+            types.add(projected);
+
             PaymentFilter auto = new PaymentFilter("Auto");
             label.add(auto);
 
-            PaymentFilter fun = new PaymentFilter("Entertainment");
+            PaymentFilter fun = new PaymentFilter("Fun");
             label.add(fun);
 
             PaymentFilter food = new PaymentFilter("Food");

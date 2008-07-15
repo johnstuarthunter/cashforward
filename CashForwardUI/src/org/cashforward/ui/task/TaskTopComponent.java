@@ -15,7 +15,7 @@ import org.openide.windows.WindowManager;
 /**
  * Top component which displays something.
  */
-final class TaskTopComponent extends TopComponent {
+public final class TaskTopComponent extends TopComponent {
 
     private static TaskTopComponent instance;
     /** path to the icon used by the component and its open action */
@@ -30,6 +30,10 @@ final class TaskTopComponent extends TopComponent {
         
         EventList scenarios = UIContext.getDefault().getScenarios();
         paymentTaskPanel.setScenarios(scenarios);
+    }
+    
+    public PaymentTaskPanel getPaymentTaskPanel(){
+        return this.paymentTaskPanel;
     }
 
     /** This method is called from within the constructor to

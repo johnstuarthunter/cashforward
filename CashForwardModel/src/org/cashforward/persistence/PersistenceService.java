@@ -139,12 +139,13 @@ public class PersistenceService {
         return payments;
     }
 
-    public List<Payment> getSchdeuledPayments() {
+    public List<Payment> getSchdeuledPayments(Scenario scenario) {
         List<Payment> payments = new ArrayList();
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
         try {
             Query query = manager.createNamedQuery("Payment.findAllScheduled");
+            query.setParameter("scenario", scenario);
             payments = query.getResultList();
             tx.commit();
         } catch (Exception e) {
