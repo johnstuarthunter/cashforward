@@ -34,7 +34,7 @@ public class LoadSpecificPaymentsAction extends AbstractAction {
         }
 
         EventList<Payment> paymentList =
-                UIContext.getDefault().getFilteredPayments();
+                UIContext.getDefault().getPayments();
 
         filter.setScenario(UIContext.getDefault().getScenario());
         

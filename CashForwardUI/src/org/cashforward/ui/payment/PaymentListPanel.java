@@ -96,7 +96,7 @@ public class PaymentListPanel extends TopComponent {
                 new SortedList(payments, new PaymentComparator());
         
         filteredList = new FilterList(sortedItems,
-                matcherFactory.createLabelMatcher());
+                matcherFactory.createLabelAndScenarioMatcher());
 
         selectionModel = new EventSelectionModel(filteredList);
         selectionModel.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
@@ -251,6 +251,7 @@ public class PaymentListPanel extends TopComponent {
 
         public Object getColumnValue(Object baseObject, int column) {
             Payment payment = (Payment) baseObject;
+            System.out.println("getColumnValue " + column);
             if (payment == null) {
                 return null;
             }

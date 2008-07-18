@@ -41,7 +41,7 @@ final class ScenarioTopComponent extends TopComponent {
         setToolTipText(NbBundle.getMessage(ScenarioTopComponent.class, "HINT_ScenarioTopComponent"));
 //        setIcon(Utilities.loadImage(ICON_PATH, true));
     
-        scenarioPanel.setPayments(UIContext.getDefault().getFilteredPayments());
+        scenarioPanel.setPayments(UIContext.getDefault().getPayments());
         scenarioPanel.setPaymentFilter(paymentFilter);
         
         filterNotifier.addLookupListener(new LookupListener() {

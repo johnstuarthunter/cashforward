@@ -10,6 +10,7 @@
     <folder name="Actions">
         <folder name="Payment">
             <attr name="position" intvalue="100"/>
+            <file name="org-cashforward-ui-action-CompareScenariosAction.instance"/>
             <file name="org-cashforward-ui-action-EnterScheduledPaymentAction.instance"/>
             <file name="org-cashforward-ui-action-NewPaymentAction.instance"/>
             <file name="org-cashforward-ui-action-NewScenarioAction.instance"/>
@@ -52,6 +53,10 @@
     </folder>
     <folder name="Toolbars">
         <folder name="File">
+            <file name="org-cashforward-ui-action-CompareScenariosAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Payment/org-cashforward-ui-action-CompareScenariosAction.instance"/>
+                <attr name="position" intvalue="50"/>
+            </file>
             <file name="org-cashforward-ui-action-EnterScheduledPaymentAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Payment/org-cashforward-ui-action-EnterScheduledPaymentAction.instance"/>
                 <attr name="position" intvalue="200"/>

@@ -94,14 +94,14 @@ public class PaymentService {
         return persistenceService.getScenarios();
     }
     
-    public List<Payment> getScheduledPayments(Scenario scenario) 
+    public List<Payment> getScheduledPayments() 
         throws Exception {
-            return persistenceService.getSchdeuledPayments(scenario);
+            return persistenceService.getSchdeuledPayments();
     }
     
-    public List<Payment> getCurrentPayments(Scenario scenario) 
+    public List<Payment> getCurrentPayments() 
         throws Exception {
-            return persistenceService.getCurrentPayments(scenario);
+            return persistenceService.getCurrentPayments();
     }
     
     public List<Payment> getPayments(PaymentSearchCriteria criteria) 
@@ -113,7 +113,7 @@ public class PaymentService {
         Scenario scenario = criteria.getScenario();
         
         List<Payment> allPayments = new ArrayList();    
-        List<Payment> payments = persistenceService.getSchdeuledPayments(scenario);
+        List<Payment> payments = persistenceService.getSchdeuledPayments();
         System.out.println(payments.size() + " scheduled payments");
         for (Payment payment : payments) {
             List newPayments = 

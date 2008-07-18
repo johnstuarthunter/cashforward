@@ -97,6 +97,17 @@ public class PaymentServiceAdapter {
         
         return null;
     }
+
+    public List<Payment> getPayments(){
+        List<Payment> current = getCurrentPayments();
+        List<Payment> scheduled = getScheduledPayments();
+        if (current != null){
+            current.addAll(scheduled);
+            return current;
+        }
+        else
+            return scheduled;
+    }
     
     public List<Payment> getPayments(PaymentSearchCriteria criteria){
         try {
@@ -107,18 +118,18 @@ public class PaymentServiceAdapter {
         return null;
     }
     
-    public List<Payment> getCurrentPayments(Scenario scenario){
+    public List<Payment> getCurrentPayments(){
         try {
-            return paymentService.getCurrentPayments(scenario);
+            return paymentService.getCurrentPayments();
         } catch (Exception e) {
         }
         
         return null;
     }
     
-    public List<Payment> getScheduledPayments(Scenario scenario){
+    public List<Payment> getScheduledPayments(){
         try {
-            return paymentService.getScheduledPayments(scenario);
+            return paymentService.getScheduledPayments();
         } catch (Exception e) {
         }
         
