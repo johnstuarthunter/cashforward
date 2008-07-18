@@ -35,9 +35,9 @@ import org.cashforward.model.Payment.Occurence;
 @Table(name = "PAYMENT")
 @NamedQueries({
     @NamedQuery(name = "Payment.findAll",
-    query = "SELECT p FROM Payment p where p.occurence = 'NONE' and :scenario MEMBER OF p.labels order by p.startDate asc"),
+    query = "SELECT p FROM Payment p where p.occurence = 'NONE' order by p.startDate asc"),
     @NamedQuery(name = "Payment.findAllScheduled",
-    query = "SELECT p FROM Payment p where p.occurence != 'NONE' and :scenario MEMBER OF p.labels order by p.startDate asc"),
+    query = "SELECT p FROM Payment p where p.occurence != 'NONE' order by p.startDate asc"),
     @NamedQuery(name = "Payment.findById",
     query = "SELECT p FROM Payment p WHERE p.id = :id"),
     @NamedQuery(name = "Payment.findByPayeeId",
@@ -108,14 +108,12 @@ public class Payment implements Serializable {
     private String occurence;
     @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)
     private List<PaymentOverride> overrides = new ArrayList();
-    
     @ManyToMany(targetEntity = Label.class,
     cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "PAYMENT_LABEL",
     joinColumns = {@JoinColumn(name = "LABEL_ID")},
     inverseJoinColumns = {@JoinColumn(name = "PAYMENT_ID")})
     private List<Label> labels = new ArrayList();
-    
     private transient List<Scenario> scenarios = new ArrayList();
 
     public Payment() {
@@ -208,12 +206,13 @@ public class Payment implements Serializable {
     public List<Label> getLabels() {
         return labels;
     }
-    
+
     public List<Scenario> getScenarios() {
         scenarios.clear();
         for (Label label : labels) {
-            if (label instanceof Scenario)
+            if (label instanceof Scenario) {
                 scenarios.add((Scenario) label);
+            }
         }
         return scenarios;
     }
@@ -290,13 +289,25 @@ public class Payment implements Serializable {
             this.labels.add(label);
         }
     }
+    
+    public void addLabels(List<Label> labels) {
+        for (Label label : labels) {
+            addLabel(label);
+        }
+    }
 
     public void removeLabel(Label label) {
         this.labels.remove(label);
     }
-    
+
     public void addScenario(Scenario scenario) {
         addLabel(scenario);
+    }
+
+    public void addScenarios(List<Scenario> scenarios) {
+        for (Label scenario : scenarios) {
+            addLabel(scenario);
+        }
     }
 
     public void removeScenario(Scenario scenario) {
@@ -311,14 +322,13 @@ public class Payment implements Serializable {
     }
 
     public void removePaymentOverride(PaymentOverride override) {
-        if (overrides.contains(override)){
+        if (overrides.contains(override)) {
             this.overrides.remove(override);
             override.setPayment(null);
         }
     }
-    
-    public boolean inMulipleScenarios(){
+
+    public boolean inMulipleScenarios() {
         return scenarios != null ? scenarios.size() > 1 : false;
     }
-    
 }

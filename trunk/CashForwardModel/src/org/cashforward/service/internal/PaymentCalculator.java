@@ -95,6 +95,7 @@ public class PaymentCalculator {
     private Payment createPayment(Payment base, Date nextDate) {
         Payment newPayment = null;
         newPayment = new Payment(base.getAmount(), base.getPayee(), nextDate);
+        newPayment.addScenarios(base.getScenarios());
         return newPayment;
 
     }

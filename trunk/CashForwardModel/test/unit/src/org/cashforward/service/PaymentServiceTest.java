@@ -56,7 +56,7 @@ public class PaymentServiceTest {
         sp.addScenario(base);
         sp.setOccurence(Payment.Occurence.BIWEEKLY.name());
         instance.addOrUpdatePayment(sp);
-        List<Payment> result = instance.getScheduledPayments(base);
+        List<Payment> result = instance.getScheduledPayments();
         for (Payment payment : result) {
             System.out.println(payment);
         }

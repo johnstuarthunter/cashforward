@@ -75,12 +75,12 @@ public final class RemovePaymentAction extends CallableSystemAction {
                 e.printStackTrace();
                 return;
             }
-            
-            if (payment.isScheduled()) {
+            UIContext.getDefault().removePayment(payment);
+            /*f (payment.isScheduled()) {
                 UIContext.getDefault().removeScheduledPayment(payment);
             } else {
                 UIContext.getDefault().removeCurrentPayment(payment);
-            }
+            }*/
         }
     }
 

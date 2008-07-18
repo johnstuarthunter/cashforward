@@ -71,10 +71,9 @@ final class PaymentTopComponent extends TopComponent {
 
         });
         
-        
         paymentCompositePanel.setPayees(UIContext.getDefault().getPayees());
         paymentCompositePanel.setLabels(UIContext.getDefault().getLabels());
-        
+        /*
         paymentFilterNotifier.addLookupListener(new LookupListener() {
             public void resultChanged(LookupEvent event) {
                 Lookup.Result r = (Lookup.Result) event.getSource();
@@ -94,7 +93,7 @@ final class PaymentTopComponent extends TopComponent {
                 } 
             }
         });
-        
+        */
         payeeNotifier.addLookupListener(new LookupListener() {
             public void resultChanged(LookupEvent arg0) {
                 paymentCompositePanel.setPayees(UIContext.getDefault().getPayees());
@@ -231,7 +230,7 @@ final class PaymentTopComponent extends TopComponent {
     @Override
     public void componentOpened() {
         paymentListPanel.setPayments(
-                UIContext.getDefault().getCurrentPayments());
+                UIContext.getDefault().getPayments());
     }
 
     @Override
