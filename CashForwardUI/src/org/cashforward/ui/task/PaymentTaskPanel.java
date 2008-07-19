@@ -191,6 +191,7 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
 
         jScrollPane1.setViewportView(scenarioList);
 
+        typeList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(typeList);
 
         jScrollPane3.setViewportView(labelList);
