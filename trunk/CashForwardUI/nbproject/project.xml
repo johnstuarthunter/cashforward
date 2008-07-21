@@ -64,7 +64,7 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.jfree.chart</code-name-base>
+                    <code-name-base>org.jfree</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>

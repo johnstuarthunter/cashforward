@@ -8,6 +8,7 @@ package org.cashforward.service;
 import org.cashforward.model.Label;
 import org.cashforward.model.PaymentSearchCriteria;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.cashforward.model.Payee;
@@ -15,6 +16,7 @@ import org.cashforward.model.Payment;
 import org.cashforward.model.Scenario;
 import org.cashforward.persistence.PersistenceService;
 import org.cashforward.service.internal.PaymentCalculator;
+import org.cashforward.service.internal.PaymentComparator;
 
 /**
  *
@@ -106,6 +108,9 @@ public class PaymentService {
     
     public List<Payment> getPayments(PaymentSearchCriteria criteria) 
         throws Exception {
+
+        if (criteria == null)
+            return persistenceService.getPayments(null);
         
         Date start = criteria.getDateStart();
         Date end = criteria.getDateEnd();
@@ -124,7 +129,9 @@ public class PaymentService {
         
         //now add current for now
         allPayments.addAll(persistenceService.getPayments(criteria));
-        
+
+        Collections.sort(allPayments, new PaymentComparator());
+
         return allPayments;
     }
     

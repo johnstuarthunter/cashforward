@@ -41,7 +41,7 @@ public class LoadScheduledPaymentsAction extends AbstractAction {
         Scenario scenario =
                 UIContext.getDefault().getScenario();
         
-        List allPayments = serviceAdapter.getPayments();
+        List allPayments = serviceAdapter.getPayments(null);
                 //serviceAdapter.getScheduledPayments();
         if (allPayments == null)
             return;

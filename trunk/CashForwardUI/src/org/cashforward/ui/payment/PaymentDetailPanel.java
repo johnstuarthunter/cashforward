@@ -8,6 +8,8 @@ package org.cashforward.ui.payment;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
 import ca.odell.glazedlists.event.ListEventListener;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import org.cashforward.model.Label;
@@ -25,6 +27,8 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
     /** Creates new form PaymentDetailPanel */
     public PaymentDetailPanel() {
         initComponents();
+        this.paymentAmountCombo.getCalculator().setDisplayFormat(
+                NumberFormat.getCurrencyInstance());
     }
 
     public void setPayees(EventList<Payee> payees) {
@@ -40,6 +44,8 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
 
     public void setPayment(Payment payment) {
         this.payment = payment;
+        setIsDeposit(payment.getAmount() >= 0);
+
         descriptionText.setText(payment.getDescription());
         paymentAmountCombo.getCalculator().setDisplayText(
                 Float.toString(payment.getAmount()));
@@ -52,8 +58,7 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
     public Payment getPayment() {
         //set up the payment
         payment.setDescription(descriptionText.getText());
-        payment.setAmount(Float.parseFloat(
-                paymentAmountCombo.getCalculator().getDisplayText()));
+        payment.setAmount(getAmount());
 
         //set payee
         Object payee = payeeCombo.getSelectedItem();
@@ -75,6 +80,25 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
 
         payment.setStartDate(paymentDateChooser.getDate());
         return this.payment;
+    }
+
+    private void setIsDeposit(boolean isDeposit){
+        cbDeposit.setSelected(isDeposit);
+        cbBill.setSelected(!isDeposit);
+    }
+    
+    private boolean isDeposit(){
+       return cbDeposit.isSelected();
+    }
+
+    private float getAmount(){
+       float amount = Float.parseFloat(
+                paymentAmountCombo.getCalculator().getDisplayText());
+
+       if (!isDeposit())
+            amount = -1 * amount;
+
+       return amount;
     }
     
     private class EventListComboBoxModel extends DefaultComboBoxModel {
@@ -114,6 +138,7 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         descriptionText = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -124,6 +149,9 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
         payeeCombo = new com.jidesoft.swing.AutoCompletionComboBox();
         jLabel4 = new javax.swing.JLabel();
         paymentAmountCombo = new com.jidesoft.combobox.CalculatorComboBox();
+        cbDeposit = new javax.swing.JRadioButton();
+        cbBill = new javax.swing.JRadioButton();
+        jLabel6 = new javax.swing.JLabel();
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jLabel1.text")); // NOI18N
 
@@ -149,48 +177,71 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
 
         paymentAmountCombo.setPreferredSize(new java.awt.Dimension(119, 20));
 
+        buttonGroup1.add(cbDeposit);
+        cbDeposit.setText(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.cbDeposit.text")); // NOI18N
+        cbDeposit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbDepositActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(cbBill);
+        cbBill.setText(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.cbBill.text")); // NOI18N
+
+        jLabel6.setText(org.openide.util.NbBundle.getMessage(PaymentDetailPanel.class, "PaymentDetailPanel.jLabel6.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(paymentDateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(paymentDateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(paymentAmountCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE))
-                    .addComponent(descriptionText, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
-                    .addComponent(labelList, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
-                    .addComponent(payeeCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(paymentAmountCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE))
+                    .addComponent(descriptionText, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                    .addComponent(labelList, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                    .addComponent(payeeCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(cbBill)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbDeposit)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(5, 5, 5)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(cbDeposit)
+                    .addComponent(cbBill))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(paymentDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(paymentAmountCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(paymentAmountCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(paymentDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(payeeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(descriptionText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(labelList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -201,13 +252,22 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
 private void descriptionTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_descriptionTextActionPerformed
 // TODO add your handling code here:
 }//GEN-LAST:event_descriptionTextActionPerformed
+
+private void cbDepositActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbDepositActionPerformed
+    // TODO add your handling code here:
+}//GEN-LAST:event_cbDepositActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JRadioButton cbBill;
+    private javax.swing.JRadioButton cbDeposit;
     private javax.swing.JTextField descriptionText;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private com.jidesoft.combobox.CheckBoxListComboBox labelList;
     private com.jidesoft.swing.AutoCompletionComboBox payeeCombo;
     private com.jidesoft.combobox.CalculatorComboBox paymentAmountCombo;
