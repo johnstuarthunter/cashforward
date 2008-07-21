@@ -42,7 +42,7 @@ public class LoadCurrentPaymentsAction extends AbstractAction {
         Scenario scenario = 
                 UIContext.getDefault().getScenario();
         
-        List allPayments = serviceAdapter.getPayments();
+        List allPayments = serviceAdapter.getPayments(null);
                 //serviceAdapter.getCurrentPayments();
         if (allPayments == null)
             return;

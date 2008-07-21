@@ -162,15 +162,17 @@ public class PersistenceService {
         tx.begin();
         try {
             StringBuffer queryString = new StringBuffer();
-            queryString.append("SELECT p FROM Payment p WHERE ");
+            queryString.append("SELECT p FROM Payment p ");
 
             if (criteria != null) {
                 if (criteria.getDateStart() != null) {
-                    queryString.append("p.startDate >= '" + sdf.format(criteria.getDateStart()) + "'");
+                    queryString.append("WHERE p.startDate >= '" + sdf.format(criteria.getDateStart()) + "'");
                 }
                 if (criteria.getDateEnd() != null) {
                     if (criteria.getDateStart() != null) {
                         queryString.append(" and ");
+                    } else {
+                        queryString.append(" WHERE ");
                     }
                     queryString.append(" p.endDate <= '" + sdf.format(criteria.getDateEnd()) + "'");
                 }
@@ -178,19 +180,22 @@ public class PersistenceService {
                 if (criteria.getDateStart() != null ||
                         criteria.getDateEnd() != null) {
                     queryString.append(" and ");
-                }
+                }else {
+                        queryString.append(" WHERE ");
+                    }
                 queryString.append(" p.occurence = '" + Payment.Occurence.NONE.name() + "'");
                 //filter out labels
                 //if (criteria.getLabels().size() > 0)
                 //    queryString.append(" and :labels MEMBER OF p.labels");
                 
-                if (criteria.getScenario() != null)
+                if (criteria.getScenario() != null) {
                     queryString.append(" and :scenario MEMBER OF p.labels");
+                }
                 //queryString.append(" and p.occurence = '" + Payment.Occurence.NONE.name() + "'");
             }
 
             Query query = manager.createQuery(queryString.toString());
-            if (criteria.getScenario() != null)
+            if (criteria != null && criteria.getScenario() != null)
                 query.setParameter("scenario", criteria.getScenario());
             payments = query.getResultList();
             tx.commit();

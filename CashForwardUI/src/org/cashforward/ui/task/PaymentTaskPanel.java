@@ -10,6 +10,7 @@ import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
 import ca.odell.glazedlists.event.ListEventListener;
 import ca.odell.glazedlists.swing.EventListModel;
+import java.util.Date;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -48,7 +49,8 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
 
         PaymentFilter projected = new PaymentFilter("Projected");
         projected.getPaymentSearchCriteria().setDateStart(
-                DateUtilities.firstOfThisYear());
+                new Date());
+                //DateUtilities.firstOfThisYear());
         projected.getPaymentSearchCriteria().setDateEnd(
                 DateUtilities.endOfThisYear());
         projected.setPaymentType(PaymentFilter.TYPE_CALCULATED);
@@ -136,13 +138,19 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
     private void processFilter(PaymentFilter filter) {
         long start = System.currentTimeMillis();
         System.out.println("processFilter start:" + start);
+        int currentType =
+                UIContext.getDefault().getPaymentFilter().getPaymentType();
+
         filter.setScenario(UIContext.getDefault().getScenario());
         UIContext.getDefault().setPaymentFilter(filter);
-        if (filter.getPaymentType() == PaymentFilter.TYPE_CURRENT) {
+        if (currentType == PaymentFilter.TYPE_CALCULATED &&
+                filter.getPaymentType() == PaymentFilter.TYPE_CURRENT) {
             loadCurrentPayments.actionPerformed(null);
-        } else if (filter.getPaymentType() == PaymentFilter.TYPE_SCHEDULED) {
+        } else if (currentType == PaymentFilter.TYPE_CALCULATED &&
+                filter.getPaymentType() == PaymentFilter.TYPE_SCHEDULED) {
             loadScheduledPayments.actionPerformed(null);
-        } else if (filter.getPaymentType() == PaymentFilter.TYPE_CALCULATED) {
+        } else if (currentType != PaymentFilter.TYPE_CALCULATED &&
+                filter.getPaymentType() == PaymentFilter.TYPE_CALCULATED) {
             loadSpecificPayments.actionPerformed(null);
         }
         System.out.println("processFilter elapsed:" + (System.currentTimeMillis() - start));

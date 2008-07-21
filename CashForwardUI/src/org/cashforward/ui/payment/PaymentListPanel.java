@@ -251,7 +251,6 @@ public class PaymentListPanel extends TopComponent {
 
         public Object getColumnValue(Object baseObject, int column) {
             Payment payment = (Payment) baseObject;
-            System.out.println("getColumnValue " + column);
             if (payment == null) {
                 return null;
             }
