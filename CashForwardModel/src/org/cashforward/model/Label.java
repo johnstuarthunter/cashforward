@@ -17,6 +17,10 @@ import javax.persistence.Table;
 /**
  * Labels are tags that are applied to <code>Payment</code>s. 
  * This provides a simplistic way to categorize each Payment.
+ *
+ * Labels are also used to add internal metadata to Payments.
+ * For now, the only such use is to tag each Payment with a 
+ * <code>Scenario</code> label.
  * 
  * @author Bill
  */
@@ -60,15 +64,28 @@ public class Label implements Comparable,Serializable {
     public void setInternal(boolean internal){
         //no overrriding hack
     }
-    
+
+    /**
+     * Internal labels are used by CashForward to set metadata on objects.
+     * Otherwise, labels are used to categorize Payments
+     * @return true if the labels is used internally by CashForward
+     */
     public boolean isInternal(){
         return internal;
     }
 
+    /**
+     * Return the name, or text, of the label
+     * @return the label text
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Set the text value of the label
+     * @param name new name for the label
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -76,7 +93,7 @@ public class Label implements Comparable,Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        //hash += (id != null ? id.hashCode() : 0);
+        hash += (name != null ? name.hashCode() : 0);
         return hash;
     }
 
@@ -99,7 +116,7 @@ public class Label implements Comparable,Serializable {
 
     @Override
     public String toString() {
-        return name;//"cashfxpersistence.Label[id=" + id + "]";
+        return name;
     }
 
     public int compareTo(Object o) {

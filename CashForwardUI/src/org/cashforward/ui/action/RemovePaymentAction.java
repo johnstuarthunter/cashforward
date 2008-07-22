@@ -5,8 +5,8 @@
 package org.cashforward.ui.action;
 
 import java.util.Collection;
+import java.util.List;
 import org.cashforward.model.Payment;
-import org.cashforward.model.Scenario;
 import org.cashforward.service.PaymentService;
 import org.cashforward.ui.UIContext;
 import org.openide.DialogDescriptor;
@@ -25,7 +25,7 @@ public final class RemovePaymentAction extends CallableSystemAction {
             UIContext.getDefault().lookupResult(Payment.class);
     private PaymentService paymentService;
     private Payment payment;
-    private Scenario currentScenario;
+    private List currentScenarios;
 
     public RemovePaymentAction() {
         super();
@@ -56,9 +56,9 @@ public final class RemovePaymentAction extends CallableSystemAction {
         Object result = DialogDisplayer.getDefault().notify(notify);
         if (result == DialogDescriptor.YES_OPTION) {
             try {
-                currentScenario = UIContext.getDefault().getScenario();
+                currentScenarios = UIContext.getDefault().getSelectedScenarios();
                 if (payment.inMulipleScenarios()) {
-                    payment.removeScenario(currentScenario);
+                    payment.removeScenarios(currentScenarios);
                     if (!paymentService.addOrUpdatePayment(payment)){
                          //do something
                         System.out.println("Could not remove the payment");

@@ -10,7 +10,9 @@ import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
 import ca.odell.glazedlists.event.ListEventListener;
 import ca.odell.glazedlists.swing.EventListModel;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -106,7 +108,9 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
                     return;
                 } else if ((PaymentTaskPanel.this.typeList.getSelectedValue() instanceof Scenario)) {
                     Scenario scenario = (Scenario) scenarioList.getSelectedValue();
-                    UIContext.getDefault().setScenario(scenario);
+                    List s = new ArrayList(1);
+                    s.add(scenario);
+                    UIContext.getDefault().setSelectedScenarios(s);
                     return;
                 }
 
@@ -141,7 +145,7 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
         int currentType =
                 UIContext.getDefault().getPaymentFilter().getPaymentType();
 
-        filter.setScenario(UIContext.getDefault().getScenario());
+        filter.setScenarios(UIContext.getDefault().getSelectedScenarios());
         UIContext.getDefault().setPaymentFilter(filter);
         if (currentType == PaymentFilter.TYPE_CALCULATED &&
                 filter.getPaymentType() == PaymentFilter.TYPE_CURRENT) {

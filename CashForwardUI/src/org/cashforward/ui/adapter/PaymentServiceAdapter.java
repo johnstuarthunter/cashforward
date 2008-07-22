@@ -117,6 +117,15 @@ public class PaymentServiceAdapter {
         
         return null;
     }
+
+    public List<Payment> getAllPayments(){
+        try {
+            return paymentService.getPayments(null);
+        } catch (Exception e) {
+        }
+
+        return null;
+    }
     
     public List<Payment> getCurrentPayments(){
         try {

@@ -314,6 +314,12 @@ public class Payment implements Serializable {
         removeLabel(scenario);
     }
 
+    public void removeScenarios(List<Scenario> currentScenarios) {
+        for (Scenario scenario : currentScenarios) {
+            removeScenario(scenario);
+        }
+    }
+
     public void addPaymentOverride(PaymentOverride override) {
         if (!overrides.contains(override)) {
             override.setPayment(this);
