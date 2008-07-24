@@ -24,6 +24,7 @@ import org.cashforward.ui.action.LoadSpecificPaymentsAction;
 import org.cashforward.util.DateUtilities;
 
 /**
+ *  Not currently used; will be used to edit master list of labels
  *
  * @author  Bill
  */

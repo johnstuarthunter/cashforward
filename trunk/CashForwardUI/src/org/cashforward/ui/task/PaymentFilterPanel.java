@@ -7,6 +7,7 @@
 package org.cashforward.ui.task;
 
 /**
+ *  Not currently used; may be used for advanced searching interface
  *
  * @author  Bill
  */
