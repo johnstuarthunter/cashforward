@@ -13,6 +13,8 @@ import org.cashforward.model.Payment.Occurence;
 
 /**
  * 
+ * Utility class for calculating Payments for scheduled Payments.
+ *
  * @author Bill 
  */
 public class PaymentCalculator {

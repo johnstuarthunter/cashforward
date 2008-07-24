@@ -62,16 +62,16 @@ public class PaymentService {
         persistenceService.addOrUpdateScenario(newScenario);
     }
 
+    /**
+     * Creates a new Scenario based off an existing one.
+     * 
+     * @param currentScenario Existing Scenario to use as base
+     * @param newScenario The new Scenario to create
+     * @return true of the new Scenario was created successfully
+     * @throws java.lang.Exception if there was a problem creating the Scenario
+     */
     public boolean createScenario(Scenario currentScenario, 
             Scenario newScenario) throws Exception {
-        //payment serivce then copies all payments from base to new
-        /*
-         * impl:
-         * get all payments where scenario.id = baseScenario.id
-         * then just ADD the newScenario label to that!!!
-         * 
-         */
-        
          PaymentSearchCriteria baseLookup = 
                  new PaymentSearchCriteria();
          baseLookup.getLabels().add(currentScenario);
@@ -81,31 +81,40 @@ public class PaymentService {
           
          return persistenceService.applyLabel(newScenario, basePayments);
          
-        /*
-         * then, when 
-         * adding, just add scenarion (from context) to payment
-         * updating, just keep scenarios the same
-         * deleting - trickiest - 
-         *      delete payment only if scenario is only scenario
-         *      otherwise, just delete the scenario label
-         * 
-         */
     }
 
     public List<Scenario> getScenarios() throws Exception{
         return persistenceService.getScenarios();
     }
-    
+
+    /**
+     * Get all the Payments that reoccur
+     *
+     * @return
+     * @throws java.lang.Exception
+     */
     public List<Payment> getScheduledPayments() 
         throws Exception {
             return persistenceService.getSchdeuledPayments();
     }
-    
+
+    /**
+     * Get all the existing non-scheduled Payments
+     *
+     * @return
+     * @throws java.lang.Exception
+     */
     public List<Payment> getCurrentPayments() 
         throws Exception {
             return persistenceService.getCurrentPayments();
     }
-    
+
+    /**
+     * Get Payments based on specific criteria
+     * @param criteria The criteria to search by
+     * @return the payments matching the given criteria
+     * @throws java.lang.Exception
+     */
     public List<Payment> getPayments(PaymentSearchCriteria criteria) 
         throws Exception {
 
@@ -142,7 +151,15 @@ public class PaymentService {
     public boolean removePayment(Payment oldPayment) throws Exception {
         return persistenceService.removePayment(oldPayment);
     }
-    
+
+    /**
+     * Enters the next scheduled Payment into the register. This payment is
+     * created as a non-scheduled entry.
+     *
+     * @param scheduledPayment Scheduled Payment to enter
+     * @return the created and persisted new Payment
+     * @throws java.lang.Exception if there is a problem creating the Payment
+     */
     public Payment enterNextPayment(Payment scheduledPayment) throws Exception {
         Payment newPayment = new Payment(scheduledPayment.getAmount(), 
                 scheduledPayment.getPayee(), scheduledPayment.getStartDate());
@@ -168,7 +185,17 @@ public class PaymentService {
             return persistenceService.addOrUpdatePayment(scheduledPayment);
         
     }
-    
+
+    /**
+     * Returns a List of project Payments for a scheduled Payment
+     * based on the given date range.
+     *
+     * @param payment the Scheduled Payment to project
+     * @param startDate
+     * @param endDate
+     * @return the List of calculated Payments
+     * @throws java.lang.Exception if there is a problem calculating the Payments
+     */
     public List<Payment> getCalculatedPayments(Payment payment, 
             Date startDate, Date endDate) throws Exception {
         return paymentCalculator.calculatePayments(payment, startDate, endDate);
