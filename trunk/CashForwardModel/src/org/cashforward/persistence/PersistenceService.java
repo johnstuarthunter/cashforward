@@ -27,16 +27,27 @@ import org.cashforward.model.PaymentSearchCriteria;
 import org.cashforward.model.Scenario;
 
 /**
+ *  Handles persistence of transaction data.
  *
- * @author TWXS025
+ * @author Bill Snyder
  */
 public class PersistenceService {
 
+    /**
+     * Primary application storage area.
+     */
     public static String STORAGE_MAIN = "CashForwardPersistence";
+    /**
+     * Storage area for use in application development
+     */
     public static String STORAGE_DEV = "CashForwardPersistenceDev";
+    /**
+     * Storage area used in unit/regression tests
+     */
     public static String STORAGE_TEST = "CashForwardPersistenceTest";
-    EntityManagerFactory factory;
-    EntityManager manager;
+
+    private EntityManagerFactory factory;
+    private EntityManager manager;
     private static PersistenceService instance;
     private final static String DOES_PAYEE_EXIST =
             "select a from Payee a where name = ?1";
@@ -65,7 +76,6 @@ public class PersistenceService {
 
         factory = Persistence.createEntityManagerFactory(unit);
         manager = factory.createEntityManager();
-    //manager.setFlushMode(FlushModeType.COMMIT);
     }
 
     public void shutdown() {
