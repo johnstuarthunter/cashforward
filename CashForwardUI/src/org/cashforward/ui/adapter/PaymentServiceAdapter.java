@@ -14,7 +14,9 @@ import org.cashforward.service.PaymentService;
 import org.openide.util.Exceptions;
 
 /**
- * 
+ * Talks to the PaymentService. Provides a way for the interface
+ * to retrieve and update data in the application.
+ *
  * @author Bill 
  */
 public class PaymentServiceAdapter {
