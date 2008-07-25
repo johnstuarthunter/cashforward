@@ -26,6 +26,7 @@ public final class NewScenarioAction extends CallableSystemAction {
     
     public NewScenarioAction(){
         super();
+        setEnabled(false);
         scenarioNotifier.addLookupListener(new LookupListener() {
 
             public void resultChanged(LookupEvent event) {

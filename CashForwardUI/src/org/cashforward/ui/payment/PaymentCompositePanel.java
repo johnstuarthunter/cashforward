@@ -52,7 +52,7 @@ public class PaymentCompositePanel extends javax.swing.JPanel {
         } else if (paymentScheduleForm.getEndDate() != null) {
             payment.setEndDate(paymentScheduleForm.getEndDate());
         }
-
+        
         payment.setOccurence(occurence.name());
         return payment;
     }
