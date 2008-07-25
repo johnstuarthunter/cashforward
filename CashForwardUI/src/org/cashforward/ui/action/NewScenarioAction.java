@@ -51,8 +51,8 @@ public final class NewScenarioAction extends CallableSystemAction {
         
         //create input panel for name
         NotifyDescriptor.InputLine nameDialog = new NotifyDescriptor.InputLine(
-                "New Scenario:",
-                "Name",
+                "New scenario name:",
+                "New Scenario",
                 NotifyDescriptor.INFORMATION_MESSAGE,
                 NotifyDescriptor.OK_CANCEL_OPTION);
         Object result = DialogDisplayer.getDefault().notify(nameDialog);
@@ -68,9 +68,7 @@ public final class NewScenarioAction extends CallableSystemAction {
             paymentService = new PaymentServiceAdapter();
         
         if (paymentService.createScenario(currentScenario, newScenario)){
-            //set new scenario in context
             UIContext.getDefault().addScenario(newScenario);
-            //UIContext.getDefault().setScenario(newScenario);
         } else {
             //alert
             return;
