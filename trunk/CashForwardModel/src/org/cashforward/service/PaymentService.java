@@ -74,8 +74,11 @@ public class PaymentService {
             Scenario newScenario) throws Exception {
          PaymentSearchCriteria baseLookup = 
                  new PaymentSearchCriteria();
-         baseLookup.getLabels().add(currentScenario);
-         
+         baseLookup.setScenario(currentScenario);
+
+         if (!persistenceService.addOrUpdateScenario(newScenario))
+             return false;
+
          List<Payment> basePayments = //needs fixing, labels, occurences
                  persistenceService.getPayments(baseLookup);
           

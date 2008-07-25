@@ -45,7 +45,6 @@ public class PersistenceService {
      * Storage area used in unit/regression tests
      */
     public static String STORAGE_TEST = "CashForwardPersistenceTest";
-
     private EntityManagerFactory factory;
     private EntityManager manager;
     private static PersistenceService instance;
@@ -190,23 +189,26 @@ public class PersistenceService {
                 if (criteria.getDateStart() != null ||
                         criteria.getDateEnd() != null) {
                     queryString.append(" and ");
-                }else {
-                        queryString.append(" WHERE ");
-                    }
-                queryString.append(" p.occurence = '" + Payment.Occurence.NONE.name() + "'");
+                } else {
+                    queryString.append(" WHERE ");
+                }
+
+                //maybe filter by payment type?
+                //queryString.append(" p.occurence = '" + Payment.Occurence.NONE.name() + "'");
                 //filter out labels
                 //if (criteria.getLabels().size() > 0)
-                //    queryString.append(" and :labels MEMBER OF p.labels");
-                
+                //  queryString.append(" and :labels MEMBER OF p.labels");
+
                 if (criteria.getScenario() != null) {
-                    queryString.append(" and :scenario MEMBER OF p.labels");
+                    queryString.append(" :scenario MEMBER OF p.labels");
                 }
-                //queryString.append(" and p.occurence = '" + Payment.Occurence.NONE.name() + "'");
+            //queryString.append(" and p.occurence = '" + Payment.Occurence.NONE.name() + "'");
             }
 
             Query query = manager.createQuery(queryString.toString());
-            if (criteria != null && criteria.getScenario() != null)
+            if (criteria != null && criteria.getScenario() != null) {
                 query.setParameter("scenario", criteria.getScenario());
+            }
             payments = query.getResultList();
             tx.commit();
         } catch (Exception e) {
@@ -267,7 +269,7 @@ public class PersistenceService {
             return a;
         }
     }
-    
+
     public Scenario getScenarioByID(long id) throws Exception {
         EntityTransaction tx = manager.getTransaction();
         Scenario a = null;
@@ -281,7 +283,7 @@ public class PersistenceService {
             return a;
         }
     }
-    
+
     public Scenario getScenarioByName(String name) throws Exception {
         EntityTransaction tx = manager.getTransaction();
         Scenario a = null;
@@ -290,10 +292,11 @@ public class PersistenceService {
             Query query = manager.createQuery("SELECT p FROM Scenario p WHERE p.name = :name");
             query.setParameter("name", name);
             List results = query.getResultList();
-            
-            if (results != null && results.size() > 0) 
+
+            if (results != null && results.size() > 0) {
                 a = (Scenario) results.get(0);
-             
+            }
+
             tx.commit();
             return a;
         } catch (Exception e) {
@@ -386,10 +389,11 @@ public class PersistenceService {
         return payees;
     }
     //bulk operation
+
     public boolean applyLabel(Label newLabel, List<Payment> payments) {
-       if (!addOrUpdateLabel(newLabel)){
-                return false;
-        } 
+        if (!addOrUpdateLabel(newLabel)) {
+            return false;
+        }
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
         try {
