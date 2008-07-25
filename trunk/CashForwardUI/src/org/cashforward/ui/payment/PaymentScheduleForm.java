@@ -26,6 +26,12 @@ public class PaymentScheduleForm extends javax.swing.JPanel {
     public PaymentScheduleForm() {
         initComponents();
         occurenceCombo.setModel(new OccurenceComboModel());
+        cboEnds.setEnabled(false);
+        stopsOnRadio.setEnabled(false);
+        untilDateCombo.setEnabled(false);
+        stopsAfterRadio.setEnabled(false);
+        valueSpinner.setEnabled(false);
+
     }
 
     public void setPayment(Payment payment) {
@@ -58,10 +64,8 @@ public class PaymentScheduleForm extends javax.swing.JPanel {
 
     private void setScheduleInterfaceEnabled(boolean state) {
         cboEnds.setSelected(state);
-        valueSpinner.setEnabled(state);
         stopsAfterRadio.setEnabled(state);
         stopsOnRadio.setEnabled(state);
-        untilDateCombo.setEnabled(state);
     }
 
     public Payment.Occurence getOccurence() {
@@ -200,7 +204,7 @@ public class PaymentScheduleForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
 private void occurenceComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_occurenceComboActionPerformed
-// TODO add your handling code here:
+    cboEnds.setEnabled(occurenceCombo.getSelectedIndex() > 0);
 }//GEN-LAST:event_occurenceComboActionPerformed
 
 private void cboEndsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboEndsActionPerformed
