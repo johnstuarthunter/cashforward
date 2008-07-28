@@ -90,7 +90,7 @@ public final class RemovePaymentAction extends CallableSystemAction {
 
     @Override
     protected String iconResource() {
-        return "org/cashforward/ui/action/delp.GIF";
+        return "org/cashforward/ui/action/payment-delete.png";
     }
 
     public HelpCtx getHelpCtx() {

@@ -71,11 +71,11 @@
             </file>
             <file name="org-cashforward-ui-action-NewPaymentAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Payment/org-cashforward-ui-action-NewPaymentAction.instance"/>
-                <attr name="position" intvalue="300"/>
+                <attr name="position" intvalue="50"/>
             </file>
             <file name="org-cashforward-ui-action-NewScenarioAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Payment/org-cashforward-ui-action-NewScenarioAction.instance"/>
-                <attr name="position" intvalue="0"/>
+                <attr name="position" intvalue="450"/>
             </file>
             <file name="org-cashforward-ui-action-RemovePaymentAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Payment/org-cashforward-ui-action-RemovePaymentAction.instance"/>

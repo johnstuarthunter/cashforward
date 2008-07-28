@@ -25,8 +25,8 @@ public class PaymentCompositePanel extends javax.swing.JPanel {
     /** Creates new form PaymentCompositePanel */
     public PaymentCompositePanel() {
         initComponents();
-        saveAction = 
-                (SavePaymentAction) SystemAction.get(SavePaymentAction.class);
+        //saveAction =
+          //      (SavePaymentAction) SystemAction.get(SavePaymentAction.class);
 
         this.jideTabbedPane1.setTabTrailingComponent(new HeaderLabel());
     }
@@ -91,15 +91,15 @@ public class PaymentCompositePanel extends javax.swing.JPanel {
         jideTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(PaymentCompositePanel.class, "PaymentCompositePanel.paymentDetailPanel.TabConstraints.tabTitle"), paymentDetailPanel); // NOI18N
         jideTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(PaymentCompositePanel.class, "PaymentCompositePanel.paymentScheduleForm.TabConstraints.tabTitle"), paymentScheduleForm); // NOI18N
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jideTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jideTabbedPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jideTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jideTabbedPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables

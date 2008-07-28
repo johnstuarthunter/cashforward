@@ -82,7 +82,7 @@ public final class NewScenarioAction extends CallableSystemAction {
 
     @Override
     protected String iconResource() {
-        return "org/cashforward/ui/action/document-new.png";
+        return "org/cashforward/ui/action/scenario-new.png";
     }
 
     public HelpCtx getHelpCtx() {

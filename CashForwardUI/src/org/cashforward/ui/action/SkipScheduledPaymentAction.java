@@ -57,7 +57,7 @@ public final class SkipScheduledPaymentAction extends CallableSystemAction {
 
     @Override
     protected String iconResource() {
-        return "org/cashforward/ui/action/skipp.GIF";
+        return "org/cashforward/ui/action/payment-skip.png";
     }
 
     public HelpCtx getHelpCtx() {
