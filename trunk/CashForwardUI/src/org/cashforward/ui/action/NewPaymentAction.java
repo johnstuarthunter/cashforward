@@ -66,7 +66,7 @@ public final class NewPaymentAction extends CallableSystemAction {
 
     @Override
     protected String iconResource() {
-        return "org/cashforward/ui/action/newp.GIF";
+        return "org/cashforward/ui/action/payment-new.png";
     }
 
     public HelpCtx getHelpCtx() {

@@ -78,7 +78,7 @@ public final class EnterScheduledPaymentAction extends CallableSystemAction {
 
     @Override
     protected String iconResource() {
-        return "org/cashforward/ui/action/CONVp.GIF";
+        return "org/cashforward/ui/action/payment-next.png";
     }
 
     public HelpCtx getHelpCtx() {

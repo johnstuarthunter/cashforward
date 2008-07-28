@@ -131,15 +131,15 @@ final class PaymentTopComponent extends TopComponent {
         paymentListContainer.setStyle(CollapsiblePane.PLAIN_STYLE);
         paymentListContainer.setSlidingDirection(7);
 
-        javax.swing.GroupLayout paymentListContainerLayout = new javax.swing.GroupLayout(paymentListContainer.getContentPane());
+        org.jdesktop.layout.GroupLayout paymentListContainerLayout = new org.jdesktop.layout.GroupLayout(paymentListContainer.getContentPane());
         paymentListContainer.getContentPane().setLayout(paymentListContainerLayout);
         paymentListContainerLayout.setHorizontalGroup(
-            paymentListContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 272, Short.MAX_VALUE)
+            paymentListContainerLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 272, Short.MAX_VALUE)
         );
         paymentListContainerLayout.setVerticalGroup(
-            paymentListContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 210, Short.MAX_VALUE)
+            paymentListContainerLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 210, Short.MAX_VALUE)
         );
 
         try {
@@ -151,15 +151,15 @@ final class PaymentTopComponent extends TopComponent {
         paymentDetailContainer.setStyle(CollapsiblePane.PLAIN_STYLE);
         paymentDetailContainer.setSlidingDirection(SwingConstants.WEST);
 
-        javax.swing.GroupLayout paymentDetailContainerLayout = new javax.swing.GroupLayout(paymentDetailContainer.getContentPane());
+        org.jdesktop.layout.GroupLayout paymentDetailContainerLayout = new org.jdesktop.layout.GroupLayout(paymentDetailContainer.getContentPane());
         paymentDetailContainer.getContentPane().setLayout(paymentDetailContainerLayout);
         paymentDetailContainerLayout.setHorizontalGroup(
-            paymentDetailContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 4, Short.MAX_VALUE)
+            paymentDetailContainerLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 4, Short.MAX_VALUE)
         );
         paymentDetailContainerLayout.setVerticalGroup(
-            paymentDetailContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            paymentDetailContainerLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 0, Short.MAX_VALUE)
         );
 
         paymentListContainer.setSlidingDirection(CollapsiblePane.WEST);
@@ -168,20 +168,20 @@ final class PaymentTopComponent extends TopComponent {
         paymentDetailContainer.setSlidingDirection(SwingConstants.EAST);
         paymentDetailContainer.setContentPane(paymentCompositePanel);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(paymentListContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(paymentDetailContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .add(paymentListContainer, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(paymentDetailContainer, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(paymentListContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(paymentDetailContainer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(paymentListContainer, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, paymentDetailContainer, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
