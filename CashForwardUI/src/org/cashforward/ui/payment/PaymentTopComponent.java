@@ -51,7 +51,7 @@ final class PaymentTopComponent extends TopComponent {
         
         Icon icon = new ImageIcon(
                 PaymentListPanel.class.getResource(
-                    "/org/cashforward/ui/payment/info.GIF"));
+                    "/org/cashforward/ui/payment/payment-detail.png"));
         JLabel infoLabel = new JLabel(icon);
         paymentDetailContainer.setTitleComponent(infoLabel);
         
