@@ -54,7 +54,7 @@ public final class NewScenarioAction extends CallableSystemAction {
         NotifyDescriptor.InputLine nameDialog = new NotifyDescriptor.InputLine(
                 "New scenario name:",
                 "New Scenario",
-                NotifyDescriptor.INFORMATION_MESSAGE,
+                NotifyDescriptor.PLAIN_MESSAGE,
                 NotifyDescriptor.OK_CANCEL_OPTION);
         Object result = DialogDisplayer.getDefault().notify(nameDialog);
         if (result == DialogDescriptor.YES_OPTION){

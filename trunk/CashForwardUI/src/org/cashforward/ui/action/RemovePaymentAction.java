@@ -9,6 +9,7 @@ import java.util.List;
 import org.cashforward.model.Payment;
 import org.cashforward.service.PaymentService;
 import org.cashforward.ui.UIContext;
+import org.cashforward.ui.task.PaymentFilter;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -29,6 +30,7 @@ public final class RemovePaymentAction extends CallableSystemAction {
 
     public RemovePaymentAction() {
         super();
+        setEnabled(false);
         paymentService = new PaymentService();
         paymentNotifier.addLookupListener(new LookupListener() {
 
@@ -38,7 +40,13 @@ public final class RemovePaymentAction extends CallableSystemAction {
                 if (!c.isEmpty()) {
                     RemovePaymentAction.this.payment =
                             (Payment) c.iterator().next();
-                    setEnabled(true);
+                    PaymentFilter filter =
+                            UIContext.getDefault().getPaymentFilter();
+                    if (filter != null && filter.getPaymentType() ==
+                            PaymentFilter.TYPE_CALCULATED)
+                        setEnabled(false);
+                    else
+                        setEnabled(true);
                 } else {
                     setEnabled(false);
                 }
