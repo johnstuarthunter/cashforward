@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cashforward.ui.action;
 
 import java.util.Date;
@@ -9,15 +5,19 @@ import java.util.List;
 import org.cashforward.model.Payment;
 import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
+import org.cashforward.ui.internal.UILogger;
 import org.cashforward.ui.payment.PaymentCompositePanel;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.HelpCtx;
-import org.openide.util.NbBundle;
-import org.openide.util.actions.CallableSystemAction;
 
-public final class NewPaymentAction extends CallableSystemAction {
-    //set lookups here for payees , occurrences, scheduled/current payments
+/**
+ * Presents a dialog for adding a new <code>Payment</code>
+ * 
+ * @author Bill
+ */
+public final class NewPaymentAction extends BaseCallableSystemAction {
+
     public void performAction() {
         PaymentServiceAdapter paymentService = 
                 new PaymentServiceAdapter();
@@ -31,7 +31,8 @@ public final class NewPaymentAction extends CallableSystemAction {
         paymentDetailPanel.setLabels(UIContext.getDefault().getLabels());
         paymentDetailPanel.setPayment(newPayment);
         DialogDescriptor dd = 
-                new DialogDescriptor(paymentDetailPanel, "New Payment");
+                new DialogDescriptor(paymentDetailPanel, 
+                getMessage("CTL_NewPaymentTitle"));
         dd.setModal(true);
         dd.setLeaf(true);
         dd.setOptionType(DialogDescriptor.OK_CANCEL_OPTION);
@@ -41,27 +42,24 @@ public final class NewPaymentAction extends CallableSystemAction {
         if (result == DialogDescriptor.OK_OPTION) {
             paymentDetailPanel.getPayment();//or commit
             
-            //Scenario currentScenario = UIContext.getDefault().getScenario();
             List currentScenarios = 
                     UIContext.getDefault().getSelectedScenarios();
             newPayment.addScenarios(currentScenarios);
           
            if (paymentService.addOrUpdatePayment(newPayment)) {
-               /*if (!newPayment.isScheduled())
-                UIContext.getDefault().addCurrentPayment(newPayment);
-               else
-                UIContext.getDefault().addScheduledPayment(newPayment);*/
+               //update the context
                UIContext.getDefault().addPayment(newPayment); 
                UIContext.getDefault().addLabels(newPayment.getLabels());
                UIContext.getDefault().addPayee(newPayment.getPayee());
-                       
+           } else {
+                 UILogger.displayError(getMessage("CTL_unable_to_add"));
            }
         }
         
     }
 
     public String getName() {
-        return NbBundle.getMessage(NewPaymentAction.class, "CTL_NewPaymentAction");
+        return getMessage("CTL_NewPaymentAction");
     }
 
     @Override

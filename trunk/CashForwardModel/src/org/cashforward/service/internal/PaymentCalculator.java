@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cashforward.service.internal;
 
 import org.cashforward.util.DateUtilities;
@@ -22,22 +18,20 @@ public class PaymentCalculator {
     public List<Payment> calculatePayments(Payment payment, Date start, Date end)
             throws Exception {
         List<Payment> payments = new ArrayList();
-        System.out.println(payment);
+        ServicesLogger.LOG.finest(payment.toString());
         Date paymentStart = payment.getStartDate();
         Date paymentEnd = payment.getEndDate();
         Date nextPaymentDate = null;
 
-        //this needs to linked to an enum
         Occurence occurence = Occurence.valueOf(payment.getOccurence());
-        //pseudocode...
-        //sample
+
         //if ("weekly".equals(occurence)) {//enum - every 7 days
             //when the range start is after the payment start
             //figure out what the earliest payment date is in the range
 
             //get day difference between range start and payment start
             int offsetStart = DateUtilities.daysBetween(start,paymentStart);
-            System.out.println("offsetStart:"+offsetStart);
+            ServicesLogger.LOG.finest("offsetStart:"+offsetStart);
             //if positive, range start is before payment
             //so, nextPaymentDate = start + (offset / 7 days)
             if (offsetStart > -1 )
@@ -47,7 +41,6 @@ public class PaymentCalculator {
                         DateUtilities.getDateAfterPeriod(start, 
                             occurence.period(), offsetStart % occurence.unit());
 
-            //System.out.println("nextPaymentDate:"+nextPaymentDate);
             
             //after we have the nextPaymentDate, 
             //keep adding the time period while still before the range and payment end
@@ -62,11 +55,9 @@ public class PaymentCalculator {
                             occurence.period(), occurence.unit());
                 else
                     nextPaymentDate = null;
-                //System.out.println("nextPaymentDate:"+nextPaymentDate);
                 
             }
 
-        //}
 
         return payments;
 
@@ -78,7 +69,7 @@ public class PaymentCalculator {
 
         Occurence occurence = Occurence.valueOf(payment.getOccurence());
         int offsetStart = DateUtilities.daysBetween(start,paymentStart);
-        System.out.println("offsetStart:"+offsetStart);
+        ServicesLogger.LOG.finest("offsetStart:"+offsetStart);
         if (offsetStart > -1 )
             nextPaymentDate = paymentStart;
         else if (occurence != Occurence.ONCE)

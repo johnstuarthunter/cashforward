@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cashforward.ui.internal.filter;
 
 import ca.odell.glazedlists.BasicEventList;
@@ -19,6 +15,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.cashforward.model.Label;
 import org.cashforward.model.Payment;
+import org.cashforward.ui.internal.UILogger;
 import org.cashforward.ui.task.PaymentFilter;
 import org.cashforward.ui.task.PaymentTaskPanel;
 import org.cashforward.ui.task.TaskTopComponent;
@@ -127,10 +124,10 @@ public class MatcherFactory {
             for (int i = 0; i < selected.length; i++) {
                 if (Label.class.isAssignableFrom(selected[i].getClass())) {
                     labelsSelectedList.add(((Label) selected[i]).getName());
-                    System.out.println("filtering s " + ((Label) selected[i]).getName());
+                    UILogger.LOG.finest("filtering s " + ((Label) selected[i]).getName());
                 } else {
                     f = (PaymentFilter) selected[i];
-                    System.out.println("filtering t " + f.getName());
+                    UILogger.LOG.finest("filtering t " + f.getName());
                     labelsSelectedList.add(f.getName());
                 }
             }
@@ -165,10 +162,10 @@ public class MatcherFactory {
                 return true;
             }
             Payment payment = (Payment) o;
-            System.out.println(payment);
+            UILogger.LOG.finest(payment.toString());
             List<Label> plabels = payment.getLabels();
             for (Label label : plabels) {
-                System.out.println("matches: " + label.getName());
+                UILogger.LOG.finest("matches: " + label.getName());
                 if (labels.contains(label.getName())) {
                     return true;
                 }
@@ -237,7 +234,7 @@ public class MatcherFactory {
             }
            
             Payment payment = (Payment) o;
-            System.out.println(payment + " is " + payment.isScheduled());
+            UILogger.LOG.finest(payment + " is " + payment.isScheduled());
             if (scheduled)
                 return payment.isScheduled();
             else

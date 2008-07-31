@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cashforward.ui.action;
 
 import ca.odell.glazedlists.EventList;
@@ -14,8 +10,11 @@ import org.cashforward.ui.adapter.PaymentServiceAdapter;
 import org.cashforward.ui.task.PaymentFilter;
 
 /**
- * 
- * @author Bill 
+ * Loads specific payments into the application. The payments read are
+ * determined by the current <code>PaymentFilter</code> in the
+ * <code>UIContext</code>
+ *
+ * @author Bill
  */
 public class LoadSpecificPaymentsAction extends AbstractAction {
 

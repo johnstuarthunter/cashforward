@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cashforward.ui.action;
 
 import java.util.Collection;
@@ -9,6 +5,7 @@ import java.util.List;
 import org.cashforward.model.Payment;
 import org.cashforward.service.PaymentService;
 import org.cashforward.ui.UIContext;
+import org.cashforward.ui.internal.UILogger;
 import org.cashforward.ui.task.PaymentFilter;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -18,9 +15,8 @@ import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
-import org.openide.util.actions.CallableSystemAction;
 
-public final class RemovePaymentAction extends CallableSystemAction {
+public final class RemovePaymentAction extends BaseCallableSystemAction {
 
     private Lookup.Result paymentNotifier =
             UIContext.getDefault().lookupResult(Payment.class);
@@ -55,12 +51,10 @@ public final class RemovePaymentAction extends CallableSystemAction {
     }
 
     public void performAction() {
-        if (this.payment == null) {
-            return;
-        }
+
         NotifyDescriptor notify =
                 new NotifyDescriptor.Confirmation(
-                "Are tou sure you want to remove this payment");
+                getMessage("CTL_confirm_remove_payment"));
         Object result = DialogDisplayer.getDefault().notify(notify);
         if (result == DialogDescriptor.YES_OPTION) {
             try {
@@ -68,27 +62,23 @@ public final class RemovePaymentAction extends CallableSystemAction {
                 if (payment.inMulipleScenarios()) {
                     payment.removeScenarios(currentScenarios);
                     if (!paymentService.addOrUpdatePayment(payment)){
-                         //do something
-                        System.out.println("Could not remove the payment");
+                         UILogger.displayError(getMessage(
+                            "CTL_unable_to_remove_payment"));
                         return;
                     }
                 }
                 else if (!paymentService.removePayment(payment)){
-                    //do something
-                    System.out.println("Could not remove the payment");
+                    UILogger.displayError(getMessage(
+                            "CTL_unable_to_remove_payment"));
                     return;
                 }
                     
             } catch (Exception e) {
-                e.printStackTrace();
+                UILogger.displayError(getMessage(
+                            "CTL_unable_to_remove_payment"),e);
                 return;
             }
             UIContext.getDefault().removePayment(payment);
-            /*f (payment.isScheduled()) {
-                UIContext.getDefault().removeScheduledPayment(payment);
-            } else {
-                UIContext.getDefault().removeCurrentPayment(payment);
-            }*/
         }
     }
 

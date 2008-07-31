@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.cashforward.ui.action;
 
 import ca.odell.glazedlists.EventList;
@@ -11,14 +6,15 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.cashforward.model.Payment;
-import org.cashforward.model.Scenario;
 import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
 import org.cashforward.ui.task.PaymentFilter;
 
 /**
- * 
- * @author Bill 
+ * Responsible for making sure the current (non-scheduled) payments are loaded
+ * into the application.
+ *
+ * @author Bill
  */
 public class LoadCurrentPaymentsAction extends AbstractAction {
     

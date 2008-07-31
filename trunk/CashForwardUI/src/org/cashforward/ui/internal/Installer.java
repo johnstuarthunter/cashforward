@@ -24,7 +24,6 @@ public class Installer extends ModuleInstall {
                 "Bill Snyder", "CashForward",
                 "U4Fnx9Ak6M1DGKsRXc2fNF8nTG0c2aC");
 
-        //TODO does this happen on the EDT?
         PaymentServiceAdapter serviceAdapter =
                 new PaymentServiceAdapter();
 
@@ -46,17 +45,7 @@ public class Installer extends ModuleInstall {
         if (payments != null) {
             UIContext.getDefault().addPayments(payments);
         }
-        /*
-        List cpayments = serviceAdapter.getCurrentPayments();
-        if (cpayments != null) {
-            UIContext.getDefault().addCurrentPayments(cpayments);
-        }
 
-        List spayments = serviceAdapter.getScheduledPayments();
-        if (spayments != null) {
-            UIContext.getDefault().addScheduledPayments(spayments);
-        }
-        */
         List payees = serviceAdapter.getPayees();
 
         if (payees != null) {

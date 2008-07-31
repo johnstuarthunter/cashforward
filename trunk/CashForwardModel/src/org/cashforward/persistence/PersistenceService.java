@@ -1,11 +1,3 @@
-/*
- * PersistenceManager.java
- * 
- * Created on Oct 23, 2007, 11:07:01 PM
- * 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cashforward.persistence;
 
 import java.text.SimpleDateFormat;
@@ -25,6 +17,7 @@ import org.cashforward.model.Payment;
 import org.cashforward.model.PaymentOverride;
 import org.cashforward.model.PaymentSearchCriteria;
 import org.cashforward.model.Scenario;
+import org.cashforward.service.internal.ServicesLogger;
 
 /**
  *  Handles persistence of transaction data.
@@ -456,7 +449,7 @@ public class PersistenceService {
 //        Payee walmart = new Payee();
 //        walmart.setName("Wal-Mart");
 //        boolean ok = service.addOrUpdatePayee(walmart);
-//        System.out.println("added ok." + " id is " + walmart.getId());
+//        ServicesLogger.LOG.finest("added ok." + " id is " + walmart.getId());
 //        walmart = service.getPayeeByID(1);
 //        Payment firstPayment = new Payment();
 //        firstPayment.setPayee(walmart);
@@ -466,13 +459,13 @@ public class PersistenceService {
 //        firstPayment.setEndDate(now);
 //        firstPayment.setOccurence("ONCE");
 //        ok = service.addOrUpdatePayment(firstPayment);
-//        System.out.println("added first payment: " + firstPayment.getId());
+//        ServicesLogger.LOG.finest("added first payment: " + firstPayment.getId());
         Payment firstPayment = service.getPaymentByID(1);
-        System.out.println("found first payment: " + firstPayment.getAmount());
+        ServicesLogger.LOG.finest("found first payment: " + firstPayment.getAmount());
         List<Label> labels = firstPayment.getLabels();
         if (labels != null) {
             for (Label label : labels) {
-                System.out.println(label.getName());
+                ServicesLogger.LOG.finest(label.getName());
             }
         }
         List<PaymentOverride> overrides = firstPayment.getPaymentOverrides();
