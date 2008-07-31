@@ -1,8 +1,3 @@
-/*
- * ScenarioPanel.java
- *
- * Created on June 28, 2008, 1:18 PM
- */
 package org.cashforward.ui.scenario;
 
 import ca.odell.glazedlists.BasicEventList;
@@ -54,15 +49,18 @@ import org.cashforward.ui.action.LoadSpecificPaymentsAction;
 import org.cashforward.ui.internal.UILogger;
 import org.cashforward.ui.task.PaymentFilter;
 import org.cashforward.util.DateUtilities;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.PeriodAxis;
+import org.jfree.chart.axis.PeriodAxisLabelInfo;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.labels.StandardXYSeriesLabelGenerator;
 import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.renderer.xy.XYStepRenderer;
 import org.jfree.chart.title.LegendTitle;
-import org.jfree.data.Range;
+import org.jfree.data.time.Month;
+import org.jfree.data.time.Year;
 import org.jfree.experimental.chart.annotations.XYTitleAnnotation;
-import org.jfree.ui.Layer;
 import org.jfree.ui.LengthAdjustmentType;
 import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.RectangleEdge;
@@ -70,8 +68,12 @@ import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.TextAnchor;
 
 /**
+ * Plots the cashflow for the selected scenario. If more than one 
+ * Scenario is selected, each Scenario's cashflow is shown.
  *
- * @author  Bill
+ * //TODO extract Strings to NbBundle
+ * 
+ * @author Bill
  */
 public class ScenarioPanel extends javax.swing.JPanel
         implements ChartChangeListener {
@@ -145,7 +147,7 @@ public class ScenarioPanel extends javax.swing.JPanel
         });
         rangeButtonContainer.add(rangeButton);
 
-
+        //do the inital chart plotting
         refreshChartData();
 
         dataset = new TimeSeriesCollection();
@@ -164,20 +166,41 @@ public class ScenarioPanel extends javax.swing.JPanel
                 new float[]{3, 1}, 0);
         plot.setDomainCrosshairStroke(dstroke);
         plot.addRangeMarker(new ValueMarker(0));
+
+        //--AXIS prototyping
         // change the auto tick unit selection to integer units only...
-        //NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        //rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        Font rfont = rangeAxis.getLabelFont();
+        rangeAxis.setLabelFont(rfont.deriveFont(Font.BOLD, rfont.getSize()+2));
+
+        PeriodAxis domainAxis = new PeriodAxis("Day");
+        Font dfont = domainAxis.getLabelFont();
+        domainAxis.setLabelFont(dfont.deriveFont(Font.BOLD, dfont.getSize()+2));
+        domainAxis.setAutoRangeTimePeriodClass(Day.class);
+        PeriodAxisLabelInfo[] info = new PeriodAxisLabelInfo[3];
+        info[0] = new PeriodAxisLabelInfo(Day.class, new SimpleDateFormat("d"));
+        //info[1] = new PeriodAxisLabelInfo(Day.class, new SimpleDateFormat("E"),
+        //    new RectangleInsets(2, 2, 2, 2), new Font("SansSerif", Font.BOLD,
+        //    10), Color.blue, false, new BasicStroke(0.0f), Color.lightGray);
+        info[1] = new PeriodAxisLabelInfo(Month.class,
+            new SimpleDateFormat("MMM"));
+        info[2] = new PeriodAxisLabelInfo(Year.class,
+            new SimpleDateFormat("yyyy"));
+        domainAxis.setLabelInfo(info);
+        plot.setDomainAxis(domainAxis);
+
 
         // add a labelled marker for the safety threshold...
         Marker threshold = new ValueMarker(0.0);
         threshold.setLabelOffsetType(LengthAdjustmentType.EXPAND);
         threshold.setPaint(Color.red);
         threshold.setStroke(new BasicStroke(2.0f));
-        //threshold.setLabel("Temperature Threshold");
-        //threshold.setLabelFont(new Font("SansSerif", Font.PLAIN, 11));
-        //threshold.setLabelPaint(Color.red);
-        //threshold.setLabelAnchor(RectangleAnchor.TOP_LEFT);
-        //threshold.setLabelTextAnchor(TextAnchor.BOTTOM_LEFT);
+        threshold.setLabel("$0.00");
+        threshold.setLabelFont(new Font("SansSerif", Font.PLAIN, 11));
+        threshold.setLabelPaint(Color.gray);
+        threshold.setLabelAnchor(RectangleAnchor.TOP_LEFT);
+        threshold.setLabelTextAnchor(TextAnchor.BOTTOM_LEFT);
         plot.addRangeMarker(threshold);
 
 
@@ -191,16 +214,10 @@ public class ScenarioPanel extends javax.swing.JPanel
                 //will need to actually have the
                 //entire set of payments, then 
                 //just use the scenario(s) as series
-                //which means I need to 
-                //just load all payments in at once
-                //and then just add series for the matching scenarios
-                //OR
-                //just make 2 separate loads to the paymentsByScenario
                 selectedScenarios.clear();
                 if (!c.isEmpty()) {
                     Scenario scenario =
                             (Scenario) c.iterator().next();
-                    //selectedScenarios.add(scenario);
                     UILogger.LOG.finest("do something scenario:"+scenario);
                     selectedScenarios.addAll(UIContext.getDefault().getSelectedScenarios());
                     refreshChartData();
@@ -307,23 +324,7 @@ public class ScenarioPanel extends javax.swing.JPanel
         plot.setDomainAxis(domainAxis);
         plot.setForegroundAlpha(0.5f);
 
-        /*
-        final XYAreaRenderer renderer = (XYAreaRenderer) plot.getRenderer();
-        renderer.setToolTipGenerator(
-                new StandardXYToolTipGenerator(
-                StandardXYToolTipGenerator.DEFAULT_TOOL_TIP_FORMAT,
-                new SimpleDateFormat("d-MMM-yyyy"),
-                new DecimalFormat("#,##0.00")));
-        GradientPaint gp0 = new GradientPaint(0.0f, 0.0f, Color.yellow,
-                0.0f, 0.0f, new Color(0, 0, 64));
-        //renderer.setSeriesPaint(0, gp0);
-        renderer.setSeriesFillPaint(0, Color.red);
-        renderer.setSeriesFillPaint(1, Color.white);
-        renderer.setLegendItemToolTipGenerator(
-                new StandardXYSeriesLabelGenerator("Tooltip {0}"));
-        */
         XYStepRenderer renderer = new XYStepRenderer();
-        renderer.setBaseShapesVisible(true);
         renderer.setToolTipGenerator(
                 new StandardXYToolTipGenerator(
                 StandardXYToolTipGenerator.DEFAULT_TOOL_TIP_FORMAT,
@@ -331,9 +332,7 @@ public class ScenarioPanel extends javax.swing.JPanel
                 new DecimalFormat("#,##0.00")));
         GradientPaint gp0 = new GradientPaint(0.0f, 0.0f, Color.yellow,
                 0.0f, 0.0f, new Color(0, 0, 64));
-        //renderer.setSeriesPaint(0, gp0);
-        renderer.setSeriesFillPaint(0, Color.red);
-        renderer.setSeriesFillPaint(1, Color.white);
+        renderer.setSeriesPaint(0, gp0);
         renderer.setLegendItemToolTipGenerator(
                 new StandardXYSeriesLabelGenerator("Tooltip {0}"));
         renderer.setDefaultEntityRadius(6);
@@ -398,35 +397,6 @@ public class ScenarioPanel extends javax.swing.JPanel
         for (TimeSeries timeSeries : series) {
             dataset.addSeries(timeSeries);
         }
-
-        //update min/max, but this is date, not value!!!
-        Range bounds = dataset.getDomainBounds(false);
-        if (bounds == null)
-            return;
-        
-        Marker lowPoint = new ValueMarker(bounds.getLowerBound(), Color.red,
-                new BasicStroke(2.0f));
-        lowPoint.setPaint(Color.red);
-        lowPoint.setStroke(new BasicStroke(2.0f));
-        lowPoint.setLabel("Low point: ($"+ bounds.getLowerBound()+")");
-        lowPoint.setLabelFont(new Font("SansSerif", Font.PLAIN, 11));
-        lowPoint.setLabelPaint(Color.red);
-        lowPoint.setLabelAnchor(RectangleAnchor.BOTTOM_LEFT);
-        lowPoint.setLabelTextAnchor(TextAnchor.BOTTOM_LEFT);
-
-        Marker highPoint = new ValueMarker(bounds.getUpperBound(), Color.black,
-                new BasicStroke(2.0f));
-        highPoint.setPaint(Color.gray);
-        highPoint.setStroke(new BasicStroke(2.0f));
-        highPoint.setLabel("High point: $"+ bounds.getUpperBound());
-        highPoint.setLabelFont(new Font("SansSerif", Font.PLAIN, 11));
-        highPoint.setLabelPaint(Color.black);
-        highPoint.setLabelAnchor(RectangleAnchor.BOTTOM_LEFT);
-        highPoint.setLabelTextAnchor(TextAnchor.BOTTOM_LEFT);
-        UILogger.LOG.finest("Bounds:"+bounds);
-        XYPlot plot = chart.getXYPlot();
-        plot.addDomainMarker(lowPoint, Layer.BACKGROUND);
-        plot.addDomainMarker(highPoint, Layer.BACKGROUND);
     }
 
     private void updateValue(String name, Day day, float value) {

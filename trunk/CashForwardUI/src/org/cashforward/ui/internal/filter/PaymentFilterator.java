@@ -1,4 +1,4 @@
-package org.cashforward.ui.internal.search;
+package org.cashforward.ui.internal.filter;
 
 import ca.odell.glazedlists.TextFilterator;
 import java.util.List;

@@ -81,6 +81,12 @@
     <folder name="OptionsDialog">
         <file name="Advanced.instance_hidden"/>
         <file name="Advanced_hidden"/>
+        <folder name="GeneralOptionsCategory">
+            <file name="org-cashforward-ui-options-EntryAdvancedOption.instance"/>
+        </folder>
+        <file name="GeneralOptionsCategory.instance">
+            <attr name="instanceClass" stringvalue="org.cashforward.ui.options.GeneralOptionsCategory"/>
+        </file>
     </folder>
     <folder name="QuickSearch">
         <folder name="Transactions">
