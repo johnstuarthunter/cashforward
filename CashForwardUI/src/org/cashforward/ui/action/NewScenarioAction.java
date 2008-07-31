@@ -1,13 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cashforward.ui.action;
 
 import java.util.Collection;
 import org.cashforward.model.Scenario;
 import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
+import org.cashforward.ui.internal.UILogger;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -15,10 +12,13 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
-import org.openide.util.NbBundle;
-import org.openide.util.actions.CallableSystemAction;
 
-public final class NewScenarioAction extends CallableSystemAction {
+/**
+ * Shows the user interface necessary for creating a <code>Scenario</code>.
+ *
+ * @author Bill
+ */
+public final class NewScenarioAction extends BaseCallableSystemAction {
     private PaymentServiceAdapter paymentService;
     private Lookup.Result scenarioNotifier =
             UIContext.getDefault().lookupResult(Scenario.class);
@@ -44,16 +44,12 @@ public final class NewScenarioAction extends CallableSystemAction {
     
     public void performAction() {
         
-        if (currentScenario == null ){
-            //alert
-            return;
-        }        
         Scenario newScenario = null;
         
         //create input panel for name
         NotifyDescriptor.InputLine nameDialog = new NotifyDescriptor.InputLine(
-                "New scenario name:",
-                "New Scenario",
+                getMessage("CTL_NewScenarioName"),
+                getMessage("CTL_NewScenarioTitle"),
                 NotifyDescriptor.PLAIN_MESSAGE,
                 NotifyDescriptor.OK_CANCEL_OPTION);
         Object result = DialogDisplayer.getDefault().notify(nameDialog);
@@ -71,15 +67,15 @@ public final class NewScenarioAction extends CallableSystemAction {
         if (paymentService.createScenario(currentScenario, newScenario)){
             UIContext.getDefault().addScenario(newScenario);
         } else {
-            //alert
-            return;
+             UILogger.displayError(getMessage(
+                            "CTL_unable_to_add_scenario"));
         }
     }
 
     public String getName() {
-        return NbBundle.getMessage(NewScenarioAction.class, "CTL_NewScenarioAction");
+        return getMessage("CTL_NewScenarioAction");
     }
-
+    
     @Override
     protected String iconResource() {
         return "org/cashforward/ui/action/scenario-new.png";
@@ -93,4 +89,5 @@ public final class NewScenarioAction extends CallableSystemAction {
     protected boolean asynchronous() {
         return false;
     }
+    
 }

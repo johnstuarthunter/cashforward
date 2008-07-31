@@ -51,17 +51,23 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.cashforward.model.Scenario;
 import org.cashforward.ui.action.LoadSpecificPaymentsAction;
+import org.cashforward.ui.internal.UILogger;
 import org.cashforward.ui.task.PaymentFilter;
 import org.cashforward.util.DateUtilities;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.labels.StandardXYSeriesLabelGenerator;
+import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.renderer.xy.XYStepRenderer;
 import org.jfree.chart.title.LegendTitle;
+import org.jfree.data.Range;
 import org.jfree.experimental.chart.annotations.XYTitleAnnotation;
+import org.jfree.ui.Layer;
+import org.jfree.ui.LengthAdjustmentType;
 import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
+import org.jfree.ui.TextAnchor;
 
 /**
  *
@@ -162,6 +168,19 @@ public class ScenarioPanel extends javax.swing.JPanel
         //NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         //rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
+        // add a labelled marker for the safety threshold...
+        Marker threshold = new ValueMarker(0.0);
+        threshold.setLabelOffsetType(LengthAdjustmentType.EXPAND);
+        threshold.setPaint(Color.red);
+        threshold.setStroke(new BasicStroke(2.0f));
+        //threshold.setLabel("Temperature Threshold");
+        //threshold.setLabelFont(new Font("SansSerif", Font.PLAIN, 11));
+        //threshold.setLabelPaint(Color.red);
+        //threshold.setLabelAnchor(RectangleAnchor.TOP_LEFT);
+        //threshold.setLabelTextAnchor(TextAnchor.BOTTOM_LEFT);
+        plot.addRangeMarker(threshold);
+
+
         scenarioNotifier.addLookupListener(new LookupListener() {
 
             public void resultChanged(LookupEvent event) {
@@ -182,7 +201,7 @@ public class ScenarioPanel extends javax.swing.JPanel
                     Scenario scenario =
                             (Scenario) c.iterator().next();
                     //selectedScenarios.add(scenario);
-                    System.out.println("do something scenario:"+scenario);
+                    UILogger.LOG.finest("do something scenario:"+scenario);
                     selectedScenarios.addAll(UIContext.getDefault().getSelectedScenarios());
                     refreshChartData();
                 }
@@ -228,7 +247,7 @@ public class ScenarioPanel extends javax.swing.JPanel
     public void chartChanged(ChartChangeEvent event) {
         if (isAdjusting) {
             //isAdjusting = false;
-            System.out.println("skipping chartChanged");
+            UILogger.LOG.finest("skipping chartChanged");
             return;
         }
         XYPlot plot = (XYPlot) chart.getPlot();
@@ -249,11 +268,11 @@ public class ScenarioPanel extends javax.swing.JPanel
             //just of going up, we need to set the last one not the first one
             if (sameDate) {
                 if (payment.equals(previousSelectedPayment)) {
-                    System.out.println("same");
+                    UILogger.LOG.finest("same");
                     continue;
                 }
                 isAdjusting = true;
-                System.out.println("settingp:" + payment);
+                UILogger.LOG.finest("settingp:" + payment);
                 UIContext.getDefault().setPayment(payment);
                 previousSelectedPayment = payment;
                 return;
@@ -322,11 +341,11 @@ public class ScenarioPanel extends javax.swing.JPanel
 
         LegendTitle lt = new LegendTitle(plot);
         lt.setItemFont(new Font("Dialog", Font.PLAIN, 9));
-        lt.setBackgroundPaint(new Color(200, 200, 255, 100));
+        lt.setBackgroundPaint(new Color(200, 200, 255, 80));
         lt.setFrame(new BlockBorder(Color.white));
         lt.setPosition(RectangleEdge.BOTTOM);
-        XYTitleAnnotation ta = new XYTitleAnnotation(0.98, 0.02, lt,
-                RectangleAnchor.TOP_LEFT);
+        XYTitleAnnotation ta = new XYTitleAnnotation(0.98, 0.90, lt,
+                RectangleAnchor.BOTTOM_RIGHT);
 
         ta.setMaxWidth(0.48);
         plot.addAnnotation(ta);
@@ -338,7 +357,6 @@ public class ScenarioPanel extends javax.swing.JPanel
         if (payments == null) {
             return;
         }
-
         //clear everything
         dataset.removeAllSeries();
         seriesRegistry.clear();
@@ -350,24 +368,24 @@ public class ScenarioPanel extends javax.swing.JPanel
         for (Payment payment : payments) {
             day = new Day(payment.getStartDate());
 
-            System.out.println("day:" + day);
+            UILogger.LOG.finest("day:" + day);
             //for each scenario, calculate the total
             List<Scenario> scenarios = payment.getScenarios();
             Map<String, Float> totals;
             for (Scenario scenario : scenarios) {
                 if (!selectedScenarios.contains(scenario))
                     continue;
-                System.out.println("---"+scenario.getName()+"---");
+                UILogger.LOG.finest("---"+scenario.getName()+"---");
                 totals = getTotals(scenario.getName());
 
                 if (totals.containsKey(day.toString())) {
                     value += totals.get(day.toString()) + payment.getAmount();
-                    System.out.println("new total for " + day + " is " + value);
+                    UILogger.LOG.finest("new total for " + day + " is " + value);
                     totals.put(day.toString(), value);
                     updateValue(scenario.getName(), day, value);
                 } else {
                     value += payment.getAmount();
-                    System.out.println("total for " + day + " is " + value);
+                    UILogger.LOG.finest("total for " + day + " is " + value);
                     totals.put(day.toString(), value);
                     insertValue(scenario.getName(), day, value);
                 }
@@ -380,7 +398,35 @@ public class ScenarioPanel extends javax.swing.JPanel
         for (TimeSeries timeSeries : series) {
             dataset.addSeries(timeSeries);
         }
+
+        //update min/max, but this is date, not value!!!
+        Range bounds = dataset.getDomainBounds(false);
+        if (bounds == null)
+            return;
         
+        Marker lowPoint = new ValueMarker(bounds.getLowerBound(), Color.red,
+                new BasicStroke(2.0f));
+        lowPoint.setPaint(Color.red);
+        lowPoint.setStroke(new BasicStroke(2.0f));
+        lowPoint.setLabel("Low point: ($"+ bounds.getLowerBound()+")");
+        lowPoint.setLabelFont(new Font("SansSerif", Font.PLAIN, 11));
+        lowPoint.setLabelPaint(Color.red);
+        lowPoint.setLabelAnchor(RectangleAnchor.BOTTOM_LEFT);
+        lowPoint.setLabelTextAnchor(TextAnchor.BOTTOM_LEFT);
+
+        Marker highPoint = new ValueMarker(bounds.getUpperBound(), Color.black,
+                new BasicStroke(2.0f));
+        highPoint.setPaint(Color.gray);
+        highPoint.setStroke(new BasicStroke(2.0f));
+        highPoint.setLabel("High point: $"+ bounds.getUpperBound());
+        highPoint.setLabelFont(new Font("SansSerif", Font.PLAIN, 11));
+        highPoint.setLabelPaint(Color.black);
+        highPoint.setLabelAnchor(RectangleAnchor.BOTTOM_LEFT);
+        highPoint.setLabelTextAnchor(TextAnchor.BOTTOM_LEFT);
+        UILogger.LOG.finest("Bounds:"+bounds);
+        XYPlot plot = chart.getXYPlot();
+        plot.addDomainMarker(lowPoint, Layer.BACKGROUND);
+        plot.addDomainMarker(highPoint, Layer.BACKGROUND);
     }
 
     private void updateValue(String name, Day day, float value) {

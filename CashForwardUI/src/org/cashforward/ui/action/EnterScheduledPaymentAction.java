@@ -1,13 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cashforward.ui.action;
 
 import java.util.Collection;
 import org.cashforward.model.Payment;
 import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
+import org.cashforward.ui.internal.UILogger;
 import org.cashforward.ui.payment.PaymentDetailPanel;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -18,6 +15,12 @@ import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.CallableSystemAction;
 
+/**
+ *
+ * Determines the next transaction for a scheduled payment.
+ *
+ * @author Bill
+ */
 public final class EnterScheduledPaymentAction extends CallableSystemAction {
     private Payment payment;
     private PaymentServiceAdapter paymentService = 
@@ -53,27 +56,37 @@ public final class EnterScheduledPaymentAction extends CallableSystemAction {
                 payment.getAmount(),payment.getPayee(),payment.getStartDate());
         newPayment.setOccurence(Payment.Occurence.NONE.name());
         paymentDetailPanel.setPayment(newPayment);
-        DialogDescriptor dd = 
-                new DialogDescriptor(paymentDetailPanel, "Enter Scheduled Payment");
+        DialogDescriptor dd = new DialogDescriptor(
+                paymentDetailPanel, NbBundle.getMessage(
+                            EnterScheduledPaymentAction.class,
+                            "CTL_EnterScheduledPaymentAction"));
         dd.setModal(true);
         dd.setLeaf(true);
         dd.setOptionType(DialogDescriptor.OK_CANCEL_OPTION);
 
         Object result = DialogDisplayer.getDefault().notify(dd);
-        
+
+        boolean skipped = false;
         if (result == DialogDescriptor.OK_OPTION) {
             paymentDetailPanel.getPayment(); //commit
             if (paymentService.addOrUpdatePayment(newPayment)) {
                 if (paymentService.skipNextPayment(payment)){
-                    //what?
-                }
+                    skipped = true;
+                } 
+            }
+            
+            if (!skipped) {
+                UILogger.displayError(NbBundle.getMessage(
+                            EnterScheduledPaymentAction.class,
+                            "CTL_unable_to_enter"));
             }
         }
         
     }
     
     public String getName() {
-        return NbBundle.getMessage(EnterScheduledPaymentAction.class, "CTL_EnterScheduledPaymentAction");
+        return NbBundle.getMessage(EnterScheduledPaymentAction.class,
+                "CTL_EnterScheduledPaymentAction");
     }
 
     @Override

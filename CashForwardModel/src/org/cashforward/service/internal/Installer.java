@@ -1,14 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cashforward.service.internal;
 
 import java.util.List;
 import org.cashforward.model.Scenario;
 import org.cashforward.service.PaymentService;
 import org.openide.modules.ModuleInstall;
-import org.openide.util.Exceptions;
 
 /**
  * Manages a module's lifecycle. Remember that an installer is optional and
@@ -31,7 +26,7 @@ public class Installer extends ModuleInstall {
                 paymentService.addOrUpdateScenario(defaultScenario);
             }
        } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
+            ServicesLogger.LOG.fine(ex.getMessage());
         }
     }
 }

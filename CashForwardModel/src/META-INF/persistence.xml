@@ -30,7 +30,6 @@
       <property name="hibernate.connection.url" value="jdbc:h2:~/.cashforward/dev_data;FILE_LOCK=NO"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
       <property name="hibernate.show_sql" value="true"/>
-      <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
     </properties>
   </persistence-unit>
   <persistence-unit name="CashForwardPersistenceTest" transaction-type="RESOURCE_LOCAL">

@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.cashforward.ui.adapter;
 
 import java.util.Date;
@@ -11,11 +6,14 @@ import org.cashforward.model.Payment;
 import org.cashforward.model.PaymentSearchCriteria;
 import org.cashforward.model.Scenario;
 import org.cashforward.service.PaymentService;
-import org.openide.util.Exceptions;
+import org.cashforward.ui.internal.UILogger;
 
 /**
- * Talks to the PaymentService. Provides a way for the interface
+ * Talks to the PaymentService. Provides a way for the interface module 
  * to retrieve and update data in the application.
+ *
+ * Note: services/adapters seem like good candidates
+ * for advanced lookup using the /META-INF/services mechanism
  *
  * @author Bill 
  */
@@ -30,7 +28,7 @@ public class PaymentServiceAdapter {
         try { 
             return paymentService.addOrUpdatePayment(payment);
         } catch (Exception e) {
-            e.printStackTrace();
+            UILogger.LOG.severe(e.getMessage());
             return false;
         }
     }
@@ -41,7 +39,7 @@ public class PaymentServiceAdapter {
             return paymentService.createScenario(currentScenario,
                     newScenario);
         } catch (Exception e){
-            e.printStackTrace();
+            UILogger.LOG.severe(e.getMessage());
             return false;
         }
     }
@@ -50,7 +48,7 @@ public class PaymentServiceAdapter {
         try {
             return paymentService.enterNextPayment(scheduledPayment);
         } catch (Exception e) {
-            e.printStackTrace();
+            UILogger.LOG.severe(e.getMessage());
             return null;
         }
     }
@@ -58,8 +56,8 @@ public class PaymentServiceAdapter {
     public Scenario getDefaultScenario() {
         try {
             return paymentService.getDefaultScenario();
-        } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
+        } catch (Exception e) {
+            UILogger.LOG.severe(e.getMessage());
         }
         return null;
     }
@@ -67,8 +65,8 @@ public class PaymentServiceAdapter {
     public List getScenarios() {
         try {
             return paymentService.getScenarios();
-        } catch (Exception ex) {
-            Exceptions.printStackTrace(ex); 
+        } catch (Exception e) {
+            UILogger.LOG.severe(e.getMessage());
             return null;
         }
     }
@@ -77,7 +75,7 @@ public class PaymentServiceAdapter {
         try {
             return paymentService.skipNextPayment(scheduledPayment);
         } catch (Exception e) {
-            e.printStackTrace();
+            UILogger.LOG.severe(e.getMessage());
             return false;
         }
     }
@@ -86,6 +84,7 @@ public class PaymentServiceAdapter {
        try {
             return paymentService.getPayees();
         } catch (Exception e) {
+            UILogger.LOG.severe(e.getMessage());
         }
         
         return null;
@@ -95,6 +94,7 @@ public class PaymentServiceAdapter {
        try {
             return paymentService.getLabels();
         } catch (Exception e) {
+            UILogger.LOG.severe(e.getMessage());
         }
         
         return null;
@@ -115,6 +115,7 @@ public class PaymentServiceAdapter {
         try {
             return paymentService.getPayments(criteria);
         } catch (Exception e) {
+            UILogger.LOG.severe(e.getMessage());
         }
         
         return null;
@@ -124,6 +125,7 @@ public class PaymentServiceAdapter {
         try {
             return paymentService.getPayments(null);
         } catch (Exception e) {
+            UILogger.LOG.severe(e.getMessage());
         }
 
         return null;
@@ -133,6 +135,7 @@ public class PaymentServiceAdapter {
         try {
             return paymentService.getCurrentPayments();
         } catch (Exception e) {
+            UILogger.LOG.severe(e.getMessage());
         }
         
         return null;
@@ -142,6 +145,7 @@ public class PaymentServiceAdapter {
         try {
             return paymentService.getScheduledPayments();
         } catch (Exception e) {
+            UILogger.LOG.severe(e.getMessage());
         }
         
         return null;
@@ -153,7 +157,7 @@ public class PaymentServiceAdapter {
             return paymentService.getCalculatedPayments(payment, 
                     startDate, endDate);
         } catch (Exception e){
-            
+            UILogger.LOG.severe(e.getMessage());
         }
         return null;
     }
@@ -162,8 +166,8 @@ public class PaymentServiceAdapter {
         try {
             paymentService.addOrUpdateScenario(base);
             return true;
-        } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
+        } catch (Exception e) {
+            UILogger.LOG.severe(e.getMessage());
         }
 
         return false;

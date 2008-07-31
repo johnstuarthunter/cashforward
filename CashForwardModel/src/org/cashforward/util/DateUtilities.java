@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.cashforward.util;
 
 import java.util.Calendar;
@@ -15,6 +10,13 @@ import java.util.Date;
  */
 public class DateUtilities {
 
+    /**
+     * Return the number of days between two dates.
+     *
+     * @param start
+     * @param end
+     * @return positive value if end is after start, negative otherwise
+     */
     public static int daysBetween(Date start, Date end){
         int result = 0;
         
@@ -23,8 +25,10 @@ public class DateUtilities {
         Calendar e = Calendar.getInstance();
         e.setTime(end);
         
-        //need to account for different years of calendars...later for now
-        result = e.get(Calendar.DAY_OF_YEAR) - 
+        //need to account for different years of calendars...later 
+        //int years = e.get(Calendar.YEAR) - s.get(Calendar.YEAR);
+        
+        result += e.get(Calendar.DAY_OF_YEAR) -
             s.get(Calendar.DAY_OF_YEAR);
         
         return result;
@@ -49,6 +53,11 @@ public class DateUtilities {
         return thisYear.getTime();
     }
     
+    /**
+     * @param date 
+     * @param daysAfter 
+     * @return the Date daysAfter the given date
+     */
     public static Date getDateAfterDays(Date date, int daysAfter) {
         Calendar start = Calendar.getInstance();
         start.setTime(date);
@@ -56,7 +65,19 @@ public class DateUtilities {
         
         return start.getTime();
     }
-    
+
+    /**
+     * Get the Date so many unitsAfter a certain period.
+     *
+     * For example, to get 3 days after today:
+     *
+     * Date in3Days = getDateAfterPeriod(new Date(), Calendar.DAY, 3);
+     *
+     * @param date
+     * @param period
+     * @param unitsAfter
+     * @return
+     */
     public static Date getDateAfterPeriod(Date date, int period, int unitsAfter) {
         Calendar start = Calendar.getInstance();
         start.setTime(date);

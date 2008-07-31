@@ -308,7 +308,7 @@ public class PaymentListPanel extends TopComponent {
 
         public Object setColumnValue(Object baseObject, Object editedObject, int i) {
             //if ( i == 4 ){
-            //    System.out.println("show/hide detail");
+            //    UILogger.LOG.finest("show/hide detail");
             //}
             //fire the expand here?  
             //    ((AuctionItem)baseObject).setStarred( (Boolean)editedObject );

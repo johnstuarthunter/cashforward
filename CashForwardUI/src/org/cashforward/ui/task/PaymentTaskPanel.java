@@ -21,6 +21,7 @@ import org.cashforward.ui.UIContext;
 import org.cashforward.ui.action.LoadCurrentPaymentsAction;
 import org.cashforward.ui.action.LoadScheduledPaymentsAction;
 import org.cashforward.ui.action.LoadSpecificPaymentsAction;
+import org.cashforward.ui.internal.UILogger;
 import org.cashforward.util.DateUtilities;
 
 /**
@@ -82,15 +83,14 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
                     return;
                 }
 
+                //set the selected scenarios
                 Object[] s = scenarioList.getSelectedValues();
                 EventList l = new BasicEventList();
                 for (int i = 0; i < s.length; i++) {
                     l.add(s[i]);
                 }
-
-                Scenario scenario = (Scenario) scenarioList.getSelectedValue();
                 UIContext.getDefault().setSelectedScenarios(l);
-                //loadSpecificPayments.actionPerformed(null);
+
                 PaymentFilter filter = (PaymentFilter) typeList.getSelectedValue();
                 if (filter != null) {
                     processFilter(filter);
@@ -121,8 +121,6 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
         });
 
         this.labelList.setModel(new EventListModel(labels));
-    //remember what was last selected? //should be an object
-    //groupList1.setSelectedIndex(1);
 
     }
 
@@ -142,7 +140,7 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
     //using the glazed lists matchers
     private void processFilter(PaymentFilter filter) {
         long start = System.currentTimeMillis();
-        System.out.println("processFilter start:" + start);
+        UILogger.LOG.finest("processFilter start:" + start);
         int currentType =
                 UIContext.getDefault().getPaymentFilter().getPaymentType();
 
@@ -158,7 +156,7 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
                 filter.getPaymentType() == PaymentFilter.TYPE_CALCULATED) {
             loadSpecificPayments.actionPerformed(null);
         }
-        System.out.println("processFilter elapsed:" + (System.currentTimeMillis() - start));
+        UILogger.LOG.finest("processFilter elapsed:" + (System.currentTimeMillis() - start));
     }
 
     public void setScenarios(EventList<Scenario> scenarios) {

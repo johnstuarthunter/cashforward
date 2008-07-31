@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.cashforward.service;
 
 import org.cashforward.model.Label;
@@ -17,6 +12,7 @@ import org.cashforward.model.Scenario;
 import org.cashforward.persistence.PersistenceService;
 import org.cashforward.service.internal.PaymentCalculator;
 import org.cashforward.service.internal.PaymentComparator;
+import org.cashforward.service.internal.ServicesLogger;
 
 /**
  *
@@ -131,11 +127,11 @@ public class PaymentService {
         
         List<Payment> allPayments = new ArrayList();    
         List<Payment> payments = persistenceService.getSchdeuledPayments();
-        System.out.println(payments.size() + " scheduled payments");
+        ServicesLogger.LOG.finest(payments.size() + " scheduled payments");
         for (Payment payment : payments) {
             List newPayments = 
                     paymentCalculator.calculatePayments(payment, start, end);
-            System.out.println("generated " + newPayments.size());
+            ServicesLogger.LOG.finest("generated " + newPayments.size());
             allPayments.addAll(newPayments);
         }
         

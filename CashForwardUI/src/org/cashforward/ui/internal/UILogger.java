@@ -23,6 +23,11 @@ public class UILogger {
         NotifyDescriptor.Exception e = 
                 new NotifyDescriptor.Exception(ex, message);
         DialogDisplayer.getDefault().notifyLater(e);
-
+    }
+    
+    public static void displayError(String message) {
+        NotifyDescriptor.Message e =
+                new NotifyDescriptor.Message(message);
+        DialogDisplayer.getDefault().notifyLater(e);
     }
 }
