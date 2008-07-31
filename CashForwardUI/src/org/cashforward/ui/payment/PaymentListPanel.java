@@ -1,8 +1,3 @@
-    /*
- * PaymentListPanel.java
- *
- * Created on May 19, 2008, 9:53 PM
- */
 package org.cashforward.ui.payment;
 
 import ca.odell.glazedlists.EventList;
@@ -40,12 +35,6 @@ import org.openide.windows.TopComponent;
  */
 public class PaymentListPanel extends TopComponent {
 
-    //behavior
-    //scenario - cannot sort
-    //need to track payments along graph
-    //current payments - sort by date
-    //scheduled payments - sort by everything
-    //- hide balance
     private EventList<Payment> payments;
     private SortedList<Payment> sortedItems;
     private FilterList<Payment> filteredList;
@@ -62,7 +51,6 @@ public class PaymentListPanel extends TopComponent {
     protected static final Color BACKGROUND4 = new Color(0, 128, 0);
     protected static final Color FOREGROUND4 = new Color(255, 255, 255);
 
-    /** Creates new form PaymentListPanel */
     public PaymentListPanel() {
         initComponents();
 
@@ -105,7 +93,7 @@ public class PaymentListPanel extends TopComponent {
         paymentTable.setSelectionModel(selectionModel);
 
         PaymentCellRenderer pcr = new PaymentCellRenderer();
-        //paymentTable.getColumnModel().getColumn(0).setCellRenderer(pcr);
+        paymentTable.getColumnModel().getColumn(0).setCellRenderer(pcr);
         //paymentTable.getColumnModel().getColumn(1).setCellRenderer(pcr);
         paymentTable.getColumnModel().getColumn(2).setCellRenderer(pcr);
         paymentTable.getColumnModel().getColumn(3).setCellRenderer(pcr);
@@ -337,7 +325,7 @@ public class PaymentListPanel extends TopComponent {
                 Font newf = new Font(f.getName(), Font.BOLD, f.getStyle());
                 newr.setFont(newf);
             }
-
+            
             return newr;
         }
     }

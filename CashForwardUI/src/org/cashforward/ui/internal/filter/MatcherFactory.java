@@ -6,11 +6,13 @@ import ca.odell.glazedlists.matchers.AbstractMatcherEditor;
 import ca.odell.glazedlists.matchers.CompositeMatcherEditor;
 import ca.odell.glazedlists.matchers.Matcher;
 import ca.odell.glazedlists.matchers.MatcherEditor;
+import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.JList;
+import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.cashforward.model.Label;
@@ -28,6 +30,12 @@ import org.cashforward.ui.task.TaskTopComponent;
 public class MatcherFactory {
 
     private static MatcherFactory instance;
+
+    //temp
+    JTextField temp = new JTextField();
+    public JTextField getTemp(){
+        return temp;
+    }
 
     private MatcherFactory() {
     }
@@ -80,6 +88,7 @@ public class MatcherFactory {
         matchers.add(createLabelMatcher());
         matchers.add(createScenarioMatcher());
         matchers.add(createTypeMatcher());
+        matchers.add(new TextComponentMatcherEditor(getTemp(),new PaymentFilterator()));
         
         CompositeMatcherEditor matcher =
                 new CompositeMatcherEditor(matchers);
