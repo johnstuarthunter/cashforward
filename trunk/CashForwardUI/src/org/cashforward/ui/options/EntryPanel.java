@@ -27,19 +27,19 @@ final class EntryPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(EntryPanel.class, "EntryPanel.jLabel1.text")); // NOI18N
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .add(jLabel1)
                 .addContainerGap(179, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1)
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .add(jLabel1)
                 .addContainerGap(54, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
