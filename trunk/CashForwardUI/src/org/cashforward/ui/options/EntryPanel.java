@@ -5,14 +5,22 @@
 
 package org.cashforward.ui.options;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.cashforward.ui.internal.options.UIOptions;
+
 final class EntryPanel extends javax.swing.JPanel {
 
     private final EntryOptionsPanelController controller;
 
-    EntryPanel(EntryOptionsPanelController controller) {
+    EntryPanel(final EntryOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
-        // TODO listen to changes in form fields and call controller.changed()
+        cbRequireLabel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                controller.changed();
+            }
+        });
     }
 
     /** This method is called from within the constructor to
@@ -23,9 +31,14 @@ final class EntryPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        cbRequireLabel = new javax.swing.JCheckBox();
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(EntryPanel.class, "EntryPanel.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbRequireLabel, org.openide.util.NbBundle.getMessage(EntryPanel.class, "EntryPanel.cbRequireLabel.text")); // NOI18N
+        cbRequireLabel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbRequireLabelActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
@@ -33,35 +46,28 @@ final class EntryPanel extends javax.swing.JPanel {
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .add(jLabel1)
-                .addContainerGap(179, Short.MAX_VALUE))
+                .add(cbRequireLabel)
+                .addContainerGap(198, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(jLabel1)
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap()
+                .add(cbRequireLabel)
+                .addContainerGap(265, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cbRequireLabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRequireLabelActionPerformed
+        // TODO add your handling code here:
+}//GEN-LAST:event_cbRequireLabelActionPerformed
+
     void load() {
-        // TODO read settings and initialize GUI
-        // Example:        
-        // someCheckBox.setSelected(Preferences.userNodeForPackage(EntryPanel.class).getBoolean("someFlag", false));
-        // or for org.openide.util with API spec. version >= 7.4:
-        // someCheckBox.setSelected(NbPreferences.forModule(EntryPanel.class).getBoolean("someFlag", false));
-        // or:
-        // someTextField.setText(SomeSystemOption.getDefault().getSomeStringProperty());
+        cbRequireLabel.setSelected(UIOptions.paymentsRequireLabel());
     }
 
     void store() {
-        // TODO store modified settings
-        // Example:
-        // Preferences.userNodeForPackage(EntryPanel.class).putBoolean("someFlag", someCheckBox.isSelected());
-        // or for org.openide.util with API spec. version >= 7.4:
-        // NbPreferences.forModule(EntryPanel.class).putBoolean("someFlag", someCheckBox.isSelected());
-        // or:
-        // SomeSystemOption.getDefault().setSomeStringProperty(someTextField.getText());
+        UIOptions.setPaymentsRequireLabel(cbRequireLabel.isSelected());
     }
 
     boolean valid() {
@@ -70,6 +76,6 @@ final class EntryPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JCheckBox cbRequireLabel;
     // End of variables declaration//GEN-END:variables
 }

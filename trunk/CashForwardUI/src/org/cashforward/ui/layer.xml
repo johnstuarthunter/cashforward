@@ -16,7 +16,6 @@
     <folder name="Actions">
         <folder name="Payment">
             <attr name="position" intvalue="100"/>
-            <file name="org-cashforward-ui-action-CompareScenariosAction.instance"/>
             <file name="org-cashforward-ui-action-EnterScheduledPaymentAction.instance"/>
             <file name="org-cashforward-ui-action-NewPaymentAction.instance"/>
             <file name="org-cashforward-ui-action-NewScenarioAction.instance"/>
@@ -81,21 +80,27 @@
     <folder name="OptionsDialog">
         <file name="Advanced.instance_hidden"/>
         <file name="Advanced_hidden"/>
+        <file name="General.instance_hidden"/>
         <folder name="GeneralOptionsCategory">
             <file name="org-cashforward-ui-options-EntryAdvancedOption.instance"/>
         </folder>
         <file name="GeneralOptionsCategory.instance">
             <attr name="instanceClass" stringvalue="org.cashforward.ui.options.GeneralOptionsCategory"/>
         </file>
+        <file name="Keymaps.instance_hidden"/>
     </folder>
     <folder name="QuickSearch">
-        <folder name="Transactions">
+        <folder name="Payments">
             <attr name="command" stringvalue="t"/>
             <attr name="position" intvalue="100"/>
             <file name="org-cashforward-ui-internal-search-PaymentSearchProvider.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.cashforward.ui.Bundle"/>
             </file>
         </folder>
+        <folder name="Documentation">
+            <file name="org-netbeans-modules-quicksearch-web-WebQuickSearchProviderImpl.instance"/>
+        </folder>
+
     </folder>
     <folder name="Toolbars">
         <file name="Edit_hidden"/>
@@ -129,7 +134,7 @@
                 <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-quicksearch-QuickSearchAction.instance"/>
             </file>
         </folder>
-            <file name="UndoRedo_hidden"/>
+        <file name="UndoRedo_hidden"/>
     </folder>
     <folder name="Windows2">
         <folder name="Components">
@@ -141,10 +146,10 @@
             <folder name="editor">
                 <file name="ScenarioTopComponent.wstcref" url="ScenarioTopComponentWstcref.xml"/>
             </folder>
-            <folder name="explorer">
+            <folder name="output">
                 <file name="PaymentTopComponent.wstcref" url="PaymentTopComponentWstcref.xml"/>
             </folder>
-            <folder name="leftSlidingSide">
+            <folder name="explorer">
                 <file name="TaskTopComponent.wstcref" url="TaskTopComponentWstcref.xml"/>
             </folder>
         </folder>
