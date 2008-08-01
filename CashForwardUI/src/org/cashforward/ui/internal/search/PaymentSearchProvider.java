@@ -17,7 +17,8 @@ import org.netbeans.spi.quicksearch.SearchResponse;
 public class PaymentSearchProvider implements SearchProvider {
 
     private RevealPayment filterPayments = new RevealPayment();
-    private String source ;
+    private String source;
+    private static final String PREFIX = "Show Payments matching ";
     
     /**
      * Method is called by infrastructure when search operation was requested.
@@ -29,9 +30,11 @@ public class PaymentSearchProvider implements SearchProvider {
      */
     public void evaluate(SearchRequest request, SearchResponse response) {
         source = request.getText();
+       if (source.startsWith(PREFIX))
+            source = source.substring(PREFIX.length());
         
-        response.addResult(filterPayments, "Show Payments matching " + source);
-
+        System.out.println("s:"+source);
+        response.addResult(filterPayments, PREFIX + source);
     }
 
     private class RevealPayment implements Runnable {
