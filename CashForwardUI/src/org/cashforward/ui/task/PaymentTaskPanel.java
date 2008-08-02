@@ -18,10 +18,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.cashforward.model.Scenario;
 import org.cashforward.ui.UIContext;
+import org.cashforward.ui.UIResources;
 import org.cashforward.ui.action.LoadCurrentPaymentsAction;
 import org.cashforward.ui.action.LoadScheduledPaymentsAction;
 import org.cashforward.ui.action.LoadSpecificPaymentsAction;
 import org.cashforward.ui.internal.UILogger;
+import org.cashforward.ui.internal.filter.LabelsToPaymentFilterList;
 import org.cashforward.util.DateUtilities;
 
 /**
@@ -33,7 +35,8 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
 
     private static EventList<Scenario> scenarios = new BasicEventList();
     private static EventList<PaymentFilter> types = new BasicEventList();
-    private static EventList<PaymentFilter> labels = new BasicEventList();
+    private static EventList<PaymentFilter> labels = 
+            new LabelsToPaymentFilterList(UIContext.getDefault().getLabels());
     private LoadScheduledPaymentsAction loadScheduledPayments;
     private LoadCurrentPaymentsAction loadCurrentPayments;
     private LoadSpecificPaymentsAction loadSpecificPayments;
@@ -42,7 +45,11 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
     public PaymentTaskPanel() {
         initComponents();
 
-        //temp data
+        lblScenarios.setIcon(UIResources.getImage(UIResources.ICON_SCENARIO));
+        lblPaymentTypes.setIcon(UIResources.getImage(UIResources.ICON_PAYMENT));
+        lblLabels.setIcon(UIResources.getImage(UIResources.ICON_LABELS));
+
+        //the types can be hard wired data
         PaymentFilter scheduled = new PaymentFilter("Scheduled");
         scheduled.setPaymentType(PaymentFilter.TYPE_SCHEDULED);
         types.add(scheduled);
@@ -60,14 +67,7 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
         projected.setPaymentType(PaymentFilter.TYPE_CALCULATED);
         types.add(projected);
 
-        PaymentFilter auto = new PaymentFilter("Auto");
-        labels.add(auto);
-
-        PaymentFilter fun = new PaymentFilter("Fun");
-        labels.add(fun);
-
-        PaymentFilter food = new PaymentFilter("Food");
-        labels.add(food);
+        //labels need to be derived
 
         loadCurrentPayments = new LoadCurrentPaymentsAction();
         loadScheduledPayments = new LoadScheduledPaymentsAction();
@@ -200,9 +200,9 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
         typeList = new javax.swing.JList();
         jScrollPane3 = new javax.swing.JScrollPane();
         labelList = new javax.swing.JList();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblScenarios = new javax.swing.JLabel();
+        lblPaymentTypes = new javax.swing.JLabel();
+        lblLabels = new javax.swing.JLabel();
 
         styledLabel1.setText(org.openide.util.NbBundle.getMessage(PaymentTaskPanel.class, "PaymentTaskPanel.styledLabel1.text")); // NOI18N
 
@@ -213,11 +213,14 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
 
         jScrollPane3.setViewportView(labelList);
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(PaymentTaskPanel.class, "PaymentTaskPanel.jLabel1.text")); // NOI18N
+        lblScenarios.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblScenarios.setText(org.openide.util.NbBundle.getMessage(PaymentTaskPanel.class, "PaymentTaskPanel.lblScenarios.text")); // NOI18N
 
-        jLabel2.setText(org.openide.util.NbBundle.getMessage(PaymentTaskPanel.class, "PaymentTaskPanel.jLabel2.text")); // NOI18N
+        lblPaymentTypes.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblPaymentTypes.setText(org.openide.util.NbBundle.getMessage(PaymentTaskPanel.class, "PaymentTaskPanel.lblPaymentTypes.text")); // NOI18N
 
-        jLabel3.setText(org.openide.util.NbBundle.getMessage(PaymentTaskPanel.class, "PaymentTaskPanel.jLabel3.text")); // NOI18N
+        lblLabels.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblLabels.setText(org.openide.util.NbBundle.getMessage(PaymentTaskPanel.class, "PaymentTaskPanel.lblLabels.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
@@ -225,46 +228,46 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .add(jLabel1)
-                .addContainerGap(78, Short.MAX_VALUE))
+                .add(lblScenarios)
+                .addContainerGap(66, Short.MAX_VALUE))
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .add(jLabel2)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .add(lblPaymentTypes)
+                .addContainerGap(17, Short.MAX_VALUE))
             .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .add(jLabel3)
-                .addContainerGap(94, Short.MAX_VALUE))
+                .add(lblLabels)
+                .addContainerGap(86, Short.MAX_VALUE))
             .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .add(jLabel1)
+                .add(lblScenarios)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 89, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jLabel2)
+                .add(lblPaymentTypes)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 88, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jLabel3)
+                .add(lblLabels)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE))
+                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList labelList;
+    private javax.swing.JLabel lblLabels;
+    private javax.swing.JLabel lblPaymentTypes;
+    private javax.swing.JLabel lblScenarios;
     private javax.swing.JList scenarioList;
     private com.jidesoft.swing.StyledLabel styledLabel1;
     private javax.swing.JList typeList;

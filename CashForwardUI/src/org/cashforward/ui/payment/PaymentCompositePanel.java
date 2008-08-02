@@ -21,6 +21,7 @@ import org.openide.util.actions.SystemAction;
 public class PaymentCompositePanel extends javax.swing.JPanel {
 
     SavePaymentAction saveAction;
+    private boolean valid;
 
     /** Creates new form PaymentCompositePanel */
     public PaymentCompositePanel() {
@@ -29,6 +30,10 @@ public class PaymentCompositePanel extends javax.swing.JPanel {
           //      (SavePaymentAction) SystemAction.get(SavePaymentAction.class);
 
         this.jideTabbedPane1.setTabTrailingComponent(new HeaderLabel());
+    }
+
+    public PaymentDetailPanel getPaymentDetailComponent(){
+        return this.paymentDetailPanel;
     }
 
     public void setPayees(EventList payees) {
