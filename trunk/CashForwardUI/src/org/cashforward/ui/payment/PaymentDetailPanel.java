@@ -8,13 +8,17 @@ package org.cashforward.ui.payment;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
 import ca.odell.glazedlists.event.ListEventListener;
-import java.math.BigDecimal;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.text.NumberFormat;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import org.cashforward.model.Label;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
+import org.cashforward.ui.internal.options.UIOptions;
+import org.jdesktop.beansbinding.BeanProperty;
+import org.jdesktop.beansbinding.Property;
 
 /**
  *
@@ -23,12 +27,43 @@ import org.cashforward.model.Payment;
 public class PaymentDetailPanel extends javax.swing.JPanel {
 
     Payment payment;
-
+    public static Property PROP_paymentValid =
+            BeanProperty.create("paymentValid");
+    private boolean paymentValid;
+    
     /** Creates new form PaymentDetailPanel */
     public PaymentDetailPanel() {
         initComponents();
         this.paymentAmountCombo.getCalculator().setDisplayFormat(
                 NumberFormat.getCurrencyInstance());
+        labelList.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (UIOptions.paymentsRequireLabel()){
+                    Object[] items = labelList.getSelectedObjects();
+                    PROP_paymentValid.setValue(
+                            PaymentDetailPanel.this,
+                            items != null && items.length > 0);
+                }
+            }
+        });
+        /*labelList.addgetList().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                if (UIOptions.paymentsRequireLabel()){
+                    int[] items = labelList.getList().getSelectedIndices();
+                    setPaymentValid(items != null && items.length > 0);
+                }
+            }
+        });*/
+
+    }
+
+    public boolean getPaymentValid() {
+        return paymentValid;
+    }
+
+    public void setPaymentValid(boolean valid) {
+        System.out.println("setting paymentvalid:"+valid);
+        this.paymentValid = valid;
     }
 
     public void setPayees(EventList<Payee> payees) {
@@ -71,10 +106,11 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
         payment.getLabels().clear();
         Object[] selectedLabels = labelList.getSelectedObjects();
         for (int i = 0; i < selectedLabels.length; i++) {
-            if (selectedLabels[i] instanceof Label) 
+            if (selectedLabels[i] instanceof Label) {
                 payment.addLabel((Label) selectedLabels[i]);
-            else 
-                payment.addLabel(new Label((String)selectedLabels[i]));
+            } else {
+                payment.addLabel(new Label((String) selectedLabels[i]));
+            }
         }
 
 
@@ -82,25 +118,26 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
         return this.payment;
     }
 
-    private void setIsDeposit(boolean isDeposit){
+    private void setIsDeposit(boolean isDeposit) {
         cbDeposit.setSelected(isDeposit);
         cbBill.setSelected(!isDeposit);
     }
-    
-    private boolean isDeposit(){
-       return cbDeposit.isSelected();
+
+    private boolean isDeposit() {
+        return cbDeposit.isSelected();
     }
 
-    private float getAmount(){
-       float amount = Float.parseFloat(
+    private float getAmount() {
+        float amount = Float.parseFloat(
                 paymentAmountCombo.getCalculator().getDisplayText());
 
-       if (!isDeposit())
+        if (!isDeposit()) {
             amount = -1 * amount;
+        }
 
-       return amount;
+        return amount;
     }
-    
+
     private class EventListComboBoxModel extends DefaultComboBoxModel {
 
         EventList source;
@@ -109,9 +146,10 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
             super();
             this.source = source;
             source.addListEventListener(new ListEventListener<Payee>() {
+
                 public void listChanged(ListEvent<Payee> event) {
                     EventListComboBoxModel.this.fireContentsChanged(
-                            EventListComboBoxModel.this,0,event.getSourceList().size());
+                            EventListComboBoxModel.this, 0, event.getSourceList().size());
                 }
             });
         }

@@ -12,6 +12,7 @@ import ca.odell.glazedlists.swing.TableComparatorChooser;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
@@ -44,6 +45,9 @@ public class PaymentListPanel extends TopComponent {
             UIContext.getDefault().lookupResult(Payment.class);
     private MatcherFactory matcherFactory = 
             MatcherFactory.getInstance();
+
+    private NumberFormat f = NumberFormat.getCurrencyInstance();
+
     protected static final Color BACKGROUND1 = new Color(253, 253, 244);
     protected static final Color BACKGROUND2 = new Color(230, 230, 255);
     protected static final Color BACKGROUND3 = new Color(210, 255, 210);
@@ -93,7 +97,7 @@ public class PaymentListPanel extends TopComponent {
         paymentTable.setSelectionModel(selectionModel);
 
         PaymentCellRenderer pcr = new PaymentCellRenderer();
-        paymentTable.getColumnModel().getColumn(0).setCellRenderer(pcr);
+        //paymentTable.getColumnModel().getColumn(0).setCellRenderer(pcr);
         //paymentTable.getColumnModel().getColumn(1).setCellRenderer(pcr);
         paymentTable.getColumnModel().getColumn(2).setCellRenderer(pcr);
         paymentTable.getColumnModel().getColumn(3).setCellRenderer(pcr);
@@ -311,20 +315,22 @@ public class PaymentListPanel extends TopComponent {
             Component r = super.getTableCellRendererComponent(
                     table, value, isSelected, hasFocus, row, column);
             JLabel newr = (JLabel) r;
-            Font f = newr.getFont();
+            Font font = newr.getFont();
             newr.setHorizontalAlignment(JLabel.RIGHT);
 
-            if (column == 3 || column == 4) {
+            if (column == 2 || column == 3) {
+                newr.setText(f.format(value));
+                System.out.println(newr.getText());
                 if ((Float) value < 0) {
                     newr.setForeground(Color.RED);
                 } else {
                     newr.setForeground(Color.BLACK);
                 }
             }
-            if (column == 0) {
-                Font newf = new Font(f.getName(), Font.BOLD, f.getStyle());
-                newr.setFont(newf);
-            }
+            //if (column == 0) {
+            //    Font newf = new Font(f.getName(), Font.BOLD, f.getStyle());
+            //    newr.setFont(newf);
+            //}
             
             return newr;
         }
