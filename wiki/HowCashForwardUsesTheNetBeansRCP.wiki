@@ -1,16 +1,16 @@
 ***Draft***
 
-== Overview ==
+= Overview =
 
 The NetBeans Platform provides excellent out of the box support for building Swing applications. 
 
-Below is an overview of how CashForward benefits from NetBeans Platform
+These next few pages will explain how CashForward benefits from NetBeans Platform.
 
 == Get up and Running: Quick and easy interface creation ==
-  * Window (TopComponent) wizards for creation and layout.
-    * create, then tweak
-  * Matisse for form layout
-    * expanding the palette
+  * Using Window and Forms for interface layout and design.
+    * Its a process of continual prototyping
+  * Matisse for form construction
+    * Expanding the default palette
 
 == Stay in sync: Using Lookup as a central application messaging bus ==
   * Central context for managing state (current selections, shared data)
@@ -20,16 +20,16 @@ Below is an overview of how CashForward benefits from NetBeans Platform
  
 == Call to Action: Effectively using Actions 
   * Easy action creation via wizards
-  * Control menus and toolbars via layer 
-  * Context aware actions 
+  * Customize menus and toolbars with the layer.xml
+  * Working with Context aware actions 
 
 == What's your Preference: Managing user Preferences and settings
   * Customizing the Options dialog
+  * Handling user and internal UI options
 
-== Hide and Seek: Integrating with the global Search
+== Find It: Integrating with the QuickSearch
   * Enabling searching of application data and help files via the Search Provider
 
 == Nuts and Bolts: Infrastructure support: Module management, Logging, etc ==
   * Module development and reducing dependencies
   * Logging facilities
-
