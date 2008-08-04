@@ -10,7 +10,7 @@ NetBeans has two ways of handling context: a Lookup within the application Windo
 
 = A Central Lookup =
 
-CashForward [CashForwardDesign doesn't use Nodes] at the moment, and so utilizes the TopComponent approach to handling context. Each {{{TopComponent}}} has its own collection of objects and state, which it holds in a map. Other objects are able to put things in the collection and ask for things back from each {{{TopComponent}}}. 
+CashForward [CashForwardDesign doesn't use Nodes] at the moment, and so utilizes the {{{TopComponent}}} approach to handling context. Each {{{TopComponent}}} has its own collection of objects and state, which it holds in a map. Other objects are able to put things in the collection and ask for things back from each {{{TopComponent}}}. 
 
 The {{{UIContext}}} takes this a step further and provides one central Lookup implementation for TopComponents and other parts of the interface to share. This Lookup is initialized apart from the rest of the interface. It also uses the [http://publicobject.com/glazedlists/ GlazedLists] {{{EventList}}} pipeline so to allow components to observe changes to master lists.
 
@@ -67,21 +67,45 @@ And that is it. Almost. {{{InstanceContent}}} allows multiple objects of the sam
 
 {{{
      /**
-     * Get <code>Payment</code> that is the focus of the application.
+     * Set the <code>Payment</code> being used by the application
      *
-     * @return the currently selected <code>Payment</code>
+     * @param payment the new <code>Payment</code> to use.
      */
-    public Payment getPayment() {
+    public synchronized void setPayment(Payment payment) {
         Collection all =
                 lookupAll(Payment.class);
         if (all != null) {
             Iterator ia = all.iterator();
-            if (ia.hasNext()) {
-                return (Payment) ia.next();
+            while (ia.hasNext()) {
+                remove(ia.next());
             }
         }
-        return null;
+        add(payment);
     }
+}}}
+
+
+Once the {{{Payment}}} is in the context, someone will need to know about it. The first thing is to ask the Lookup for the object via the lookupResult method. 
+
+{{{
+     Lookup.Result paymentNotifier =
+            UIContext.getDefault().lookupResult(Payment.class);
+}}}
+
+{{{Lookup.Result}}} will give you all the available instances of the {{{Payment}}} in the context. However, we are interested in listening for the result to change. If we attach a {{{LookupListener}}} to the {{{Lookup.Result}}} we will receive notifications when a {{{Payment}}} is added or removed:
+
+{{{
+    paymentNotifier.addLookupListener(new LookupListener() {
+
+            public void resultChanged(LookupEvent event) {
+                Lookup.Result r = (Lookup.Result) event.getSource();
+                Collection c = r.allInstances();
+                if (!c.isEmpty()) {
+                    payment = (Payment) c.iterator().next();
+            }
+        });
 
 }}}
+
+
  
