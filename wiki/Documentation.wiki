@@ -2,7 +2,6 @@
 
 = Hello ==
 
-== If you just want to learn how to use CashForward, continue on to the *[UserDocs User Documenation]*==
+If you just want to learn how to use CashForward, continue on to the [CashForwardUserDocs User Documenation]
 
-
-== Otherwise, if you are interested in learning in the technical details, or contributing to CashForward, please continue to the *[Developer Documentation DeveloperDocs]*==
+Otherwise, if you are interested in learning in the technical details, or contributing to CashForward, please continue to the [Developer Documentation DeveloperDocs]
