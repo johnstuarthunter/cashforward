@@ -1,8 +1,14 @@
-#summary How CashForward uses the NetBeans Lookup mechanims
+#summary How CashForward uses the NetBeans Lookup facilities
 
 = Introduction =
 
-The NetBeans Lookup facilities 
+The NetBeans Lookup mechanism provides support for managing selection, or application context. For instance, if I want to know when a Payment has been selected, I can ask the Lookup context to tell me. This allows for a cleaner separation of the interface and other application components, and reduces the amount of code I need to write.
+
+NetBeans has two ways of handling context: a Lookup within the application Windows (TopComponents) and within the application Nodes (Nodes are a [http://wiki.netbeans.info/wiki/view/DevFaqWhatIsANode hierarchical presentation model]). 
+
+CashForward [CashForwardDesign doesn't use Nodes] at the moment, and so utilizes the TopComponent approach to handling context. Each TopComponent has its own collection of objects and state, which it holds in a map. Other objects are able to put things in the collection and ask for things back from each TopComponent. 
+
+The UIContext takes this a step further and provides one central Lookup implementation for TopComponents and other parts of the interface to share. A central Lookup can be intialized apart from the rest of the 
 
 
 = Details =
