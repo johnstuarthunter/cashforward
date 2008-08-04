@@ -19,74 +19,89 @@
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
   </AuxValues>
 
-  <Layout>
-    <DimensionLayout dim="0">
-      <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <Component id="paymentListContainer" max="32767" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="paymentDetailContainer" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-          </Group>
-      </Group>
-    </DimensionLayout>
-    <DimensionLayout dim="1">
-      <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="paymentListContainer" alignment="0" max="32767" attributes="0"/>
-          <Component id="paymentDetailContainer" alignment="1" max="32767" attributes="0"/>
-      </Group>
-    </DimensionLayout>
-  </Layout>
+  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
   <SubComponents>
-    <Container class="com.jidesoft.pane.CollapsiblePane" name="paymentListContainer">
-      <Properties>
-        <Property name="showExpandButton" type="boolean" value="false"/>
-        <Property name="showTitleBar" type="boolean" value="false"/>
-        <Property name="style" type="int" value="2"/>
-        <Property name="slidingDirection" type="int" value="7"/>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_AddingCodePre" type="java.lang.String" value="paymentListContainer.setSlidingDirection(CollapsiblePane.WEST);&#xd;&#xa;paymentListContainer.setContentPane(paymentListPanel);&#xd;&#xa;paymentListContainer.setContentAreaFilled(true);"/>
-      </AuxValues>
+    <Container class="javax.swing.JPanel" name="paymentContainer">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+          <BorderConstraints direction="Center"/>
+        </Constraint>
+      </Constraints>
 
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="272" max="32767" attributes="0"/>
+              <Group type="102" alignment="1" attributes="0">
+                  <Component id="paymentListContainer" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="paymentDetailContainer" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="210" max="32767" attributes="0"/>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="paymentDetailContainer" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+              <Component id="paymentListContainer" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
-    </Container>
-    <Container class="com.jidesoft.pane.CollapsiblePane" name="paymentDetailContainer">
-      <Properties>
-        <Property name="collapsed" type="boolean" value="true"/>
-        <Property name="showExpandButton" type="boolean" value="false"/>
-        <Property name="style" type="int" value="2"/>
-        <Property name="slidingDirection" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="SwingConstants.WEST" type="code"/>
-        </Property>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_AddingCodePre" type="java.lang.String" value="paymentDetailContainer.setSlidingDirection(SwingConstants.EAST);&#xd;&#xa;paymentDetailContainer.setContentPane(paymentCompositePanel);&#xd;&#xa;"/>
-      </AuxValues>
+      <SubComponents>
+        <Container class="com.jidesoft.pane.CollapsiblePane" name="paymentListContainer">
+          <Properties>
+            <Property name="showExpandButton" type="boolean" value="false"/>
+            <Property name="showTitleBar" type="boolean" value="false"/>
+            <Property name="style" type="int" value="2"/>
+            <Property name="slidingDirection" type="int" value="7"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_AddingCodePre" type="java.lang.String" value="paymentListContainer.setSlidingDirection(CollapsiblePane.WEST);&#xd;&#xa;paymentListContainer.setContentPane(paymentListPanel);&#xd;&#xa;paymentListContainer.setContentAreaFilled(true);"/>
+          </AuxValues>
 
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="4" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-      </Layout>
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="302" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="243" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+        </Container>
+        <Container class="com.jidesoft.pane.CollapsiblePane" name="paymentDetailContainer">
+          <Properties>
+            <Property name="collapsed" type="boolean" value="true"/>
+            <Property name="showExpandButton" type="boolean" value="false"/>
+            <Property name="style" type="int" value="2"/>
+            <Property name="slidingDirection" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="SwingConstants.WEST" type="code"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_AddingCodePre" type="java.lang.String" value="paymentDetailContainer.setSlidingDirection(SwingConstants.EAST);&#xd;&#xa;paymentDetailContainer.setContentPane(paymentCompositePanel);&#xd;&#xa;"/>
+          </AuxValues>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="4" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+        </Container>
+      </SubComponents>
     </Container>
   </SubComponents>
 </Form>

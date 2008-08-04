@@ -2,14 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.cashforward.ui.scenario;
 
+import com.jidesoft.swing.DefaultOverlayable;
+import com.jidesoft.swing.OverlayableUtils;
+import com.jidesoft.swing.StyledLabelBuilder;
+import java.awt.BorderLayout;
 import org.cashforward.ui.UIContext;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.logging.Logger;
-import org.cashforward.model.PaymentSearchCriteria;
+import org.cashforward.model.Scenario;
 import org.cashforward.ui.task.PaymentFilter;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
@@ -17,22 +20,22 @@ import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
-//import org.openide.util.Utilities;
 
 /**
- * Top component which displays something.
+ * Shows the Scenario graphs and controls.
  */
 final class ScenarioTopComponent extends TopComponent {
 
     private static ScenarioTopComponent instance;
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
-
-    Lookup.Result filterNotifier =
-            UIContext.getDefault().lookupResult(PaymentFilter.class);    
-    PaymentFilter paymentFilter =
+    private DefaultOverlayable chartOverlay;
+    private Lookup.Result filterNotifier =
+            UIContext.getDefault().lookupResult(PaymentFilter.class);
+    private Lookup.Result scenarioNotifier =
+            UIContext.getDefault().lookupResult(Scenario.class);
+    private PaymentFilter paymentFilter =
             UIContext.getDefault().getPaymentFilter();
-    
     private static final String PREFERRED_ID = "ScenarioTopComponent";
 
     private ScenarioTopComponent() {
@@ -40,30 +43,71 @@ final class ScenarioTopComponent extends TopComponent {
         setName(NbBundle.getMessage(ScenarioTopComponent.class, "CTL_ScenarioTopComponent"));
         setToolTipText(NbBundle.getMessage(ScenarioTopComponent.class, "HINT_ScenarioTopComponent"));
 //        setIcon(Utilities.loadImage(ICON_PATH, true));
-    
+
         scenarioPanel.setPayments(UIContext.getDefault().getPayments());
         scenarioPanel.setPaymentFilter(paymentFilter);
-        
+
         filterNotifier.addLookupListener(new LookupListener() {
 
             public void resultChanged(LookupEvent event) {
                 Lookup.Result r = (Lookup.Result) event.getSource();
                 Collection c = r.allInstances();
                 if (!c.isEmpty()) {
-                    PaymentFilter filter = 
+                    PaymentFilter filter =
                             (PaymentFilter) c.iterator().next();
-                    //now what? set dates? only if non-null 
-                    if (filter.getDateEnd() != null){
-                       ScenarioTopComponent.this.
-                               scenarioPanel.setPaymentFilter(paymentFilter);
+                    if (filter.getDateEnd() != null) {
+                        scenarioPanel.setPaymentFilter(paymentFilter);
                     }
-                    
                 }
+                refreshOverlay();
             }
         });
+
+        setupOverlay();
+    }
+
+    private void setupOverlay() {
+        remove(scenarioPanel);
+        chartOverlay = new DefaultOverlayable(scenarioPanel);
+
+        OverlayLookupListener oll = new OverlayLookupListener();
+        scenarioNotifier.addLookupListener(oll);
         
+        chartOverlay.addOverlayComponent(
+                StyledLabelBuilder.createStyledLabel("{No Cashflow available." +
+                "Add Payments to see how it affects the Cashflow.  :f:gray}"));
+
+        add(chartOverlay,BorderLayout.CENTER);
+        
+        refreshOverlay();
     }
     
+    private void refreshOverlay() {
+        boolean scenarioSelected =
+                UIContext.getDefault().getSelectedScenarios().size() > 0;
+        boolean paymentsInTable =
+                UIContext.getDefault().getPayments().size() > 0;
+
+        if (scenarioSelected) {
+            if (!paymentsInTable) { //show no payments message
+                scenarioPanel.setVisible(false);
+                chartOverlay.getOverlayComponents()[0].setVisible(true);
+                //chartOverlay.getOverlayComponents()[1].setVisible(false);
+                UIContext.getDefault().clearPayment();
+            } else { //just show the table
+                scenarioPanel.setVisible(true);
+                chartOverlay.getOverlayComponents()[0].setVisible(false);
+                //chartOverlay.getOverlayComponents()[1].setVisible(false);
+            }
+        } else { //show select scenario message
+            scenarioPanel.setVisible(false);//for now
+            chartOverlay.getOverlayComponents()[0].setVisible(true);
+            UIContext.getDefault().clearPayment();
+        }
+
+        OverlayableUtils.repaintOverlayable(chartOverlay);
+    }
+
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -75,22 +119,13 @@ final class ScenarioTopComponent extends TopComponent {
 
         scenarioPanel = new org.cashforward.ui.scenario.ScenarioPanel();
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, scenarioPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(scenarioPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
-        );
+        setLayout(new java.awt.BorderLayout());
+        add(scenarioPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.cashforward.ui.scenario.ScenarioPanel scenarioPanel;
     // End of variables declaration//GEN-END:variables
+
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
@@ -127,16 +162,6 @@ final class ScenarioTopComponent extends TopComponent {
         return TopComponent.PERSISTENCE_ALWAYS;
     }
 
-    @Override
-    public void componentOpened() {
-        // TODO add custom code on component opening
-    }
-
-    @Override
-    public void componentClosed() {
-        // TODO add custom code on component closing
-    }
-
     /** replaces this in object stream */
     @Override
     public Object writeReplace() {
@@ -154,6 +179,13 @@ final class ScenarioTopComponent extends TopComponent {
 
         public Object readResolve() {
             return ScenarioTopComponent.getDefault();
+        }
+    }
+
+    class OverlayLookupListener implements LookupListener {
+
+        public void resultChanged(LookupEvent arg0) {
+            refreshOverlay();
         }
     }
 }

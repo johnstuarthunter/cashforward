@@ -4,50 +4,60 @@ import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.SortedList;
+import ca.odell.glazedlists.event.ListEvent;
+import ca.odell.glazedlists.event.ListEventListener;
 import ca.odell.glazedlists.gui.AdvancedTableFormat;
 import ca.odell.glazedlists.gui.WritableTableFormat;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 import ca.odell.glazedlists.swing.EventTableModel;
 import ca.odell.glazedlists.swing.TableComparatorChooser;
+import com.jidesoft.swing.DefaultOverlayable;
+import com.jidesoft.swing.OverlayableUtils;
+import com.jidesoft.swing.StyledLabelBuilder;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
+import org.cashforward.model.Scenario;
 import org.cashforward.ui.UIContext;
 import org.cashforward.ui.internal.filter.MatcherFactory;
+import org.cashforward.ui.task.PaymentFilter;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 
 /**
+ * Shows the current filtered/selected group of Payments.
  *
  * @author  Bill
  */
 public class PaymentListPanel extends TopComponent {
 
     private EventList<Payment> payments;
-    private SortedList<Payment> sortedItems;
+    private SortedList<Payment> sortedList;
     private FilterList<Payment> filteredList;
     private EventTableModel tableModel;
     private EventSelectionModel selectionModel;
+    
     private Lookup.Result paymentNotifier =
             UIContext.getDefault().lookupResult(Payment.class);
-    private MatcherFactory matcherFactory = 
+    
+    private MatcherFactory matcherFactory =
             MatcherFactory.getInstance();
 
     private NumberFormat f = NumberFormat.getCurrencyInstance();
-
+    
     protected static final Color BACKGROUND1 = new Color(253, 253, 244);
     protected static final Color BACKGROUND2 = new Color(230, 230, 255);
     protected static final Color BACKGROUND3 = new Color(210, 255, 210);
@@ -67,43 +77,43 @@ public class PaymentListPanel extends TopComponent {
                     Payment payment = (Payment) c.iterator().next();
                     int index = filteredList.indexOf(payment);
                     if (!selectionModel.getValueIsAdjusting()) {
-                        if (index == selectionModel.getAnchorSelectionIndex()){
+                        if (index == selectionModel.getAnchorSelectionIndex()) {
                             tableModel.fireTableRowsUpdated(index, index);
                         } else {
                             paymentTable.scrollRectToVisible(
-                                paymentTable.getCellRect(index, 0, true));
+                                    paymentTable.getCellRect(index, 0, true));
                             selectionModel.setSelectionInterval(index, index);
                         }
                     }
                 }
             }
         });
+
     }
 
     public void setPayments(final EventList payments) {
         this.payments = payments;
 
-        //set up model
-        sortedItems =
+        sortedList =
                 new SortedList(payments, new PaymentComparator());
-        
-        filteredList = new FilterList(sortedItems,
+
+        filteredList = new FilterList(sortedList,
                 matcherFactory.createLabelAndScenarioMatcher());
 
         selectionModel = new EventSelectionModel(filteredList);
         selectionModel.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
+        
         tableModel = new EventTableModel(filteredList, new PaymentTableFormat());
         paymentTable.setModel(tableModel);
         paymentTable.setSelectionModel(selectionModel);
 
         PaymentCellRenderer pcr = new PaymentCellRenderer();
-        //paymentTable.getColumnModel().getColumn(0).setCellRenderer(pcr);
-        //paymentTable.getColumnModel().getColumn(1).setCellRenderer(pcr);
         paymentTable.getColumnModel().getColumn(2).setCellRenderer(pcr);
         paymentTable.getColumnModel().getColumn(3).setCellRenderer(pcr);
 
-        TableComparatorChooser tableSorter = 
-                new TableComparatorChooser(paymentTable, sortedItems, true);
+        //not supporting table sorting at the momemt
+        //TableComparatorChooser tableSorter =
+        //        new TableComparatorChooser(paymentTable, sortedList, true);
 
         paymentTable.getSelectionModel().addListSelectionListener(
                 new ListSelectionListener() {
@@ -122,7 +132,7 @@ public class PaymentListPanel extends TopComponent {
                         UIContext.getDefault().setPayment(payment);
                     }
                 });
-                
+
     }
 
     JTable getTableComponent() {
@@ -132,7 +142,6 @@ public class PaymentListPanel extends TopComponent {
     private float getBalance(int toIndex) {
         float balance = 0f;
 
-        //int count = payments.size();
         for (int i = 0; i <= toIndex; i++) {
             balance += filteredList.get(i).getAmount();
         }
@@ -186,6 +195,7 @@ public class PaymentListPanel extends TopComponent {
     private com.jidesoft.grid.CellStyleTable paymentTable;
     private com.jidesoft.grid.RowStripeCellStyleProvider rowStripeCellStyleProvider1;
     // End of variables declaration//GEN-END:variables
+
     class PaymentComparator implements Comparator {
 
         public int compare(Object a, Object b) {
@@ -228,7 +238,7 @@ public class PaymentListPanel extends TopComponent {
     }
 
     class PaymentTableFormat implements AdvancedTableFormat, WritableTableFormat {
-        //table setup
+
         final String[] colNames = new String[]{
             "Date", "Payee", "Amount", "Balance"
         };
@@ -261,7 +271,8 @@ public class PaymentListPanel extends TopComponent {
             } else if (column == 2) {
                 return Float.valueOf(amount);
             } else if (column == 3) {
-                return getBalance(filteredList.indexOf(baseObject));
+                int toIndex = filteredList.indexOf(baseObject);
+                return getBalance(toIndex);
             } else {
                 return "";
             }
@@ -284,26 +295,16 @@ public class PaymentListPanel extends TopComponent {
                 return GlazedLists.caseInsensitiveComparator();
             } else if (column == 2) {
                 return GlazedLists.comparableComparator();
-            //else if (column == 3) return new AuctionItemCostComparator();
-            //else if (column == 4) return new AuctionItemCostComparator();
-            //else if (column == 5) return GlazedLists.comparableComparator();
-            //else if (column == 6) return GlazedLists.comparableComparator();
             } else {
                 return new AlwaysTheSameComparator();
             }
         }
 
         public boolean isEditable(Object o, int i) {
-            //if (i == 4) return true;
             return false;
         }
 
         public Object setColumnValue(Object baseObject, Object editedObject, int i) {
-            //if ( i == 4 ){
-            //    UILogger.LOG.finest("show/hide detail");
-            //}
-            //fire the expand here?  
-            //    ((AuctionItem)baseObject).setStarred( (Boolean)editedObject );
             return baseObject;
         }
     }
@@ -314,25 +315,20 @@ public class PaymentListPanel extends TopComponent {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component r = super.getTableCellRendererComponent(
                     table, value, isSelected, hasFocus, row, column);
-            JLabel newr = (JLabel) r;
-            Font font = newr.getFont();
-            newr.setHorizontalAlignment(JLabel.RIGHT);
+            JLabel cell = (JLabel) r;
+            cell.setHorizontalAlignment(JLabel.RIGHT);
 
             if (column == 2 || column == 3) {
-                newr.setText(f.format(value));
-                System.out.println(newr.getText());
+                cell.setText(f.format(value));
                 if ((Float) value < 0) {
-                    newr.setForeground(Color.RED);
+                    cell.setForeground(Color.RED);
                 } else {
-                    newr.setForeground(Color.BLACK);
+                    cell.setForeground(Color.BLACK);
                 }
             }
-            //if (column == 0) {
-            //    Font newf = new Font(f.getName(), Font.BOLD, f.getStyle());
-            //    newr.setFont(newf);
-            //}
-            
-            return newr;
+
+            return cell;
         }
     }
+
 }

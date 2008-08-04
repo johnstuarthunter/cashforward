@@ -1,8 +1,3 @@
-/*
- * PaymentTaskPanel.java
- *
- * Created on May 17, 2008, 9:18 PM
- */
 package org.cashforward.ui.task;
 
 import ca.odell.glazedlists.BasicEventList;
@@ -10,44 +5,45 @@ import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
 import ca.odell.glazedlists.event.ListEventListener;
 import ca.odell.glazedlists.swing.EventListModel;
-import java.util.ArrayList;
+import com.jidesoft.swing.DefaultOverlayable;
+import com.jidesoft.swing.OverlayableUtils;
+import com.jidesoft.swing.StyledLabelBuilder;
 import java.util.Date;
-import java.util.List;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.cashforward.model.Scenario;
 import org.cashforward.ui.UIContext;
-import org.cashforward.ui.UIResources;
 import org.cashforward.ui.action.LoadCurrentPaymentsAction;
 import org.cashforward.ui.action.LoadScheduledPaymentsAction;
 import org.cashforward.ui.action.LoadSpecificPaymentsAction;
 import org.cashforward.ui.internal.UILogger;
 import org.cashforward.ui.internal.filter.LabelsToPaymentFilterList;
+import org.cashforward.ui.internal.filter.MatcherFactory;
 import org.cashforward.util.DateUtilities;
 
 /**
- *  Not currently used; will be used to edit master list of labels
+ *  Shows the Scenario, Payment type, and Payment label lists/filters.
  *
  * @author  Bill
  */
 public class PaymentTaskPanel extends javax.swing.JPanel {
 
-    private static EventList<Scenario> scenarios = new BasicEventList();
-    private static EventList<PaymentFilter> types = new BasicEventList();
-    private static EventList<PaymentFilter> labels = 
+    private DefaultOverlayable labelOverlay;
+    private EventList<Scenario> scenarios = UIContext.getDefault().getScenarios();
+    private EventList<PaymentFilter> types = new BasicEventList();
+    private EventList<PaymentFilter> labels =
             new LabelsToPaymentFilterList(UIContext.getDefault().getLabels());
     private LoadScheduledPaymentsAction loadScheduledPayments;
     private LoadCurrentPaymentsAction loadCurrentPayments;
     private LoadSpecificPaymentsAction loadSpecificPayments;
 
-    /** Creates new form PaymentTaskPanel */
     public PaymentTaskPanel() {
         initComponents();
 
-        lblScenarios.setIcon(UIResources.getImage(UIResources.ICON_SCENARIO));
-        lblPaymentTypes.setIcon(UIResources.getImage(UIResources.ICON_PAYMENT));
-        lblLabels.setIcon(UIResources.getImage(UIResources.ICON_LABELS));
+        //lblScenarios.setIcon(UIResources.getImage(UIResources.ICON_SCENARIO));
+        //lblPaymentTypes.setIcon(UIResources.getImage(UIResources.ICON_PAYMENT));
+        //lblLabels.setIcon(UIResources.getImage(UIResources.ICON_LABELS));
 
         //the types can be hard wired data
         PaymentFilter scheduled = new PaymentFilter("Scheduled");
@@ -61,13 +57,12 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
         PaymentFilter projected = new PaymentFilter("Projected");
         projected.getPaymentSearchCriteria().setDateStart(
                 new Date());
-                //DateUtilities.firstOfThisYear());
+
         projected.getPaymentSearchCriteria().setDateEnd(
                 DateUtilities.endOfThisYear());
         projected.setPaymentType(PaymentFilter.TYPE_CALCULATED);
         types.add(projected);
 
-        //labels need to be derived
 
         loadCurrentPayments = new LoadCurrentPaymentsAction();
         loadScheduledPayments = new LoadScheduledPaymentsAction();
@@ -78,11 +73,14 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) {
                     return;
-                } else if (PaymentTaskPanel.this.scenarioList.getSelectedIndex() < 0) {
+                } else if (scenarioList.getSelectedIndex() < 0) {
+                    //keep label/type lists disabled when no Scenario selected
                     UIContext.getDefault().clearScenario();
+                    labelList.setEnabled(false);
+                    typeList.setEnabled(false);
+                    refreshOverlay();
                     return;
                 }
-
                 //set the selected scenarios
                 Object[] s = scenarioList.getSelectedValues();
                 EventList l = new BasicEventList();
@@ -90,11 +88,16 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
                     l.add(s[i]);
                 }
                 UIContext.getDefault().setSelectedScenarios(l);
+                
+                refreshOverlay();
 
-                PaymentFilter filter = (PaymentFilter) typeList.getSelectedValue();
+                //update the filter
+                PaymentFilter filter =
+                        (PaymentFilter) typeList.getSelectedValue();
                 if (filter != null) {
                     processFilter(filter);
                 }
+
             }
         });
 
@@ -104,23 +107,35 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) {
                     return;
-                } else if (PaymentTaskPanel.this.typeList.getSelectedIndex() < 0) {
-                    UIContext.getDefault().clearScenario();
-                    return;
-                } else if ((PaymentTaskPanel.this.typeList.getSelectedValue() instanceof Scenario)) {
-                    Scenario scenario = (Scenario) scenarioList.getSelectedValue();
-                    List s = new ArrayList(1);
-                    s.add(scenario);
-                    UIContext.getDefault().setSelectedScenarios(s);
-                    return;
                 }
 
-                PaymentFilter filter = (PaymentFilter) typeList.getSelectedValue();
-                processFilter(filter);
+                //update the filter
+                processFilter((PaymentFilter) typeList.getSelectedValue());
+
+                //...and the overlay
+                refreshOverlay();
             }
         });
 
+        /**
+         * The PaymentQuickSearch sets permanent filters on the Payment list
+         *
+         * When we get focus back on the scenario/type/list
+         * clear the QuickSearch filter
+         */
+        ListSelectionListener clearQuickSearch = new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                clearQuickSearch();
+            }
+        };
+
+        this.scenarioList.addListSelectionListener(clearQuickSearch);
+        this.typeList.addListSelectionListener(clearQuickSearch);
+        this.labelList.addListSelectionListener(clearQuickSearch);
+
         this.labelList.setModel(new EventListModel(labels));
+
+        setupOverlay();
 
     }
 
@@ -136,9 +151,13 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
         return this.typeList;
     }
 
-    //alternatively, this would just be filtered automatically
-    //using the glazed lists matchers
+    //alternatively, this could just be filtered automatically
+    //using the glazed lists matchers. But this seems a little more performant
     private void processFilter(PaymentFilter filter) {
+        if (filter == null) {
+            return;
+        }
+
         long start = System.currentTimeMillis();
         UILogger.LOG.finest("processFilter start:" + start);
         int currentType =
@@ -156,32 +175,41 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
                 filter.getPaymentType() == PaymentFilter.TYPE_CALCULATED) {
             loadSpecificPayments.actionPerformed(null);
         }
-        UILogger.LOG.finest("processFilter elapsed:" + (System.currentTimeMillis() - start));
+        UILogger.LOG.finest("processFilter elapsed:" +
+                (System.currentTimeMillis() - start));
     }
 
-    public void setScenarios(EventList<Scenario> scenarios) {
-        for (Scenario scenario : scenarios) {
-            PaymentTaskPanel.scenarios.add(scenario);
-        }
-        scenarios.addListEventListener(new ListEventListener() {
-            //TODO handle remove
+    public void setScenarios(EventList<Scenario> newSenarios) {
+        scenarioList.setModel(new EventListModel(newSenarios));
+    }
 
+    private void setupOverlay() {
+        jScrollPane3.remove(labelList);
+        labelOverlay =
+                new DefaultOverlayable(labelList);
+        labelOverlay.addOverlayComponent(
+                StyledLabelBuilder.createStyledLabel(
+                "{Labels added to Payments will appear here.  :f:gray}"));
+        labelOverlay.setOverlayVisible(labels.size() == 0);
+        jScrollPane3.setViewportView(labelOverlay);
+
+        labels.addListEventListener(new ListEventListener() {
             public void listChanged(ListEvent event) {
-                while (event.next()) {
-                    if (event.getType() == ListEvent.INSERT) {
-                        EventList<Scenario> source = event.getSourceList();
-                        Scenario scenario = source.get(event.getIndex());
-                        PaymentTaskPanel.scenarios.add(scenario);
-                    } else if (event.getType() == ListEvent.DELETE) {
-                        EventList<Scenario> source = event.getSourceList();
-                        Scenario scenario = source.get(event.getIndex());
-                        PaymentTaskPanel.scenarios.remove(scenario);
-                    } else if (event.getType() == ListEvent.UPDATE) {
-                    }
-                }
-
+                refreshOverlay();
             }
         });
+    }
+
+    private void refreshOverlay() {
+        labelOverlay.getOverlayComponents()[0].setVisible(
+                labels.size() == 0);
+        OverlayableUtils.repaintOverlayable(labelOverlay);
+    }
+
+    private void clearQuickSearch() {
+        if (MatcherFactory.getInstance().getQuickSearchProxy().getText() != null) {
+            MatcherFactory.getInstance().getQuickSearchProxy().setText(null);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -209,17 +237,19 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(scenarioList);
 
         typeList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        typeList.setEnabled(false);
         jScrollPane2.setViewportView(typeList);
 
+        labelList.setEnabled(false);
         jScrollPane3.setViewportView(labelList);
 
-        lblScenarios.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblScenarios.setFont(new java.awt.Font("Tahoma", 1, 12));
         lblScenarios.setText(org.openide.util.NbBundle.getMessage(PaymentTaskPanel.class, "PaymentTaskPanel.lblScenarios.text")); // NOI18N
 
-        lblPaymentTypes.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblPaymentTypes.setFont(new java.awt.Font("Tahoma", 1, 12));
         lblPaymentTypes.setText(org.openide.util.NbBundle.getMessage(PaymentTaskPanel.class, "PaymentTaskPanel.lblPaymentTypes.text")); // NOI18N
 
-        lblLabels.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblLabels.setFont(new java.awt.Font("Tahoma", 1, 12));
         lblLabels.setText(org.openide.util.NbBundle.getMessage(PaymentTaskPanel.class, "PaymentTaskPanel.lblLabels.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);

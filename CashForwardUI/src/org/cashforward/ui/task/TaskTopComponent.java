@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cashforward.ui.task;
 
 import ca.odell.glazedlists.EventList;
@@ -11,9 +7,9 @@ import org.cashforward.ui.UIContext;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
-//import org.openide.util.Utilities;
+
 /**
- * Top component which displays something.
+ * Displays various lists of filters for looking at Payments.
  */
 public final class TaskTopComponent extends TopComponent {
 
@@ -28,8 +24,6 @@ public final class TaskTopComponent extends TopComponent {
         setToolTipText(NbBundle.getMessage(TaskTopComponent.class, "HINT_TaskTopComponent"));
 //        setIcon(Utilities.loadImage(ICON_PATH, true));
         
-        EventList scenarios = UIContext.getDefault().getScenarios();
-        paymentTaskPanel.setScenarios(scenarios);
     }
     
     public PaymentTaskPanel getPaymentTaskPanel(){
@@ -95,13 +89,18 @@ public final class TaskTopComponent extends TopComponent {
     public int getPersistenceType() {
         return TopComponent.PERSISTENCE_ALWAYS;
     }
-
+ 
     @Override
     public void componentOpened() {
+        EventList scenarios = UIContext.getDefault().getScenarios();
+        paymentTaskPanel.setScenarios(scenarios);
+        //set the default for now
+        getPaymentTaskPanel().getScenarioListComponent().setSelectedIndex(0);
     }
 
     @Override
     public void componentClosed() {
+        
     }
 
     /** replaces this in object stream */

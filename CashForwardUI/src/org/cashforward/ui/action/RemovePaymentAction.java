@@ -48,6 +48,7 @@ public final class RemovePaymentAction extends BaseCallableSystemAction {
                 }
             }
         });
+        
     }
 
     public void performAction() {

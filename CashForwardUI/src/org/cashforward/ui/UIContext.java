@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cashforward.ui;
 
 import ca.odell.glazedlists.BasicEventList;
@@ -26,7 +22,7 @@ import org.openide.util.lookup.InstanceContent;
  *
  * In addition to use the Lookup NetBeans APIs, the UIContext also keeps
  * instances of GlazedLists <code>EventList</code>s around for usage by
- * the list and table based interface components.
+ * the list and table/list based interface components.
  *
  * Both the Lookup and EventList mechanisms are useful for broadcasting
  * model changes to the interface.
@@ -38,8 +34,6 @@ public class UIContext extends AbstractLookup {
     private InstanceContent content = null;
     private static UIContext ctx = new UIContext();
     private EventList<Payment> filteredPayments = new BasicEventList();
-    private EventList<Payment> scheduledPayments = new BasicEventList();
-    private EventList<Payment> currentPayments = new BasicEventList();
     private EventList<Payee> payees = new BasicEventList();
     private EventList<Label> labels = new BasicEventList();
     private EventList<Scenario> scenarios = new BasicEventList();
@@ -146,25 +140,11 @@ public class UIContext extends AbstractLookup {
      * @param scenario
      */
     public void removeScenario(Scenario scenario) {
+        scenarios.getReadWriteLock().writeLock().lock();
         scenarios.remove(scenario);
+        scenarios.getReadWriteLock().writeLock().unlock();
     }
 
-    /**
-     * Set the active Scenario
-     *
-     * @param scenario
-     */
-    /*public synchronized void setScenario(Scenario scenario) {
-        Collection all =
-                lookupAll(Scenario.class);
-        if (all != null) {
-            Iterator ia = all.iterator();
-            while (ia.hasNext()) {
-                remove(ia.next());
-            }
-        }
-        add(scenario);
-    }*/
 
     /**
      * Set the active selected <code>Scenario</code>s
@@ -177,6 +157,7 @@ public class UIContext extends AbstractLookup {
         if (all != null) {
             Iterator ia = all.iterator();
             while (ia.hasNext()) {
+                this.
                 remove(ia.next());
             }
         }
@@ -196,19 +177,6 @@ public class UIContext extends AbstractLookup {
         return new ArrayList(all);
     }
 
-    /*
-    public Scenario getScenario() {
-        Collection all =
-                lookupAll(Scenario.class);
-        if (all != null) {
-            Iterator ia = all.iterator();
-            if (ia.hasNext()) {
-                return (Scenario) ia.next();
-            }
-        }
-        return null;
-    }
-    */
 
     /**
      * Clear the active Scenario from the context
@@ -276,7 +244,6 @@ public class UIContext extends AbstractLookup {
         return new PaymentFilter();
     }
 
-    //---proto
     public synchronized void addPayment(Payment payment) {
         filteredPayments.getReadWriteLock().writeLock().lock();
         filteredPayments.add(payment);
@@ -297,65 +264,6 @@ public class UIContext extends AbstractLookup {
         filteredPayments.removeAll(payments);
         filteredPayments.getReadWriteLock().writeLock().unlock();
     }
-    //---end
-
-    /*
-    public synchronized void addCurrentPayments(List payments) {
-        currentPayments.getReadWriteLock().writeLock().lock();
-        currentPayments.addAll(payments);
-        currentPayments.getReadWriteLock().writeLock().unlock();
-    }
-
-    public synchronized void addCurrentPayment(Payment payment) {
-        currentPayments.getReadWriteLock().writeLock().lock();
-        currentPayments.add(payment);
-        currentPayments.getReadWriteLock().writeLock().unlock();
-    }
-
-    public synchronized void removeCurrentPayments(List payments) {
-        currentPayments.getReadWriteLock().writeLock().lock();
-        currentPayments.removeAll(payments);
-        currentPayments.getReadWriteLock().writeLock().unlock();
-    }
-
-    public synchronized void removeCurrentPayment(Payment payment) {
-        currentPayments.getReadWriteLock().writeLock().lock();
-        currentPayments.remove(payment);
-        currentPayments.getReadWriteLock().writeLock().unlock();
-    }
-
-    public synchronized EventList getCurrentPayments() {
-        return currentPayments;
-    }
-
-    public synchronized void addScheduledPayments(List payments) {
-        scheduledPayments.getReadWriteLock().writeLock().lock();
-        scheduledPayments.addAll(payments);
-        scheduledPayments.getReadWriteLock().writeLock().unlock();
-    }
-
-    public synchronized void addScheduledPayment(Payment payment) {
-        scheduledPayments.getReadWriteLock().writeLock().lock();
-        scheduledPayments.add(payment);
-        scheduledPayments.getReadWriteLock().writeLock().unlock();
-    }
-
-    public synchronized void removeScheduledPayments(List payments) {
-        scheduledPayments.getReadWriteLock().writeLock().lock();
-        scheduledPayments.removeAll(payments);
-        scheduledPayments.getReadWriteLock().writeLock().unlock();
-    }
-
-    public synchronized void removeScheduledPayment(Payment payment) {
-        scheduledPayments.getReadWriteLock().writeLock().lock();
-        scheduledPayments.remove(payment);
-        scheduledPayments.getReadWriteLock().writeLock().unlock();
-    }
-
-    public synchronized EventList getScheduledPayments() {
-        return scheduledPayments;
-    }
-    */
 
     /**
      * Get all the Payments we are dealing with

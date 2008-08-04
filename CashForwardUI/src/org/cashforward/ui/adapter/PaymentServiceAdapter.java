@@ -12,8 +12,8 @@ import org.cashforward.ui.internal.UILogger;
  * Talks to the PaymentService. Provides a way for the interface module 
  * to retrieve and update data in the application.
  *
- * Note: services/adapters seem like good candidates
- * for advanced lookup using the /META-INF/services mechanism
+ * NOTE:
+ * The functionality exposed by this class will evolve and the UI evolves.
  *
  * @author Bill 
  */

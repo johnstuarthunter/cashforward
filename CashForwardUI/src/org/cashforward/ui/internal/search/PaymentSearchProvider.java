@@ -1,6 +1,5 @@
 package org.cashforward.ui.internal.search;
 
-import org.cashforward.ui.internal.UILogger;
 import org.cashforward.ui.internal.filter.MatcherFactory;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
@@ -19,7 +18,7 @@ public class PaymentSearchProvider implements SearchProvider {
     private RevealPayment filterPayments = new RevealPayment();
     private String source;
     private static final String PREFIX = "Show Payments matching ";
-    
+
     /**
      * Method is called by infrastructure when search operation was requested.
      * Implementors should evaluate given request and fill response object with
@@ -30,10 +29,9 @@ public class PaymentSearchProvider implements SearchProvider {
      */
     public void evaluate(SearchRequest request, SearchResponse response) {
         source = request.getText();
-       if (source.startsWith(PREFIX))
+        if (source.startsWith(PREFIX))
             source = source.substring(PREFIX.length());
         
-        System.out.println("s:"+source);
         response.addResult(filterPayments, PREFIX + source);
     }
 
@@ -42,9 +40,9 @@ public class PaymentSearchProvider implements SearchProvider {
         public void run() {
             //filter out the payments
             if (source != null || !"".equals(source.trim())) {
-                MatcherFactory.getInstance().getTemp().setText(source);
+                MatcherFactory.getInstance().getQuickSearchProxy().setText(source);
             } else {
-                MatcherFactory.getInstance().getTemp().setText(null);
+                MatcherFactory.getInstance().getQuickSearchProxy().setText(null);
             }
         }
         

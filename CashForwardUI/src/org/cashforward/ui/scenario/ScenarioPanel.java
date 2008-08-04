@@ -44,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.UIManager;
 import org.cashforward.model.Scenario;
 import org.cashforward.ui.action.LoadSpecificPaymentsAction;
 import org.cashforward.ui.internal.UILogger;
@@ -83,7 +84,9 @@ public class ScenarioPanel extends javax.swing.JPanel
     Lookup.Result scenarioNotifier =
             UIContext.getDefault().lookupResult(Scenario.class);
     private EventList selectedScenarios = new BasicEventList();
+    private JideSplitButton rangeButton;
     private JFreeChart chart;
+    private ChartPanel chartPanel;
     private TimeSeriesCollection dataset;
     private Map<String, TimeSeries> seriesRegistry = new HashMap();
     private Map<String, Map<String, Float>> scenarioTotals = new HashMap();
@@ -95,10 +98,23 @@ public class ScenarioPanel extends javax.swing.JPanel
     public ScenarioPanel() {
         initComponents();
 
-        final JideSplitButton rangeButton =
-                new JideSplitButton("Showing: Year to Date");
+        rangeButton =
+                new JideSplitButton("Showing: Through this Year");
         rangeButton.setButtonStyle(JideSplitButton.FLAT_STYLE);
         rangeButton.setAlwaysDropdown(true);
+        rangeButton.add(new AbstractAction("Through this Year") {
+
+            public void actionPerformed(ActionEvent e) {
+                PaymentFilter filter = new PaymentFilter();
+                Date today = new Date();
+                filter.setDateStart(today);
+                filter.setDateEnd(DateUtilities.endOfThisYear());
+                filter.setScenarios(UIContext.getDefault().getSelectedScenarios());
+                UIContext.getDefault().setPaymentFilter(filter);
+                new LoadSpecificPaymentsAction().actionPerformed(null);
+                rangeButton.setText((String) this.getValue(Action.NAME));
+            }
+        });
         rangeButton.add(new AbstractAction("Next Three Months") {
 
             public void actionPerformed(ActionEvent e) {
@@ -152,31 +168,34 @@ public class ScenarioPanel extends javax.swing.JPanel
 
         dataset = new TimeSeriesCollection();
         chart = createChart(dataset);
-        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel = new ChartPanel(chart);
         chartPanel.setBackground(Color.WHITE);
-        chartContainer.add(chartPanel);
+        chartContainer.add(BorderLayout.CENTER, chartPanel);
 
         XYPlot plot = chart.getXYPlot();
         plot.setDomainCrosshairVisible(true);
         plot.setDomainCrosshairLockedOnData(true);
         plot.setDomainCrosshairPaint(Color.BLACK);
         plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
-        BasicStroke dstroke = new BasicStroke(
-                3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0,
-                new float[]{3, 1}, 0);
+        BasicStroke dstroke = new BasicStroke(2);
         plot.setDomainCrosshairStroke(dstroke);
         plot.addRangeMarker(new ValueMarker(0));
+        plot.setDomainGridlinesVisible(false);
+        plot.setRangeGridlinesVisible(false);
+        
 
         //--AXIS prototyping
         // change the auto tick unit selection to integer units only...
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         Font rfont = rangeAxis.getLabelFont();
-        rangeAxis.setLabelFont(rfont.deriveFont(Font.BOLD, rfont.getSize()+2));
+        rangeAxis.setLabelFont(rfont.deriveFont(Font.BOLD, rfont.getSize() + 2));
+        //rangeAxis.setLabelPaint(Color.WHITE);
 
-        PeriodAxis domainAxis = new PeriodAxis("Day");
-        Font dfont = domainAxis.getLabelFont();
-        domainAxis.setLabelFont(dfont.deriveFont(Font.BOLD, dfont.getSize()+2));
+        PeriodAxis domainAxis = new PeriodAxis("");
+        domainAxis.setAutoRangeTimePeriodClass(Day.class);
+        //Font dfont = domainAxis.getLabelFont();
+        //domainAxis.setLabelFont(dfont.deriveFont(Font.BOLD, dfont.getSize() + 2));
         domainAxis.setAutoRangeTimePeriodClass(Day.class);
         PeriodAxisLabelInfo[] info = new PeriodAxisLabelInfo[3];
         info[0] = new PeriodAxisLabelInfo(Day.class, new SimpleDateFormat("d"));
@@ -184,18 +203,18 @@ public class ScenarioPanel extends javax.swing.JPanel
         //    new RectangleInsets(2, 2, 2, 2), new Font("SansSerif", Font.BOLD,
         //    10), Color.blue, false, new BasicStroke(0.0f), Color.lightGray);
         info[1] = new PeriodAxisLabelInfo(Month.class,
-            new SimpleDateFormat("MMM"));
+                new SimpleDateFormat("MMM"));
         info[2] = new PeriodAxisLabelInfo(Year.class,
-            new SimpleDateFormat("yyyy"));
+                new SimpleDateFormat("yyyy"));
         domainAxis.setLabelInfo(info);
         plot.setDomainAxis(domainAxis);
 
 
-        // add a labelled marker for the safety threshold...
+        // add a labelled marker for the zero threshold...
         Marker threshold = new ValueMarker(0.0);
         threshold.setLabelOffsetType(LengthAdjustmentType.EXPAND);
         threshold.setPaint(Color.red);
-        threshold.setStroke(new BasicStroke(2.0f));
+        threshold.setStroke(new BasicStroke(1.0f));
         threshold.setLabel("$0.00");
         threshold.setLabelFont(new Font("SansSerif", Font.PLAIN, 11));
         threshold.setLabelPaint(Color.gray);
@@ -208,7 +227,7 @@ public class ScenarioPanel extends javax.swing.JPanel
 
             public void resultChanged(LookupEvent event) {
                 Lookup.Result r = (Lookup.Result) event.getSource();
-                
+
                 Collection c = r.allInstances();
                 //graph the scenarios
                 //will need to actually have the
@@ -218,7 +237,7 @@ public class ScenarioPanel extends javax.swing.JPanel
                 if (!c.isEmpty()) {
                     Scenario scenario =
                             (Scenario) c.iterator().next();
-                    UILogger.LOG.finest("do something scenario:"+scenario);
+                    UILogger.LOG.finest("do something scenario:" + scenario);
                     selectedScenarios.addAll(UIContext.getDefault().getSelectedScenarios());
                     refreshChartData();
                 }
@@ -250,12 +269,20 @@ public class ScenarioPanel extends javax.swing.JPanel
 
     public void setPayments(EventList payments) {
         this.payments = payments;
+
         refreshChartData();
         payments.addListEventListener(new ListEventListener() {
 
             public void listChanged(ListEvent event) {
                 if (!event.isReordering()) {
                     refreshChartData();
+                    if (event.getSourceList().size() == 0) {
+                        chartPanel.setVisible(false);
+                        rangeButtonContainer.setVisible(false);
+                    } else {
+                        chartPanel.setVisible(true);
+                        rangeButtonContainer.setVisible(true);
+                    }
                 }
             }
         });
@@ -302,7 +329,7 @@ public class ScenarioPanel extends javax.swing.JPanel
         chart = //ChartFactory.createXYAreaChart(
                 ChartFactory.createXYLineChart(
                 null,
-                null, "Balance",
+                null, null,
                 dataset,
                 PlotOrientation.VERTICAL,
                 false, // legend
@@ -310,10 +337,14 @@ public class ScenarioPanel extends javax.swing.JPanel
                 false // URLs
                 );
 
-        Paint bp = new GradientPaint(0, 0, Color.white, 0, 1000, Color.GRAY);
+        
+        Paint bp = new GradientPaint(
+                0f, 0f, UIManager.getColor("Panel.background"),
+                0f, 100f, Color.WHITE);
         chart.setBackgroundPaint(bp);
         chart.setBackgroundImageAlpha(.3f);
         final XYPlot plot = chart.getXYPlot();
+        plot.setBackgroundPaint(null);
 
         final ValueAxis domainAxis = new DateAxis();
         domainAxis.setTickMarksVisible(true);
@@ -330,9 +361,9 @@ public class ScenarioPanel extends javax.swing.JPanel
                 StandardXYToolTipGenerator.DEFAULT_TOOL_TIP_FORMAT,
                 new SimpleDateFormat("d-MMM-yyyy"),
                 new DecimalFormat("#,##0.00")));
-        GradientPaint gp0 = new GradientPaint(0.0f, 0.0f, Color.yellow,
-                0.0f, 0.0f, new Color(0, 0, 64));
-        renderer.setSeriesPaint(0, gp0);
+        //GradientPaint gp0 = new GradientPaint(0.0f, 0.0f, Color.yellow,
+        //        0.0f, 0.0f, new Color(0, 0, 64));
+        //renderer.setSeriesPaint(0, gp0);
         renderer.setLegendItemToolTipGenerator(
                 new StandardXYSeriesLabelGenerator("Tooltip {0}"));
         renderer.setDefaultEntityRadius(6);
@@ -340,7 +371,7 @@ public class ScenarioPanel extends javax.swing.JPanel
 
         LegendTitle lt = new LegendTitle(plot);
         lt.setItemFont(new Font("Dialog", Font.PLAIN, 9));
-        lt.setBackgroundPaint(new Color(200, 200, 255, 80));
+        lt.setBackgroundPaint(new Color(200, 200, 255, 90));
         lt.setFrame(new BlockBorder(Color.white));
         lt.setPosition(RectangleEdge.BOTTOM);
         XYTitleAnnotation ta = new XYTitleAnnotation(0.98, 0.90, lt,
@@ -352,7 +383,7 @@ public class ScenarioPanel extends javax.swing.JPanel
     }
 
     private void refreshChartData() {
-        
+
         if (payments == null) {
             return;
         }
@@ -372,9 +403,10 @@ public class ScenarioPanel extends javax.swing.JPanel
             List<Scenario> scenarios = payment.getScenarios();
             Map<String, Float> totals;
             for (Scenario scenario : scenarios) {
-                if (!selectedScenarios.contains(scenario))
+                if (!selectedScenarios.contains(scenario)) {
                     continue;
-                UILogger.LOG.finest("---"+scenario.getName()+"---");
+                }
+                UILogger.LOG.finest("---" + scenario.getName() + "---");
                 totals = getTotals(scenario.getName());
 
                 if (totals.containsKey(day.toString())) {
@@ -388,7 +420,7 @@ public class ScenarioPanel extends javax.swing.JPanel
                     totals.put(day.toString(), value);
                     insertValue(scenario.getName(), day, value);
                 }
-                
+
                 scenarioTotals.put(scenario.getName(), totals);
             }
         }
@@ -407,7 +439,7 @@ public class ScenarioPanel extends javax.swing.JPanel
 
     private void insertValue(String name, Day day, float value) {
         TimeSeries s = getSeries(name);
-        s.add(day,value);
+        s.add(day, value);
         seriesRegistry.put(name, s);
     }
 

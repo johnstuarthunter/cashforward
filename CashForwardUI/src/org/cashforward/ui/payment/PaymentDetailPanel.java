@@ -1,8 +1,3 @@
-/*
- * PaymentDetailPanel.java
- *
- * Created on May 17, 2008, 9:49 PM
- */
 package org.cashforward.ui.payment;
 
 import ca.odell.glazedlists.EventList;
@@ -10,9 +5,12 @@ import ca.odell.glazedlists.event.ListEvent;
 import ca.odell.glazedlists.event.ListEventListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.text.JTextComponent;
 import org.cashforward.model.Label;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
@@ -21,40 +19,29 @@ import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.Property;
 
 /**
+ * Shows the detailed information about the Payment:
+ * Payment date, payee, amount, etc.
+ * 
+ * Scheduling information is found on the <code>PaymentScheduleForm</code>.
  *
  * @author  Bill
  */
 public class PaymentDetailPanel extends javax.swing.JPanel {
 
-    Payment payment;
+    private Payment payment;
+    //Property for tracking the valdidity of the form.
     public static Property PROP_paymentValid =
             BeanProperty.create("paymentValid");
     private boolean paymentValid;
-    
+
+    private NumberFormat f = NumberFormat.getCurrencyInstance();
+
     /** Creates new form PaymentDetailPanel */
     public PaymentDetailPanel() {
         initComponents();
-        this.paymentAmountCombo.getCalculator().setDisplayFormat(
-                NumberFormat.getCurrencyInstance());
-        labelList.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (UIOptions.paymentsRequireLabel()){
-                    Object[] items = labelList.getSelectedObjects();
-                    PROP_paymentValid.setValue(
-                            PaymentDetailPanel.this,
-                            items != null && items.length > 0);
-                }
-            }
-        });
-        /*labelList.addgetList().addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                if (UIOptions.paymentsRequireLabel()){
-                    int[] items = labelList.getList().getSelectedIndices();
-                    setPaymentValid(items != null && items.length > 0);
-                }
-            }
-        });*/
-
+        //this.paymentAmountCombo.getCalculator().setDisplayFormat(
+        //        NumberFormat.getCurrencyInstance());
+        setupRequiredFields();
     }
 
     public boolean getPaymentValid() {
@@ -62,7 +49,6 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
     }
 
     public void setPaymentValid(boolean valid) {
-        System.out.println("setting paymentvalid:"+valid);
         this.paymentValid = valid;
     }
 
@@ -83,7 +69,7 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
 
         descriptionText.setText(payment.getDescription());
         paymentAmountCombo.getCalculator().setDisplayText(
-                Float.toString(payment.getAmount()));
+                Float.toString(Math.abs(payment.getAmount())));
         payeeCombo.setEditable(true);
         payeeCombo.setSelectedItem(payment.getPayee());
         paymentDateChooser.setDate(payment.getStartDate());
@@ -118,6 +104,72 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
         return this.payment;
     }
 
+    private void setupRequiredFields() {
+        //TODO, DRY here.
+        if (UIOptions.paymentsRequireLabel()) {
+            labelList.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+
+                public void keyTyped(KeyEvent e) {
+                    validateFields();
+                }
+            });
+            labelList.addItemListener(new ItemListener() {
+
+                public void itemStateChanged(ItemEvent e) {
+                    validateFields();
+                }
+            });
+        }
+        payeeCombo.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+
+            public void keyTyped(KeyEvent e) {
+                validateFields();
+            }
+        });
+        payeeCombo.addItemListener(new ItemListener() {
+
+            public void itemStateChanged(ItemEvent e) {
+                validateFields();
+            }
+        });
+
+        validateFields();
+    }
+
+    private void validateFields() {
+        boolean valid = labelsValid() & payeeValid();
+
+        PROP_paymentValid.setValue(this, valid);
+    }
+
+    private boolean labelsValid() {
+        if (UIOptions.paymentsRequireLabel()) {
+            Object[] items = labelList.getSelectedObjects();
+            JTextComponent text =
+                    (JTextComponent) labelList.getEditor().getEditorComponent();
+            boolean hasLabels = items != null && items.length > 0;
+            if (!hasLabels && text.getText() != null && //direct entry
+                    text.getText().trim().length() > 0) {
+                hasLabels = true;
+            }
+            return hasLabels;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean payeeValid() {
+        Object item = payeeCombo.getSelectedItem();
+        JTextComponent text =
+                (JTextComponent) payeeCombo.getEditor().getEditorComponent();
+        boolean hasPayee = item != null;
+        if (!hasPayee && text.getText() != null && //direct entry
+                text.getText().trim().length() > 0) {
+            hasPayee = true;
+        }
+        return hasPayee;
+    }
+
     private void setIsDeposit(boolean isDeposit) {
         cbDeposit.setSelected(isDeposit);
         cbBill.setSelected(!isDeposit);
@@ -128,9 +180,12 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
     }
 
     private float getAmount() {
-        float amount = Float.parseFloat(
-                paymentAmountCombo.getCalculator().getDisplayText());
-
+        //grr wish it returned floats
+        String result = paymentAmountCombo.getCalculator().getDisplayText();
+        //not dealing with i18n this time around
+        result = result.replaceAll(",", "");
+        Float amount = Float.parseFloat(result);
+        
         if (!isDeposit()) {
             amount = -1 * amount;
         }
@@ -283,7 +338,7 @@ public class PaymentDetailPanel extends javax.swing.JPanel {
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel4)
                     .add(labelList, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

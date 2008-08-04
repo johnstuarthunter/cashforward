@@ -1,14 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cashforward.ui.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.UIManager;
 import org.cashforward.model.Scenario;
 import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
+import org.cashforward.ui.internal.options.UIOptions;
 import org.openide.modules.ModuleInstall;
 
 /**
@@ -20,9 +18,19 @@ public class Installer extends ModuleInstall {
     @Override
     public void restored() {
 
-        com.jidesoft.utils.Lm.verifyLicense(
-                "Bill Snyder", "CashForward",
-                "U4Fnx9Ak6M1DGKsRXc2fNF8nTG0c2aC");
+        if (UIOptions.isDebuggingOn()) {
+            UILogger.turnOnDebugging();
+        }
+
+
+        com.jidesoft.utils.Lm.verifyLicense("CashForward",
+                "CashForward", "JoATfLwitIFxtqKBnz25uyW7KBd4kjr2");
+        try {
+            //overwriting the JIDE stuff...
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ignored) {
+            //dont really care
+        }
 
         PaymentServiceAdapter serviceAdapter =
                 new PaymentServiceAdapter();

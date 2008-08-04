@@ -1,8 +1,3 @@
-/*
- * PaymentCompositePanel.java
- *
- * Created on June 26, 2008, 10:05 PM
- */
 package org.cashforward.ui.payment;
 
 import ca.odell.glazedlists.EventList;
@@ -16,23 +11,27 @@ import org.openide.util.actions.SystemAction;
 
 /**
  *
+ * Combines both the interface for Payment Details and
+ * Schedule. Also exposes the ability to persist changes via
+ * allowUpdate(boolean).
+ *
  * @author  Bill
  */
 public class PaymentCompositePanel extends javax.swing.JPanel {
 
-    SavePaymentAction saveAction;
-    private boolean valid;
+    private SavePaymentAction saveAction;
+    private UpdateButton updateButton;
 
     /** Creates new form PaymentCompositePanel */
     public PaymentCompositePanel() {
         initComponents();
-        //saveAction =
-          //      (SavePaymentAction) SystemAction.get(SavePaymentAction.class);
-
-        this.jideTabbedPane1.setTabTrailingComponent(new HeaderLabel());
+        saveAction =
+                (SavePaymentAction) SystemAction.get(SavePaymentAction.class);
+        updateButton = new UpdateButton();
+        this.jideTabbedPane1.setTabTrailingComponent(updateButton);
     }
 
-    public PaymentDetailPanel getPaymentDetailComponent(){
+    public PaymentDetailPanel getPaymentDetailComponent() {
         return this.paymentDetailPanel;
     }
 
@@ -57,14 +56,18 @@ public class PaymentCompositePanel extends javax.swing.JPanel {
         } else if (paymentScheduleForm.getEndDate() != null) {
             payment.setEndDate(paymentScheduleForm.getEndDate());
         }
-        
+
         payment.setOccurence(occurence.name());
         return payment;
     }
 
-    class HeaderLabel extends JideButton implements UIResource {
+    public void allowUpdate(boolean update) {
+        this.updateButton.setVisible(update);
+    }
 
-        public HeaderLabel() {
+    class UpdateButton extends JideButton implements UIResource {
+
+        public UpdateButton() {
             super("Update");
             setButtonStyle(JideButton.FLAT_STYLE);
             addActionListener(new ActionListener() {

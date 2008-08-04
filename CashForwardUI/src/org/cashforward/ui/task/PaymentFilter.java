@@ -48,9 +48,9 @@ public class PaymentFilter {
 
     public PaymentFilter(List<Scenario> scenarios) {
         this.scenarios = scenarios;
-        this.name = scenarios.get(0).getName();//hmm
+        this.name = scenarios.get(0).getName();
         this.criteria = new PaymentSearchCriteria();
-        criteria.setScenario(scenarios.get(0));//hmm
+        criteria.setScenario(scenarios.get(0));
     }
     
     public String getName(){
@@ -63,8 +63,8 @@ public class PaymentFilter {
     
     public void setScenarios(List<Scenario> scenarios){
         this.scenarios = scenarios;
-        if (criteria != null)
-            criteria.setScenario(scenarios.get(0));//hmm
+        if (criteria != null && !scenarios.isEmpty())
+            criteria.setScenario(scenarios.get(0));
     }
     
     public List<Scenario> getScenarios(){

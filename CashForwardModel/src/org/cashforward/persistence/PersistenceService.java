@@ -90,6 +90,19 @@ public class PersistenceService {
         }
         return true;
     }
+    
+    public boolean removeLabel(Label label) {
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        try {
+            manager.remove(label);
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public boolean addOrUpdatePayment(Payment payment) throws Exception {
         EntityTransaction tx = manager.getTransaction();
@@ -404,6 +417,27 @@ public class PersistenceService {
             return false;
         }
 
+        return true;
+    }
+    
+    public boolean removeLabel(Label oldLabel, List<Payment> payments) {
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        try {
+            for (Payment payment : payments) {
+                payment.removeLabel(oldLabel);
+                if (payment.getId() < 1) {
+                    manager.persist(payment);
+                } else {
+                    manager.merge(payment);
+                }
+            }
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        
         return true;
     }
 
