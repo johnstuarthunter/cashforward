@@ -1,6 +1,6 @@
 #summary CashForward Documentation
 
-== Hello ==
+== Please choose from the following paths ==
 
 ==[CashForwardUserDocs User Documenation]==
 (If you just want to learn how to use CashForward)
