@@ -1,2 +1,8 @@
+#summary CashForward User Documentation
 #labels UserDocs
-User docs will go here
+
+= Getting Started With CashForward =
+
+== Intro ==
+
+CashForward is ....
