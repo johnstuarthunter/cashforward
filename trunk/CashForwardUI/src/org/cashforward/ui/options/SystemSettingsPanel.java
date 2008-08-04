@@ -9,14 +9,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.cashforward.ui.internal.options.UIOptions;
 
-final class EntryPanel extends javax.swing.JPanel {
+final class SystemSettingsPanel extends javax.swing.JPanel {
 
     private final EntryOptionsPanelController controller;
 
-    EntryPanel(final EntryOptionsPanelController controller) {
+    SystemSettingsPanel(final EntryOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
-        cbRequireLabel.addActionListener(new ActionListener() {
+        cbDebugOn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 controller.changed();
             }
@@ -31,12 +31,12 @@ final class EntryPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        cbRequireLabel = new javax.swing.JCheckBox();
+        cbDebugOn = new javax.swing.JCheckBox();
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbRequireLabel, org.openide.util.NbBundle.getMessage(EntryPanel.class, "EntryPanel.cbRequireLabel.text")); // NOI18N
-        cbRequireLabel.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(cbDebugOn, org.openide.util.NbBundle.getMessage(SystemSettingsPanel.class, "SystemSettingsPanel.cbDebugOn.text")); // NOI18N
+        cbDebugOn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbRequireLabelActionPerformed(evt);
+                cbDebugOnActionPerformed(evt);
             }
         });
 
@@ -46,28 +46,28 @@ final class EntryPanel extends javax.swing.JPanel {
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .add(cbRequireLabel)
-                .addContainerGap(198, Short.MAX_VALUE))
+                .add(cbDebugOn)
+                .addContainerGap(266, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .add(cbRequireLabel)
+                .add(cbDebugOn)
                 .addContainerGap(265, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cbRequireLabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRequireLabelActionPerformed
+    private void cbDebugOnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbDebugOnActionPerformed
         // TODO add your handling code here:
-}//GEN-LAST:event_cbRequireLabelActionPerformed
+}//GEN-LAST:event_cbDebugOnActionPerformed
 
     void load() {
-        cbRequireLabel.setSelected(UIOptions.paymentsRequireLabel());
+        cbDebugOn.setSelected(UIOptions.isDebuggingOn());
     }
 
     void store() {
-        UIOptions.setPaymentsRequireLabel(cbRequireLabel.isSelected());
+        UIOptions.setDebuggingOn(cbDebugOn.isSelected());
     }
 
     boolean valid() {
@@ -76,6 +76,6 @@ final class EntryPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox cbRequireLabel;
+    private javax.swing.JCheckBox cbDebugOn;
     // End of variables declaration//GEN-END:variables
 }

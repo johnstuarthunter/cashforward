@@ -30,12 +30,7 @@ import org.cashforward.ui.task.TaskTopComponent;
 public class MatcherFactory {
 
     private static MatcherFactory instance;
-
-    //temp
-    JTextField temp = new JTextField();
-    public JTextField getTemp(){
-        return temp;
-    }
+    private JTextField temp = new JTextField();
 
     private MatcherFactory() {
     }
@@ -45,6 +40,17 @@ public class MatcherFactory {
             instance = new MatcherFactory();
         }
         return instance;
+    }
+
+    /**
+     * Delegate for the CashForward QuickSearchProvider. Used by
+     * the EventList pipeline to filter out Payments based on what is
+     * typed in the filter box
+     *
+     * @return
+     */
+    public JTextField getQuickSearchProxy() {
+        return temp;
     }
 
     /**
@@ -83,20 +89,20 @@ public class MatcherFactory {
     /**
      * @return a joint Label and Scenario matcher
      */
-    public MatcherEditor createLabelAndScenarioMatcher(){
+    public MatcherEditor createLabelAndScenarioMatcher() {
         EventList matchers = new BasicEventList();
         matchers.add(createLabelMatcher());
         matchers.add(createScenarioMatcher());
         matchers.add(createTypeMatcher());
-        matchers.add(new TextComponentMatcherEditor(getTemp(),new PaymentFilterator()));
-        
+        matchers.add(new TextComponentMatcherEditor(getQuickSearchProxy(), new PaymentFilterator()));
+
         CompositeMatcherEditor matcher =
                 new CompositeMatcherEditor(matchers);
         matcher.setMode(CompositeMatcherEditor.AND);
-        
+
         return matcher;
     }
-    
+
     private class LabelSelect extends AbstractMatcherEditor implements ListSelectionListener {
 
         /** a list of labels */
@@ -118,14 +124,15 @@ public class MatcherFactory {
          * an event.
          */
         public void valueChanged(ListSelectionEvent e) {
-            if (e.getValueIsAdjusting())
+            if (e.getValueIsAdjusting()) {
                 return;
-            Matcher newMatcher = 
+            }
+            Matcher newMatcher =
                     new PaymentsForLabelsMatcher(getSelectedLabels());
             fireChanged(newMatcher);
         }
 
-        private EventList getSelectedLabels(){
+        private EventList getSelectedLabels() {
             labelsSelectedList.clear();
             Object[] selected = target.getSelectedValues();
             PaymentFilter f;
@@ -204,19 +211,21 @@ public class MatcherFactory {
          * an event.
          */
         public void valueChanged(ListSelectionEvent e) {
-            if (e.getValueIsAdjusting())
+            if (e.getValueIsAdjusting()) {
                 return;
+            }
             Matcher newMatcher =
                     new ScheduledPaymentMatcher(isScheduled());
             fireChanged(newMatcher);
         }
 
-        private boolean isScheduled(){
+        private boolean isScheduled() {
             Object o = target.getSelectedValue();
-            PaymentFilter p = (PaymentFilter)o;
-            if (p == null)
+            PaymentFilter p = (PaymentFilter) o;
+            if (p == null) {
                 return false;
-            
+            }
+
             return (p.getPaymentType() == PaymentFilter.TYPE_SCHEDULED);
         }
     }
@@ -224,6 +233,7 @@ public class MatcherFactory {
     private class ScheduledPaymentMatcher implements Matcher {
 
         private boolean scheduled;
+
         /**
          * Create a new {@link PaymentsForLabelsMatcher} that matches only
          * {@link Issue}s that have one or more user in the specified list.
@@ -241,14 +251,14 @@ public class MatcherFactory {
             if (o == null) {
                 return false;
             }
-           
+
             Payment payment = (Payment) o;
             UILogger.LOG.finest(payment + " is " + payment.isScheduled());
-            if (scheduled)
+            if (scheduled) {
                 return payment.isScheduled();
-            else
+            } else {
                 return !payment.isScheduled();
+            }
         }
     }
-
 }

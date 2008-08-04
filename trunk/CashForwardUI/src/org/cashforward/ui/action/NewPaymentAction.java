@@ -10,14 +10,11 @@ import org.cashforward.ui.adapter.PaymentServiceAdapter;
 import org.cashforward.ui.internal.UILogger;
 import org.cashforward.ui.payment.PaymentCompositePanel;
 import org.cashforward.ui.payment.PaymentDetailPanel;
-import org.cashforward.ui.task.PaymentFilter;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.Binding;
 import org.jdesktop.beansbinding.Bindings;
 import org.jdesktop.beansbinding.Property;
-import org.jdesktop.beansbinding.PropertyStateEvent;
-import org.jdesktop.beansbinding.PropertyStateListener;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.HelpCtx;
@@ -60,6 +57,7 @@ public final class NewPaymentAction extends BaseCallableSystemAction {
 
         final PaymentCompositePanel paymentDetailPanel =
                 new PaymentCompositePanel();
+        paymentDetailPanel.allowUpdate(false);
         paymentDetailPanel.setPayees(UIContext.getDefault().getPayees());
         paymentDetailPanel.setLabels(UIContext.getDefault().getLabels());
         paymentDetailPanel.setPayment(newPayment);
@@ -121,11 +119,4 @@ public final class NewPaymentAction extends BaseCallableSystemAction {
         return false;
     }
 
-    private boolean paymentHasLabel(Payment payment) {
-        boolean ok = true;
-        if (payment.getLabels().size() >= payment.getScenarios().size()) {
-            ok = false;
-        }
-        return ok;
-    }
 }

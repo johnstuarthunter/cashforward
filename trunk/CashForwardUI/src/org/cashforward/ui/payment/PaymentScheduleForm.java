@@ -1,8 +1,3 @@
-/*
- * PaymentScheduleForm.java
- *
- * Created on June 20, 2008, 10:40 PM
- */
 package org.cashforward.ui.payment;
 
 import java.util.Date;
@@ -13,6 +8,7 @@ import org.cashforward.model.Payment.Occurence;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
 
 /**
+ * Interface for setting scheduling information for a Payment.
  *
  * @author  Bill
  */
@@ -22,7 +18,6 @@ public class PaymentScheduleForm extends javax.swing.JPanel {
     private Payment.Occurence occurence;
     private PaymentServiceAdapter paymentService;
 
-    /** Creates new form PaymentScheduleForm */
     public PaymentScheduleForm() {
         initComponents();
         occurenceCombo.setModel(new OccurenceComboModel());
@@ -55,10 +50,15 @@ public class PaymentScheduleForm extends javax.swing.JPanel {
                         new Date(), payment.getEndDate());
             if (paymentsRemaining != null)
                 valueSpinner.setValue(paymentsRemaining.size());
-            valueSpinner.setEnabled(false);
+            //valueSpinner.setEnabled(false);
+            cboEnds.setSelected(true);
+            untilDateCombo.setEnabled(true);
+            setScheduleInterfaceEnabled(true);
         } else {
+            untilDateCombo.setSelectedItem(null);
             untilDateCombo.setEnabled(false);
             valueSpinner.setEnabled(false);
+            valueSpinner.setValue(0);
         }
     }
 

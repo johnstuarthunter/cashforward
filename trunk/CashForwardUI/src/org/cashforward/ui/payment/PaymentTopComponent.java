@@ -17,7 +17,10 @@ import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 import com.jidesoft.pane.CollapsiblePane;
-//import org.openide.util.Utilities;
+import com.jidesoft.swing.DefaultOverlayable;
+import com.jidesoft.swing.OverlayableUtils;
+import com.jidesoft.swing.StyledLabelBuilder;
+import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.Icon;
@@ -25,92 +28,144 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import org.cashforward.model.Scenario;
 import org.cashforward.ui.task.PaymentFilter;
+import org.openide.util.Utilities;
+
 /**
  * Top component which displays something.
  */
 final class PaymentTopComponent extends TopComponent {
-   
+
     private static PaymentTopComponent instance;
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "PaymentTopComponent";
     
+    private DefaultOverlayable tableOverlay;
     private Lookup.Result paymentNotifier =
             UIContext.getDefault().lookupResult(Payment.class);
-    private Lookup.Result payeeNotifier = 
+    private Lookup.Result payeeNotifier =
             UIContext.getDefault().lookupResult(Payee.class);
-    private Lookup.Result paymentFilterNotifier = 
+    private Lookup.Result scenarioNotifier =
+            UIContext.getDefault().lookupResult(Scenario.class);
+    private Lookup.Result filterNotifier =
             UIContext.getDefault().lookupResult(PaymentFilter.class);
-    
+    private JTable paymentTable;
+
     private PaymentTopComponent() {
         initComponents();
         setName(NbBundle.getMessage(PaymentTopComponent.class, "CTL_PaymentTopComponent"));
         setToolTipText(NbBundle.getMessage(PaymentTopComponent.class, "HINT_PaymentTopComponent"));
 //        setIcon(Utilities.loadImage(ICON_PATH, true));
-        
+
         Icon icon = new ImageIcon(
-                PaymentListPanel.class.getResource(
-                    "/org/cashforward/ui/payment/payment-detail.png"));
+                Utilities.loadImage("/org/cashforward/ui/payment/payment-detail.png"));
         JLabel infoLabel = new JLabel(icon);
         paymentDetailContainer.setTitleComponent(infoLabel);
-        
-        final JTable paymentTable = paymentListPanel.getTableComponent();
+
+        paymentTable = paymentListPanel.getTableComponent();
         paymentTable.addMouseListener(new MouseAdapter() {
 
             public void mouseClicked(MouseEvent e) {
-                if (paymentTable.columnAtPoint(e.getPoint()) == 4){
+                if (paymentTable.columnAtPoint(e.getPoint()) == 4) {
                     try {
-                        if (PaymentTopComponent.this.paymentDetailContainer.isCollapsed())
-                            PaymentTopComponent.this.paymentDetailContainer.setCollapsed(false);
-                        else 
-                            PaymentTopComponent.this.paymentDetailContainer.setCollapsed(true);
-                    } catch (Exception ex) {ex.printStackTrace();/*who cares*/}
+                        if (paymentDetailContainer.isCollapsed()) {
+                            paymentDetailContainer.setCollapsed(false);
+                        } else {
+                            paymentDetailContainer.setCollapsed(true);
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();/*who cares*/
+                    }
                 }
             }
-
         });
-        
+
         paymentCompositePanel.setPayees(UIContext.getDefault().getPayees());
         paymentCompositePanel.setLabels(UIContext.getDefault().getLabels());
-        /*
-        paymentFilterNotifier.addLookupListener(new LookupListener() {
-            public void resultChanged(LookupEvent event) {
-                Lookup.Result r = (Lookup.Result) event.getSource();
-                Collection c = r.allInstances();
-                if (!c.isEmpty()) {
-                    PaymentFilter filter = (PaymentFilter) c.iterator().next();
-                    int type = filter.getPaymentType();
-                    if (type == PaymentFilter.TYPE_CALCULATED)
-                        paymentListPanel.setPayments(
-                                UIContext.getDefault().getFilteredPayments());
-                    else if (type == PaymentFilter.TYPE_CURRENT)
-                        paymentListPanel.setPayments(
-                                UIContext.getDefault().getCurrentPayments());
-                    else if (type == PaymentFilter.TYPE_SCHEDULED)
-                        paymentListPanel.setPayments(
-                                UIContext.getDefault().getScheduledPayments());
-                } 
-            }
-        });
-        */
         payeeNotifier.addLookupListener(new LookupListener() {
+
             public void resultChanged(LookupEvent arg0) {
                 paymentCompositePanel.setPayees(UIContext.getDefault().getPayees());
             }
         });
-        
+
         paymentNotifier.addLookupListener(new LookupListener() {
 
             public void resultChanged(LookupEvent event) {
                 Lookup.Result r = (Lookup.Result) event.getSource();
                 Collection c = r.allInstances();
                 if (!c.isEmpty()) {
+                    PaymentFilter filter =
+                            UIContext.getDefault().getPaymentFilter();
+                    boolean calculated = filter.getPaymentType() ==
+                            PaymentFilter.TYPE_CALCULATED;
                     Payment payment = (Payment) c.iterator().next();
                     paymentCompositePanel.setPayment(payment);
-                }                
+                    paymentCompositePanel.allowUpdate(!calculated);
+                } else {
+                    paymentCompositePanel.setPayment(new Payment());
+                    paymentCompositePanel.allowUpdate(false);
+                }
             }
         });
+
+        setupOverlay();
+    }
+
+    public PaymentCompositePanel getPaymentCompositePanel() {
+        return paymentCompositePanel;
+    }
+
+    private void setupOverlay() {
+        remove(paymentContainer);
+        tableOverlay =
+                new DefaultOverlayable(paymentContainer);
+
+        OverlayLookupListener oll = new OverlayLookupListener();
+        scenarioNotifier.addLookupListener(oll);
+        filterNotifier.addLookupListener(oll);
+
+        tableOverlay.addOverlayComponent(
+                StyledLabelBuilder.createStyledLabel("{No payments available for this Scenario. " +
+                "Add a new Payment or change the filters. :f:gray}"),
+                SwingConstants.CENTER);
+
+        tableOverlay.addOverlayComponent(
+                StyledLabelBuilder.createStyledLabel("{Please select at " +
+                "least one Scenario to view Payments. :f:gray}"),
+                SwingConstants.CENTER);
+
+        add(tableOverlay,BorderLayout.CENTER);
+
+        refreshOverlay();
+    }
+
+    private void refreshOverlay() {
+        boolean scenarioSelected =
+                UIContext.getDefault().getSelectedScenarios().size() > 0;
+        boolean paymentsInTable = UIContext.getDefault().getPayments().size() > 0;
+
+        if (scenarioSelected) {
+            if (!paymentsInTable) { //show no payments message
+                paymentContainer.setVisible(false);
+                tableOverlay.getOverlayComponents()[0].setVisible(true);
+                tableOverlay.getOverlayComponents()[1].setVisible(false);
+                UIContext.getDefault().clearPayment();
+            } else { //just show the table
+                paymentContainer.setVisible(true);
+                tableOverlay.getOverlayComponents()[0].setVisible(false);
+                tableOverlay.getOverlayComponents()[1].setVisible(false);
+            }
+        } else { //show select scenario message
+            paymentContainer.setVisible(false);//for now
+            tableOverlay.getOverlayComponents()[0].setVisible(true);
+            tableOverlay.getOverlayComponents()[1].setVisible(false);
+            UIContext.getDefault().clearPayment();
+        }
+
+        OverlayableUtils.repaintOverlayable(tableOverlay);
     }
 
     /** This method is called from within the constructor to
@@ -123,8 +178,11 @@ final class PaymentTopComponent extends TopComponent {
 
         paymentListPanel = new org.cashforward.ui.payment.PaymentListPanel();
         paymentCompositePanel = new org.cashforward.ui.payment.PaymentCompositePanel();
+        paymentContainer = new javax.swing.JPanel();
         paymentListContainer = new com.jidesoft.pane.CollapsiblePane();
         paymentDetailContainer = new com.jidesoft.pane.CollapsiblePane();
+
+        setLayout(new java.awt.BorderLayout());
 
         paymentListContainer.setShowExpandButton(false);
         paymentListContainer.setShowTitleBar(false);
@@ -135,11 +193,11 @@ final class PaymentTopComponent extends TopComponent {
         paymentListContainer.getContentPane().setLayout(paymentListContainerLayout);
         paymentListContainerLayout.setHorizontalGroup(
             paymentListContainerLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 272, Short.MAX_VALUE)
+            .add(0, 302, Short.MAX_VALUE)
         );
         paymentListContainerLayout.setVerticalGroup(
             paymentListContainerLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 210, Short.MAX_VALUE)
+            .add(0, 243, Short.MAX_VALUE)
         );
 
         try {
@@ -168,29 +226,36 @@ final class PaymentTopComponent extends TopComponent {
         paymentDetailContainer.setSlidingDirection(SwingConstants.EAST);
         paymentDetailContainer.setContentPane(paymentCompositePanel);
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout paymentContainerLayout = new org.jdesktop.layout.GroupLayout(paymentContainer);
+        paymentContainer.setLayout(paymentContainerLayout);
+        paymentContainerLayout.setHorizontalGroup(
+            paymentContainerLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, paymentContainerLayout.createSequentialGroup()
                 .add(paymentListContainer, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(paymentDetailContainer, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+        paymentContainerLayout.setVerticalGroup(
+            paymentContainerLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, paymentContainerLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(paymentDetailContainer, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
             .add(paymentListContainer, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, paymentDetailContainer, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        add(paymentContainer, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.cashforward.ui.payment.PaymentCompositePanel paymentCompositePanel;
+    private javax.swing.JPanel paymentContainer;
     private com.jidesoft.pane.CollapsiblePane paymentDetailContainer;
     private com.jidesoft.pane.CollapsiblePane paymentListContainer;
     private org.cashforward.ui.payment.PaymentListPanel paymentListPanel;
     // End of variables declaration//GEN-END:variables
+
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
@@ -255,6 +320,12 @@ final class PaymentTopComponent extends TopComponent {
 
         public Object readResolve() {
             return PaymentTopComponent.getDefault();
+        }
+    }
+    
+     class OverlayLookupListener implements LookupListener {
+        public void resultChanged(LookupEvent arg0) {
+            refreshOverlay();
         }
     }
 }

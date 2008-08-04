@@ -17,30 +17,31 @@ import org.cashforward.service.internal.ServicesLogger;
 /**
  *
  * @author Bill 
- * 
- * NOTE:
- * The functionality exposed by this class will evolve and the UI evolves.
- * 
+ *
+ * Service for managing Payments. This is a good candidate for conversion
+ * to the NetBeans SPI paradigm.
+ *
  * Yet to see:
  * -filtering payments by amount, payee
  * -considering payment overrides when query payments
  * 
  */
 public class PaymentService {
-    
+
     PersistenceService persistenceService;
     PaymentCalculator paymentCalculator;
-    
-     public PaymentService(){
-         //TODO read db from config
-         persistenceService = 
-                 PersistenceService.getInstance(PersistenceService.STORAGE_DEV);
-         paymentCalculator = new PaymentCalculator();
-     }
-    
-    protected PaymentService(PersistenceService persistenceService){
-        if (persistenceService == null)
+
+    public PaymentService() {
+        //TODO read db from config
+        persistenceService =
+                PersistenceService.getInstance(PersistenceService.STORAGE_DEV);
+        paymentCalculator = new PaymentCalculator();
+    }
+
+    protected PaymentService(PersistenceService persistenceService) {
+        if (persistenceService == null) {
             throw new IllegalArgumentException("PersistenceService cannot be null.");
+        }
         this.persistenceService = persistenceService;
     }
 
@@ -54,7 +55,7 @@ public class PaymentService {
         return s;
     }
 
-    public void addOrUpdateScenario(Scenario newScenario) throws Exception  {
+    public void addOrUpdateScenario(Scenario newScenario) throws Exception {
         persistenceService.addOrUpdateScenario(newScenario);
     }
 
@@ -66,23 +67,35 @@ public class PaymentService {
      * @return true of the new Scenario was created successfully
      * @throws java.lang.Exception if there was a problem creating the Scenario
      */
-    public boolean createScenario(Scenario currentScenario, 
+    public boolean createScenario(Scenario currentScenario,
             Scenario newScenario) throws Exception {
-         PaymentSearchCriteria baseLookup = 
-                 new PaymentSearchCriteria();
-         baseLookup.setScenario(currentScenario);
+        PaymentSearchCriteria baseLookup =
+                new PaymentSearchCriteria();
+        baseLookup.setScenario(currentScenario);
 
-         if (!persistenceService.addOrUpdateScenario(newScenario))
-             return false;
+        if (!persistenceService.addOrUpdateScenario(newScenario)) {
+            return false;
+        }
 
-         List<Payment> basePayments = //needs fixing, labels, occurences
-                 persistenceService.getPayments(baseLookup);
-          
-         return persistenceService.applyLabel(newScenario, basePayments);
-         
+        List<Payment> basePayments = //needs fixing, labels, occurences
+                persistenceService.getPayments(baseLookup);
+
+        return persistenceService.applyLabel(newScenario, basePayments);
+
     }
 
-    public List<Scenario> getScenarios() throws Exception{
+    public boolean removeScenario(Scenario scenario) throws Exception {
+        PaymentSearchCriteria baseLookup =
+                new PaymentSearchCriteria();
+        baseLookup.setScenario(scenario);
+        List<Payment> scenarioPayments =
+                persistenceService.getPayments(baseLookup);
+        persistenceService.removeLabel(scenario, scenarioPayments);
+        persistenceService.removeLabel(scenario);
+        return true;
+    }
+
+    public List<Scenario> getScenarios() throws Exception {
         return persistenceService.getScenarios();
     }
 
@@ -92,9 +105,9 @@ public class PaymentService {
      * @return
      * @throws java.lang.Exception
      */
-    public List<Payment> getScheduledPayments() 
-        throws Exception {
-            return persistenceService.getSchdeuledPayments();
+    public List<Payment> getScheduledPayments()
+            throws Exception {
+        return persistenceService.getSchdeuledPayments();
     }
 
     /**
@@ -103,9 +116,9 @@ public class PaymentService {
      * @return
      * @throws java.lang.Exception
      */
-    public List<Payment> getCurrentPayments() 
-        throws Exception {
-            return persistenceService.getCurrentPayments();
+    public List<Payment> getCurrentPayments()
+            throws Exception {
+        return persistenceService.getCurrentPayments();
     }
 
     /**
@@ -114,27 +127,28 @@ public class PaymentService {
      * @return the payments matching the given criteria
      * @throws java.lang.Exception
      */
-    public List<Payment> getPayments(PaymentSearchCriteria criteria) 
-        throws Exception {
+    public List<Payment> getPayments(PaymentSearchCriteria criteria)
+            throws Exception {
 
-        if (criteria == null)
+        if (criteria == null) {
             return persistenceService.getPayments(null);
-        
+        }
+
         Date start = criteria.getDateStart();
         Date end = criteria.getDateEnd();
-        
+
         Scenario scenario = criteria.getScenario();
-        
-        List<Payment> allPayments = new ArrayList();    
+
+        List<Payment> allPayments = new ArrayList();
         List<Payment> payments = persistenceService.getSchdeuledPayments();
         ServicesLogger.LOG.finest(payments.size() + " scheduled payments");
         for (Payment payment : payments) {
-            List newPayments = 
+            List newPayments =
                     paymentCalculator.calculatePayments(payment, start, end);
             ServicesLogger.LOG.finest("generated " + newPayments.size());
             allPayments.addAll(newPayments);
         }
-        
+
         //now add current for now
         allPayments.addAll(persistenceService.getPayments(criteria));
 
@@ -142,11 +156,11 @@ public class PaymentService {
 
         return allPayments;
     }
-    
+
     public boolean addOrUpdatePayment(Payment newPayment) throws Exception {
         return persistenceService.addOrUpdatePayment(newPayment);
     }
-    
+
     public boolean removePayment(Payment oldPayment) throws Exception {
         return persistenceService.removePayment(oldPayment);
     }
@@ -160,29 +174,29 @@ public class PaymentService {
      * @throws java.lang.Exception if there is a problem creating the Payment
      */
     public Payment enterNextPayment(Payment scheduledPayment) throws Exception {
-        Payment newPayment = new Payment(scheduledPayment.getAmount(), 
+        Payment newPayment = new Payment(scheduledPayment.getAmount(),
                 scheduledPayment.getPayee(), scheduledPayment.getStartDate());
         newPayment.setOccurence(Payment.Occurence.NONE.name());
         newPayment.setEndDate(newPayment.getStartDate());
-        
-        if (persistenceService.addOrUpdatePayment(newPayment)){
+
+        if (persistenceService.addOrUpdatePayment(newPayment)) {
             scheduledPayment.setStartDate(
-                    paymentCalculator.getNextPaymentDate(scheduledPayment, 
+                    paymentCalculator.getNextPaymentDate(scheduledPayment,
                     new Date()));
             persistenceService.addOrUpdatePayment(scheduledPayment);
-                
+
         }
-        
+
         return newPayment;
-        
+
     }
-    
+
     public boolean skipNextPayment(Payment scheduledPayment) throws Exception {
-            scheduledPayment.setStartDate(
-                    paymentCalculator.getNextPaymentDate(scheduledPayment, 
-                    new Date()));
-            return persistenceService.addOrUpdatePayment(scheduledPayment);
-        
+        scheduledPayment.setStartDate(
+                paymentCalculator.getNextPaymentDate(scheduledPayment,
+                new Date()));
+        return persistenceService.addOrUpdatePayment(scheduledPayment);
+
     }
 
     /**
@@ -195,17 +209,16 @@ public class PaymentService {
      * @return the List of calculated Payments
      * @throws java.lang.Exception if there is a problem calculating the Payments
      */
-    public List<Payment> getCalculatedPayments(Payment payment, 
+    public List<Payment> getCalculatedPayments(Payment payment,
             Date startDate, Date endDate) throws Exception {
         return paymentCalculator.calculatePayments(payment, startDate, endDate);
     }
-    
+
     public List<Payee> getPayees() throws Exception {
         return persistenceService.getPayees();
     }
-    
+
     public List<Label> getLabels() throws Exception {
         return persistenceService.getLabels();
     }
-    
 }

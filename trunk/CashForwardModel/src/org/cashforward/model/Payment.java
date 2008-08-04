@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -242,7 +243,7 @@ public class Payment implements Serializable {
     }
 
     public boolean isScheduled() {
-        return Occurence.valueOf(occurence) != Occurence.NONE;
+        return Occurence.valueOf(occurence.toUpperCase()) != Occurence.NONE;
     }
 
     @Override
@@ -253,9 +254,8 @@ public class Payment implements Serializable {
     }
 
     @Override
-    //TODO complete this 
+    //this could be better
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Payment)) {
             return false;
         }

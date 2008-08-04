@@ -11,9 +11,9 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-final class EntryOptionsPanelController extends OptionsPanelController {
+final class PaymentOptionsOptionsPanelController extends OptionsPanelController {
 
-    private SystemSettingsPanel panel;
+    private PaymentOptionsPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
 
@@ -55,9 +55,9 @@ final class EntryOptionsPanelController extends OptionsPanelController {
         pcs.removePropertyChangeListener(l);
     }
 
-    private SystemSettingsPanel getPanel() {
+    private PaymentOptionsPanel getPanel() {
         if (panel == null) {
-            panel = new SystemSettingsPanel(this);
+            panel = new PaymentOptionsPanel(this);
         }
         return panel;
     }

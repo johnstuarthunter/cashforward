@@ -88,7 +88,9 @@ public class PaymentCalculator {
     private Payment createPayment(Payment base, Date nextDate) {
         Payment newPayment = null;
         newPayment = new Payment(base.getAmount(), base.getPayee(), nextDate);
-        newPayment.addScenarios(base.getScenarios());
+        newPayment.addLabels(base.getLabels());
+        //newPayment.setOccurence(Occurence.ONCE.getLabel());
+        newPayment.setEndDate(nextDate);
         return newPayment;
 
     }

@@ -53,7 +53,7 @@ public final class NewScenarioAction extends BaseCallableSystemAction {
                 NotifyDescriptor.PLAIN_MESSAGE,
                 NotifyDescriptor.OK_CANCEL_OPTION);
         Object result = DialogDisplayer.getDefault().notify(nameDialog);
-        if (result == DialogDescriptor.YES_OPTION){
+        if (result == DialogDescriptor.OK_OPTION){
             if (nameDialog.getInputText() != null)
                 //create Scenario object
                 newScenario = new Scenario(nameDialog.getInputText());
@@ -87,7 +87,7 @@ public final class NewScenarioAction extends BaseCallableSystemAction {
 
     @Override
     protected boolean asynchronous() {
-        return false;
+        return true;
     }
     
 }
