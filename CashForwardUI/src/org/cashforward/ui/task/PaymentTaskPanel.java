@@ -81,6 +81,9 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
                     refreshOverlay();
                     return;
                 }
+                
+                labelList.setEnabled(true);
+                typeList.setEnabled(true);
                 //set the selected scenarios
                 Object[] s = scenarioList.getSelectedValues();
                 EventList l = new BasicEventList();
@@ -237,10 +240,8 @@ public class PaymentTaskPanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(scenarioList);
 
         typeList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        typeList.setEnabled(false);
         jScrollPane2.setViewportView(typeList);
 
-        labelList.setEnabled(false);
         jScrollPane3.setViewportView(labelList);
 
         lblScenarios.setFont(new java.awt.Font("Tahoma", 1, 12));

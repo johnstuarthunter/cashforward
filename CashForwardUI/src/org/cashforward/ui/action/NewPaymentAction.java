@@ -34,7 +34,7 @@ public final class NewPaymentAction extends BaseCallableSystemAction {
 
     public NewPaymentAction(){
         super();
-        setEnabled(false);
+        //setEnabled(false);
         scenarioNotifier.addLookupListener(new LookupListener() {
             public void resultChanged(LookupEvent event) {
                 Lookup.Result r = (Lookup.Result) event.getSource();
