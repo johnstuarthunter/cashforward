@@ -213,7 +213,7 @@ public class ScenarioPanel extends javax.swing.JPanel
         // add a labelled marker for the zero threshold...
         Marker threshold = new ValueMarker(0.0);
         threshold.setLabelOffsetType(LengthAdjustmentType.EXPAND);
-        threshold.setPaint(Color.red);
+        threshold.setPaint(Color.BLACK);
         threshold.setStroke(new BasicStroke(1.0f));
         threshold.setLabel("$0.00");
         threshold.setLabelFont(new Font("SansSerif", Font.PLAIN, 11));
@@ -370,14 +370,14 @@ public class ScenarioPanel extends javax.swing.JPanel
         plot.setRenderer(renderer);
 
         LegendTitle lt = new LegendTitle(plot);
-        lt.setItemFont(new Font("Dialog", Font.PLAIN, 9));
-        lt.setBackgroundPaint(new Color(200, 200, 255, 90));
+        lt.setItemFont(new Font("Dialog", Font.PLAIN, 10));
+        lt.setBackgroundPaint(new Color(200, 200, 255, 95));
         lt.setFrame(new BlockBorder(Color.white));
         lt.setPosition(RectangleEdge.BOTTOM);
         XYTitleAnnotation ta = new XYTitleAnnotation(0.98, 0.90, lt,
                 RectangleAnchor.BOTTOM_RIGHT);
 
-        ta.setMaxWidth(0.48);
+        ta.setMaxWidth(0.68);
         plot.addAnnotation(ta);
         return chart;
     }

@@ -1,10 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.cashforward.ui.action;
 
-import java.util.Collection;
 import java.util.List;
 import org.cashforward.model.Scenario;
 import org.cashforward.service.PaymentService;
@@ -29,11 +24,11 @@ public final class RemoveScenarioAction extends BaseCallableSystemAction {
         setEnabled(false);
         paymentService = new PaymentService();
         scenarioNotifier.addLookupListener(new LookupListener() {
-
             public void resultChanged(LookupEvent event) {
                 Lookup.Result r = (Lookup.Result) event.getSource();
-                Collection c = r.allInstances();
-                setEnabled(UIContext.getDefault().getSelectedScenarios().size()>0);
+                setEnabled(UIContext.getDefault().
+                        getSelectedScenarios().size()> 0 &&
+                        UIContext.getDefault().getScenarios().size() > 0);
             }
         });
 

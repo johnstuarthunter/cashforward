@@ -4,16 +4,11 @@ import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.SortedList;
-import ca.odell.glazedlists.event.ListEvent;
-import ca.odell.glazedlists.event.ListEventListener;
 import ca.odell.glazedlists.gui.AdvancedTableFormat;
 import ca.odell.glazedlists.gui.WritableTableFormat;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 import ca.odell.glazedlists.swing.EventTableModel;
 import ca.odell.glazedlists.swing.TableComparatorChooser;
-import com.jidesoft.swing.DefaultOverlayable;
-import com.jidesoft.swing.OverlayableUtils;
-import com.jidesoft.swing.StyledLabelBuilder;
 import java.awt.Color;
 import java.awt.Component;
 import java.text.NumberFormat;
@@ -22,16 +17,13 @@ import java.util.Comparator;
 import java.util.Date;
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.cashforward.model.Payee;
 import org.cashforward.model.Payment;
-import org.cashforward.model.Scenario;
 import org.cashforward.ui.UIContext;
 import org.cashforward.ui.internal.filter.MatcherFactory;
-import org.cashforward.ui.task.PaymentFilter;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -96,7 +88,7 @@ public class PaymentListPanel extends TopComponent {
 
         sortedList =
                 new SortedList(payments, new PaymentComparator());
-
+        
         filteredList = new FilterList(sortedList,
                 matcherFactory.createLabelAndScenarioMatcher());
 
@@ -112,8 +104,9 @@ public class PaymentListPanel extends TopComponent {
         paymentTable.getColumnModel().getColumn(3).setCellRenderer(pcr);
 
         //not supporting table sorting at the momemt
-        //TableComparatorChooser tableSorter =
-        //        new TableComparatorChooser(paymentTable, sortedList, true);
+        TableComparatorChooser tableSorter =
+                new TableComparatorChooser(paymentTable, sortedList, false);
+       
 
         paymentTable.getSelectionModel().addListSelectionListener(
                 new ListSelectionListener() {
@@ -271,8 +264,10 @@ public class PaymentListPanel extends TopComponent {
             } else if (column == 2) {
                 return Float.valueOf(amount);
             } else if (column == 3) {
-                int toIndex = filteredList.indexOf(baseObject);
-                return getBalance(toIndex);
+                try { //there is a bug here
+                    int toIndex = filteredList.indexOf(baseObject);
+                    return getBalance(toIndex);
+                } catch (AssertionError e){return 0;}
             } else {
                 return "";
             }
