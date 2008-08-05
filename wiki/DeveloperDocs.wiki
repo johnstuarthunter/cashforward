@@ -5,7 +5,7 @@
 CashForward is built on the NetBeans RCP, using the sources from 6.5 M2. It was initiated through a NetBeans Innovator's Grant. Although certainly not perfect, CashForward should be a decent application to reference as you begin to build your own application on the NetBeans RCP platform. 
 
 
-= Overview =
+= Prerequisites =
 
 The developer documentation assumes intermediate knowledge of Java and some familiarity with NetBeans. Understanding something about Swing, Hibernate, JPA, GlazedLists will also help.
 
