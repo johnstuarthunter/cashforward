@@ -13,7 +13,7 @@ The developer documentation assumes intermediate knowledge of Java and some fami
 
 What is the NetBeans Platform? In short, a collection of APIs that enable developers to build modular, robust Swing applications. The tools and APIs provide such capabilities as Window management, Form layout, Selection management, Data management, Searching, Logging, Help and Documentation and much more.
 
-The NetBeans team has gone out of there way to make the platform APIs easy to use. The NetBeans development environment has _excellent_ support for building Platform applications.
+The NetBeans team has gone out of their way to make the platform APIs easy to use. The NetBeans development environment has _excellent_ support for building Platform applications.
 
 = Contents =
 
