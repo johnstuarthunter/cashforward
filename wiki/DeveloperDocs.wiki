@@ -11,13 +11,13 @@ The developer documentation assumes intermediate knowledge of Java and some fami
 
 = The NetBeans Platform =
 
-What is the NetBeans Platorm? In short, a collection of APIs that enable developers to build modular, robust Swing applications. The tools and APIs provide such capabilities as Window management, Form layout, Selection manangement, Data management, Searching, Logging, Help and Documentation and much more.
+What is the NetBeans Platform? In short, a collection of APIs that enable developers to build modular, robust Swing applications. The tools and APIs provide such capabilities as Window management, Form layout, Selection management, Data management, Searching, Logging, Help and Documentation and much more.
 
 The NetBeans team has gone out of there way to make the platform APIs easy to use. The NetBeans development environment has _excellent_ support for building Platform applications.
 
 = Contents =
 
-   * How CashForward Benefits from NetBeans
+   * [HowCashForwardUsesTheNetBeansRCP How CashForward Benefits from NetBeans]
    * CashForward Services Design
    * CashForward User Interface Design
    * Appendix: Interface patterns found in CashForward
