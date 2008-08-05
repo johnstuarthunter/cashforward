@@ -10,6 +10,7 @@ import org.cashforward.ui.adapter.PaymentServiceAdapter;
 import org.cashforward.ui.internal.UILogger;
 import org.cashforward.ui.payment.PaymentCompositePanel;
 import org.cashforward.ui.payment.PaymentDetailPanel;
+import org.cashforward.util.DateUtilities;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.Binding;
@@ -32,10 +33,11 @@ public final class NewPaymentAction extends BaseCallableSystemAction {
     private Lookup.Result scenarioNotifier =
             UIContext.getDefault().lookupResult(Scenario.class);
 
-    public NewPaymentAction(){
+    public NewPaymentAction() {
         super();
         //setEnabled(false);
         scenarioNotifier.addLookupListener(new LookupListener() {
+
             public void resultChanged(LookupEvent event) {
                 Lookup.Result r = (Lookup.Result) event.getSource();
                 Collection c = r.allInstances();
@@ -71,7 +73,7 @@ public final class NewPaymentAction extends BaseCallableSystemAction {
         //---Prevent closing of form unless the data is valid
         Property dialogValid = BeanProperty.create("valid");
         Property formValid = PaymentDetailPanel.PROP_paymentValid;
-        
+
         Binding binding =
                 Bindings.createAutoBinding(UpdateStrategy.READ,
                 paymentDetailPanel.getPaymentDetailComponent(), formValid,
@@ -118,5 +120,4 @@ public final class NewPaymentAction extends BaseCallableSystemAction {
     protected boolean asynchronous() {
         return false;
     }
-
 }

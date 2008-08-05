@@ -7,7 +7,7 @@ and open the template in the editor.
 <helpset version="2.0">
     <title>CashForwardUI Help</title>
     <maps>
-        <homeID>org.cashforward.ui.about</homeID>
+        <homeID>org.cashforward.ui.help</homeID>
         <mapref location="ui-map.xml"/>
     </maps>
     <view mergetype="javax.help.AppendMerge">
@@ -16,7 +16,7 @@ and open the template in the editor.
         <type>javax.help.TOCView</type>
         <data>ui-toc.xml</data>
     </view>
-    <view mergetype="javax.help.AppendMerge">
+    <!--view mergetype="javax.help.AppendMerge">
         <name>Index</name>
         <label>Index</label>
         <type>javax.help.IndexView</type>
@@ -27,5 +27,5 @@ and open the template in the editor.
         <label>Search</label>
         <type>javax.help.SearchView</type>
         <data engine="com.sun.java.help.search.DefaultSearchEngine">JavaHelpSearch</data>
-    </view>
+    </view-->
 </helpset>

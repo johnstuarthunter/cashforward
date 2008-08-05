@@ -34,6 +34,10 @@ public class PaymentCompositePanel extends javax.swing.JPanel {
     public PaymentDetailPanel getPaymentDetailComponent() {
         return this.paymentDetailPanel;
     }
+    
+    public PaymentScheduleForm getPaymentScheduleComponent() {
+        return this.paymentScheduleForm;
+    }
 
     public void setPayees(EventList payees) {
         paymentDetailPanel.setPayees(payees);
@@ -51,12 +55,7 @@ public class PaymentCompositePanel extends javax.swing.JPanel {
     public Payment getPayment() {
         Payment payment = paymentDetailPanel.getPayment();
         Payment.Occurence occurence = paymentScheduleForm.getOccurence();
-        if (occurence == Payment.Occurence.NONE || occurence == null) {
-            payment.setEndDate(payment.getStartDate());
-        } else if (paymentScheduleForm.getEndDate() != null) {
-            payment.setEndDate(paymentScheduleForm.getEndDate());
-        }
-
+        paymentScheduleForm.updatePaymentOccurence();
         payment.setOccurence(occurence.name());
         return payment;
     }
@@ -73,7 +72,7 @@ public class PaymentCompositePanel extends javax.swing.JPanel {
             addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    PaymentCompositePanel.this.getPayment();//commit
+                    saveAction.setPayment(getPayment());
                     PaymentCompositePanel.this.saveAction.actionPerformed(null);
                 }
             });

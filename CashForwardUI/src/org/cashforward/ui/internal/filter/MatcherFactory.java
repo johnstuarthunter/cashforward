@@ -7,6 +7,7 @@ import ca.odell.glazedlists.matchers.CompositeMatcherEditor;
 import ca.odell.glazedlists.matchers.Matcher;
 import ca.odell.glazedlists.matchers.MatcherEditor;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
+import com.jidesoft.swing.CheckBoxList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -112,11 +113,17 @@ public class MatcherFactory {
 
         /**
          * Create a {@link IssuesForLabelsMatcherEditor} that matches Labels from the
-         * specified {@link EventList} of {@link Issue}s.
+         * specified {@link EventList} of {@link Payment}s.
+         * 
          */
         public LabelSelect(JList target) {
             this.target = target;
             target.addListSelectionListener(this);
+            
+            if (target instanceof CheckBoxList){
+                ((CheckBoxList)target).getCheckBoxListSelectionModel().addListSelectionListener(this);
+            }
+            
         }
 
         /**
@@ -134,7 +141,13 @@ public class MatcherFactory {
 
         private EventList getSelectedLabels() {
             labelsSelectedList.clear();
-            Object[] selected = target.getSelectedValues();
+            Object[] selected = null;
+            
+            if (target instanceof CheckBoxList){
+                selected = ((CheckBoxList)target).getCheckBoxListSelectedValues();
+            } else
+                selected = target.getSelectedValues();
+            
             PaymentFilter f;
 
             for (int i = 0; i < selected.length; i++) {
