@@ -3,8 +3,6 @@ package org.cashforward.ui.payment;
 import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.InputVerifier;
-import javax.swing.JComponent;
 import org.cashforward.model.Payment;
 import org.cashforward.model.Payment.Occurence;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
@@ -88,12 +86,13 @@ public class PaymentScheduleForm extends javax.swing.JPanel {
 
         if (stopsAfterRadio.isSelected()) {
             int period = newOccurence.period();
+            int unit = newOccurence.unit();
             int timesRemaining =
                     getOccurencesRemaining();
             if (timesRemaining > 0) {
                 Date endDate = DateUtilities.getDateAfterPeriod(
                         payment.getStartDate(),
-                        period, timesRemaining);
+                        period, timesRemaining*unit);
                 payment.setEndDate(endDate);
             }
         } else if (stopsOnRadio.isSelected()) {
