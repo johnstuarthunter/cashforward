@@ -291,7 +291,7 @@ public class PaymentListPanel extends TopComponent {
             } else if (column == 2) {
                 return GlazedLists.comparableComparator();
             } else {
-                return new AlwaysTheSameComparator();
+                return null;
             }
         }
 

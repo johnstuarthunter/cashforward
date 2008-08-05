@@ -4,6 +4,7 @@ import org.cashforward.model.Payment;
 import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
 import org.cashforward.ui.internal.UILogger;
+import org.cashforward.ui.payment.PaymentCompositePanel;
 import org.openide.util.HelpCtx;
 
 /**
@@ -14,9 +15,11 @@ import org.openide.util.HelpCtx;
 public final class SavePaymentAction extends BaseCallableSystemAction {
     private PaymentServiceAdapter paymentService = 
             new PaymentServiceAdapter();
-    
+    private Payment payment;
     public void performAction() {
-        Payment payment = UIContext.getDefault().getPayment();
+        if (payment == null)
+            return;
+
         UILogger.LOG.finest("saving payment:"+payment);
         if (payment == null)
             return;
@@ -25,6 +28,10 @@ public final class SavePaymentAction extends BaseCallableSystemAction {
         } else {
             UILogger.displayError(getMessage("CTL_unable_to_update_payment"));
         }
+    }
+
+    public void setPayment(Payment payment){
+        this.payment = payment;
     }
 
     public String getName() {

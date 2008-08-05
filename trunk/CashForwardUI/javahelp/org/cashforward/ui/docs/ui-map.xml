@@ -5,5 +5,5 @@ and open the template in the editor.
 -->
 <!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
 <map version="2.0">
-    <mapID target="org.cashforward.ui.about" url="ui-about.html"/>
+    <mapID target="org.cashforward.ui.help" url="ui-about.html"/>
 </map>

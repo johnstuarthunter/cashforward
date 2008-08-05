@@ -1,8 +1,8 @@
 package org.cashforward.ui.internal;
 
+import com.jidesoft.plaf.LookAndFeelFactory;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.UIManager;
 import org.cashforward.model.Scenario;
 import org.cashforward.ui.UIContext;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
@@ -25,12 +25,10 @@ public class Installer extends ModuleInstall {
 
         com.jidesoft.utils.Lm.verifyLicense("CashForward",
                 "CashForward", "JoATfLwitIFxtqKBnz25uyW7KBd4kjr2");
-        try {
-            //overwriting the JIDE stuff...
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ignored) {
-            //dont really care
-        }
+
+        //overwriting the JIDE menu...
+        LookAndFeelFactory.setDefaultStyle(
+                LookAndFeelFactory.VSNET_STYLE_WITHOUT_MENU);
 
         PaymentServiceAdapter serviceAdapter =
                 new PaymentServiceAdapter();

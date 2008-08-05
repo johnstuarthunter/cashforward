@@ -32,7 +32,7 @@ public class PaymentService {
     PaymentCalculator paymentCalculator;
 
     public PaymentService() {
-        //TODO read db from config
+        //TODO read db from config?
         persistenceService =
                 PersistenceService.getInstance(PersistenceService.STORAGE_DEV);
         paymentCalculator = new PaymentCalculator();

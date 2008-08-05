@@ -3,9 +3,12 @@ package org.cashforward.ui.payment;
 import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
 import org.cashforward.model.Payment;
 import org.cashforward.model.Payment.Occurence;
 import org.cashforward.ui.adapter.PaymentServiceAdapter;
+import org.cashforward.util.DateUtilities;
 
 /**
  * Interface for setting scheduling information for a Payment.
@@ -26,30 +29,31 @@ public class PaymentScheduleForm extends javax.swing.JPanel {
         untilDateCombo.setEnabled(false);
         stopsAfterRadio.setEnabled(false);
         valueSpinner.setEnabled(false);
-
     }
 
     public void setPayment(Payment payment) {
-        if (paymentService == null)
+        if (paymentService == null) {
             paymentService = new PaymentServiceAdapter();
-        
+        }
+
         this.payment = payment;
         if (payment.getOccurence() != null) {
             occurence = Payment.Occurence.valueOf(payment.getOccurence());
             occurenceCombo.setSelectedItem(occurence.getLabel());
         }
-        
-        if (Payment.Occurence.NONE == occurence){
-             setScheduleInterfaceEnabled(false);
+
+        if (Payment.Occurence.NONE == occurence) {
+            setScheduleInterfaceEnabled(false);
         } else if (payment.getEndDate() != null) {
             untilDateCombo.setDate(payment.getEndDate());
             stopsButtonGroup.setSelected(stopsOnRadio.getModel(), true);
             //set value spinner appropriate
-            List<Payment> paymentsRemaining = 
-                    paymentService.getScheduledPayments(payment, 
-                        new Date(), payment.getEndDate());
-            if (paymentsRemaining != null)
+            List<Payment> paymentsRemaining =
+                    paymentService.getScheduledPayments(payment,
+                    new Date(), payment.getEndDate());
+            if (paymentsRemaining != null) {
                 valueSpinner.setValue(paymentsRemaining.size());
+            }
             //valueSpinner.setEnabled(false);
             cboEnds.setSelected(true);
             untilDateCombo.setEnabled(true);
@@ -68,16 +72,49 @@ public class PaymentScheduleForm extends javax.swing.JPanel {
         stopsOnRadio.setEnabled(state);
     }
 
+    /**
+     * This is really the *commit* method for this form.
+     *
+     * @return the selected Occurence
+     */
+    public void updatePaymentOccurence() {
+        Payment.Occurence newOccurence =
+                getOccurence();
+
+        if (!cboEnds.isSelected()) {
+            payment.setEndDate(null);
+            return;
+        }
+
+        if (stopsAfterRadio.isSelected()) {
+            int period = newOccurence.period();
+            int timesRemaining =
+                    getOccurencesRemaining();
+            if (timesRemaining > 0) {
+                Date endDate = DateUtilities.getDateAfterPeriod(
+                        payment.getStartDate(),
+                        period, timesRemaining);
+                payment.setEndDate(endDate);
+            }
+        } else if (stopsOnRadio.isSelected()) {
+            payment.setEndDate(this.untilDateCombo.getDate());
+        }
+    }
+
     public Payment.Occurence getOccurence() {
-        return Occurence.values()[occurenceCombo.getSelectedIndex()];
+        Payment.Occurence newOccurence =
+                Occurence.values()[occurenceCombo.getSelectedIndex()];
+
+        return newOccurence;
     }
 
     public Date getEndDate() {
         return this.untilDateCombo.getDate();
     }
     //keep this in sync with end date
+
     public int getOccurencesRemaining() {
-        return Integer.parseInt((String) valueSpinner.getValue());
+        return Integer.parseInt(valueSpinner.getValue().toString());
     }
 
     private class OccurenceComboModel extends DefaultComboBoxModel {

@@ -95,7 +95,7 @@ public final class TaskTopComponent extends TopComponent {
         EventList scenarios = UIContext.getDefault().getScenarios();
         paymentTaskPanel.setScenarios(scenarios);
         //set the default for now
-        getPaymentTaskPanel().getScenarioListComponent().setSelectedIndex(0);
+        getPaymentTaskPanel().getScenarioListComponent().setCheckBoxListSelectedIndex(0);
     }
 
     @Override
