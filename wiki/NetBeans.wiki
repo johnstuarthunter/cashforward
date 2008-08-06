@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Below you will find a collection of resources that may help in your development of NetBeans Platform applications.
+Below you will soon find a collection of resources that may help in your development of NetBeans Platform applications.
 
 
 = Tutorials =
