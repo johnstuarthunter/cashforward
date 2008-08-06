@@ -1,12 +1,20 @@
 #summary User Interface Patterns in CashForward
 
-= Introduction =
+One of my goals with the NetBeans Grant was to also catalog various the user interaction patterns in the application. However, due to time constraints, this section will not be as complete as it should.
 
-My favorite page. 
+A great list of user interface patterns has been put together by [http://designinginterfaces.com/ Jenifer Tidell]. 
 
-Will look at stuff from Tidwell:http://designinginterfaces.com/
+Here are a few patterns found in CashForward:
 
-Maybe Tufte too
-
-
-= Details =
+   * [http://designinginterfaces.com/Two-Panel_Selector Two-Panel Selector]
+      * The PaymentDetail view
+   * [http://designinginterfaces.com/Extras_On_Demand Extras On Demand]
+      * Again, the PaymentDetail view
+   * [http://designinginterfaces.com/Movable_Panels Movable Panels]
+      * Dockable windows thanks to the NetBeans platform
+   * [http://designinginterfaces.com/Card_Stack CardStack]
+      * In the Options panel
+   * [http://designinginterfaces.com/Responsive_Enabling Reponsive Enabling]
+      * Because Actions attach to the UIContext (NetBeans Lookup)
+   * [http://designinginterfaces.com/Dropdown_Chooser Drop Down Choose]
+     * Date selection, label selection, and Scenario graph control
