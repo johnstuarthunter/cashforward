@@ -17,3 +17,4 @@ Once a payments have been created, they can be associated with different _Scenar
   * [TutorialUpdatingPayments Updating Payments]
   * [TutorialCashflow Cashflow]
   * [TutorialScenarios Comparing Cashflow]
+  * [TutorialSearching Searching Payments]
