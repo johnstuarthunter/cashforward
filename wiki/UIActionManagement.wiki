@@ -11,4 +11,6 @@ Only CallableSystemAction is used. This is an always-on action that is modified 
 One of the nice things about the Actions API is the registry.  I can call 
 {{{SystemAction.get(myClass);}}} to get the global instance of the action. So in the {{{PaymentCompositePanel}}}, the update button behavior comes from {{{SystemAction.get(SavePaymentAction.class);}}}
 
-{{{CallableSystemActions}}} can also be asynchronous, simply by returning {{{true}}} from {{{asynchronous}}}. 
+{{{CallableSystemActions}}} can also be asynchronous, simply by returning {{{true}}} from {{{asynchronous}}}.
+
+Actions can be created with the New File->Module Development->Action wizard. 
