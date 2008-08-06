@@ -4,9 +4,7 @@
 
 The NetBeans Platform provides excellent out of the box support for building Swing applications. If you've ever built custom Swing applications, you understand the complexity and time it takes to make an application function. 
 
-The NetBeans Platform provides frameworks and tooling that help deal with that complexity. 
-
-These next few sections will explain how CashForward benefits from NetBeans Platform. 
+The NetBeans Platform provides frameworks and tooling that help deal with that complexity. These are just some of my notes and observations as I've built CashForward.
 
 == [UICreation Get up and Running: Quick and easy interface creation] ==
   * Using Window and Forms for interface layout and design.
