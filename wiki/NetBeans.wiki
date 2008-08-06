@@ -7,7 +7,7 @@ Below you will soon find a collection of resources that may help in your develop
 
 = Tutorials =
 
-http://platform.netbeans.org/tutorials/
+[http://platform.netbeans.org/tutorials/ Tutorials on the NetBeans website]
 
 = Links = 
 
