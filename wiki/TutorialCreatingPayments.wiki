@@ -2,8 +2,8 @@
 
 = ToolBar Button =
 
-Clicking the New Payment button will show the New Payment Window.
 http://cashforward.googlecode.com/svn/trunk/CashForwardUI/src/org/cashforward/ui/action/payment-new.png
+Clicking the New Payment button will show the New Payment Window.
 
 = New Payment Window =
 The New Payment window has two parts: Payment Detail and Payment Schedule.
