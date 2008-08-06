@@ -4,7 +4,7 @@
 
 The [http://bits.netbeans.org/dev/javadoc/index.html Actions API] manages the actions available to the Platform modules. Menus, Toolbars, and code can access and invoke registered actions.
 
-= In CashForward =
+== In CashForward ==
 
 Only CallableSystemAction is used. This is an always-on action that is modified to be context-aware (through listening for objects on the UIContext).
 
