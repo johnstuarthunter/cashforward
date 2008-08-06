@@ -18,6 +18,6 @@ The NetBeans team has gone out of their way to make the platform APIs easy to us
 = Contents =
 
    * [HowCashForwardUsesTheNetBeansRCP How CashForward Benefits from NetBeans]
-   * CashForward Services Design
-   * CashForward User Interface Design
+   * [CashForwardServicesDesign CashForward Services Design]
+   * [CashForwardClientDesign  CashForward User Interface Design]
    * Appendix: Interface patterns found in CashForward
