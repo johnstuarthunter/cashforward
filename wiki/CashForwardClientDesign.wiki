@@ -1,13 +1,31 @@
-#summary The
+#summary The design of the CashForward Client (NetBeans Grant Milestone)
 
 = Introduction =
 
-Add your content here.
+This document will take a brief look at the client module implemented in the NetBeans Grant Milestone Release.
+
+CashForwardUI? contains the core user interface for working with {{{Payment}}}s and [CashForwardServicesDesign the services need to calculate, manage, and persist Payment information]. 
 
 
-= Details =
+= User Interface Structure =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+The user interface is organized into a few important layers. 
+
+   * Form/Presentation
+   * Actions
+   * Adapter
+
+== Forms/Presentation ==
+
+The presentation/form layers are divided up between several components - {{{Payment}, {{{Scenario}}}, and {{{Task}}}. These are also the three main {{{TopComponent}}}s you see in the interface. 
+
+Each of these packages, {{{org.cashforward.ui.payment}}},{{{org.cashforward.ui.scenario}}},{{{org.cashforward.ui.task}}} also contain supporting forms for input and display. 
+
+== Actions ==
+
+The {{{org.cashforward.ui.action}}} package contains the actions for the menu/toolbars (usually inheriting off of {{{org.cashforward.action.BaseCallableSystemAction}}}) and other system actions. 
+
+
+
+
+
