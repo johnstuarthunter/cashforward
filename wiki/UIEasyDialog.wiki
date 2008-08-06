@@ -1,0 +1,17 @@
+#summary Using NetBeans Dialogs
+
+= Introduction =
+
+As a more flexible alternative to {{{JOptionPane}}}, the NetBeans Platform provides the [http://bits.netbeans.org/dev/javadoc/index.html Dialogs API] for handling alerts, notifications, and messages to the user. 
+
+= In CashForward =
+
+DialogDescriptor and NotifyDescriptor are used to ask for information, confirmation, and display problems.
+
+The Dialogs API is quite flexible: 
+
+{{{
+final DialogDescriptor dd =
+                new DialogDescriptor(paymentDetailPanel,
+                getMessage("CTL_NewPaymentTitle"));
+}}}
