@@ -34,7 +34,7 @@ public class PaymentService {
     public PaymentService() {
         //TODO read db from config?
         persistenceService =
-                PersistenceService.getInstance(PersistenceService.STORAGE_DEV);
+                PersistenceService.getInstance(PersistenceService.STORAGE_MAIN);
         paymentCalculator = new PaymentCalculator();
     }
 
@@ -136,8 +136,6 @@ public class PaymentService {
 
         Date start = criteria.getDateStart();
         Date end = criteria.getDateEnd();
-
-        Scenario scenario = criteria.getScenario();
 
         List<Payment> allPayments = new ArrayList();
         List<Payment> payments = persistenceService.getSchdeuledPayments();
