@@ -4,4 +4,4 @@ The Scenario CashFlow is a useful tool for viewing a budget (Scenario) projected
 
 Clicking on the CashFlow will highlight the corresponding payment in the Payment table. 
 
-When more than one Scenario is selected, each Scenario will be displayed on the 
+When more than one Scenario is selected, each Scenario will be displayed together in the CashFlow view.
