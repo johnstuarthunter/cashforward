@@ -1,0 +1,12 @@
+#summary User Interface Patterns in CashForward
+
+= Introduction =
+
+My favorite page. 
+
+Will look at stuff from Tidwell:http://designinginterfaces.com/
+
+Maybe Tufte too
+
+
+= Details =
