@@ -8,7 +8,7 @@ The NetBeans Platform provides frameworks and tooling that help deal with that c
 
 These next few sections will explain how CashForward benefits from NetBeans Platform. 
 
-== [UICreation Net Get up and Running: Quick and easy interface creation] ==
+== [UICreation Get up and Running: Quick and easy interface creation] ==
   * Using Window and Forms for interface layout and design.
     * Its a process of continual prototyping
   * Matisse for form construction
