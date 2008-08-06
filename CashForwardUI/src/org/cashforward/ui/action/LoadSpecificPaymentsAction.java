@@ -43,7 +43,7 @@ public class LoadSpecificPaymentsAction extends AbstractAction {
             return;
         
         paymentList.getReadWriteLock().writeLock().lock();
-        paymentList.clear();
+        //paymentList.clear();
         paymentList.addAll(allPayments);
         paymentList.getReadWriteLock().writeLock().unlock();
         

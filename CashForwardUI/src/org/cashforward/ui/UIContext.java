@@ -113,7 +113,9 @@ public class UIContext extends AbstractLookup {
      * @param newScenario the new Scenario to add
      */
     public void addScenario(Scenario newScenario) {
+        this.scenarios.getReadWriteLock().writeLock().lock();
         this.scenarios.add(newScenario);
+        this.scenarios.getReadWriteLock().writeLock().unlock();
     }
 
     /**
@@ -122,7 +124,9 @@ public class UIContext extends AbstractLookup {
      * @param scenarios the new <code>Scenario</code>s to add.
      */
     public void addScenarios(List scenarios) {
+        this.scenarios.getReadWriteLock().writeLock().lock();
         this.scenarios.addAll(scenarios);
+        this.scenarios.getReadWriteLock().writeLock().unlock();
     }
 
     /**
