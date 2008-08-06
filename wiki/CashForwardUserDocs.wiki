@@ -9,8 +9,7 @@ CashForward concepts...
 
 == Contents ==
 
-  * Creating Payments
-  * Updating Payments
-  * Cashflow
-  * Scenarios and comparing cashflow
-  * Misc
+  * [TutorialCreatingPayments Creating Payments]
+  * [TutorialUpdatingPayments Updating Payments]
+  * [TutorialCashflow Cashflow]
+  * [TutorialScenarios Comparing Cashflow]
