@@ -32,5 +32,4 @@ Calls to the {{{EntityManager}}} are wrapped in the {{{PersistenceService}}}.{{{
 
 = Services = 
 
-{{{Payment}}s are manipulated through the {{{PaymentService}}} class. This is 
-
+{{{Payment}}}s are manipulated through the {{{PaymentService}}} class. It is expected that external clients will do all work on {{{Payment}}}s via the {{{PaymentService}}}.
