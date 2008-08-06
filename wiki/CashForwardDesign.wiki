@@ -1,2 +1,0 @@
-Placeholder for application design related discussion
-e.g., why particular interface components, interaction patters were used
