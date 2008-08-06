@@ -72,7 +72,7 @@ public class PaymentCompositePanel extends javax.swing.JPanel {
             addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    saveAction.setPayment(getPayment());
+                    saveAction.setPaymentForm(PaymentCompositePanel.this);
                     PaymentCompositePanel.this.saveAction.actionPerformed(null);
                 }
             });
