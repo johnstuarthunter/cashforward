@@ -1,0 +1,13 @@
+#summary How CashForward Uses NetBeans Windowing/Design Capabilities
+
+= Introduction =
+
+The NetBeans Platform exposes a dockable windowing system for applications. Each dockable window (or {{{TopComponent}}}) is customizable and easily constructed through the native form designer.
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
