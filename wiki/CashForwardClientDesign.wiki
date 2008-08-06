@@ -36,7 +36,7 @@ In the future adapters will also act as a bridge/converter between Presentation 
 
 = Internal  =
 
-There are other classes and packages for internal support:
+There are other classes and packages used for internal activities :
 
    * Filtering
    * Searching 
@@ -44,6 +44,14 @@ There are other classes and packages for internal support:
 
 == Filtering == 
 
-{{{org.cashforward.ui.internal.filter}}} and {{{org.cashforward.ui.internal.filter}}}
+{{{org.cashforward.ui.internal.filter}}} contains helper classes for structuring the Payment event pipeline. 
+
+== Searching == 
+
+Payments (and the CashForward website) can be searched via the QuickSearch; support for this is found in the {{{org.cashforward.ui.internal.search}}} package.
+    
+== Options ==
+
+User preferences are stored using {{{org.cashforward.ui.internal.options.UIOptions}}} {{{UIOptions}}} is a wrapper around NbPreferences.
 
 
