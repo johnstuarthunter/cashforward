@@ -1,10 +1,10 @@
 #summary Creating and handling User Preferences
 
-= Introduction =
+== Introduction ==
 
 The [http://bits.netbeans.org/dev/javadoc/org-netbeans-modules-options-api/allclasses-frame.htmlOptions Dialog and Service SPI] provide support for creating customizable Option interfaces as well storing the User Preferences
 
-= In CashForward = 
+== In CashForward == 
 
 CashForward takes advantage of the tooling to install default Option interfaces for Payments and for General System settings. See the New File->Modular Development->Options Panel wizard. 
 
