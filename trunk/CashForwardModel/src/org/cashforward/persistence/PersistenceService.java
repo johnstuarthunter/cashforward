@@ -90,7 +90,7 @@ public class PersistenceService {
         }
         return true;
     }
-    
+
     public boolean removeLabel(Label label) {
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
@@ -192,13 +192,6 @@ public class PersistenceService {
                     queryString.append(" p.endDate <= '" + sdf.format(criteria.getDateEnd()) + "'");
                 }
 
-                if (criteria.getDateStart() != null ||
-                        criteria.getDateEnd() != null) {
-                    queryString.append(" and ");
-                } else {
-                    queryString.append(" WHERE ");
-                }
-
                 //maybe filter by payment type?
                 //queryString.append(" p.occurence = '" + Payment.Occurence.NONE.name() + "'");
                 //filter out labels
@@ -206,6 +199,12 @@ public class PersistenceService {
                 //  queryString.append(" and :labels MEMBER OF p.labels");
 
                 if (criteria.getScenario() != null) {
+                    if (criteria.getDateStart() != null ||
+                            criteria.getDateEnd() != null) {
+                        queryString.append(" and ");
+                    } else {
+                        queryString.append(" WHERE ");
+                    }
                     queryString.append(" :scenario MEMBER OF p.labels");
                 }
             //queryString.append(" and p.occurence = '" + Payment.Occurence.NONE.name() + "'");
@@ -419,7 +418,7 @@ public class PersistenceService {
 
         return true;
     }
-    
+
     public boolean removeLabel(Label oldLabel, List<Payment> payments) {
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
@@ -437,7 +436,7 @@ public class PersistenceService {
             e.printStackTrace();
             return false;
         }
-        
+
         return true;
     }
 
