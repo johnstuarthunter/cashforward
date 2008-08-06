@@ -1,35 +1,37 @@
-***Draft***
+#summary How NetBeans Uses the NetBeans Platform
 
 = Overview =
 
-The NetBeans Platform provides excellent out of the box support for building Swing applications. 
+The NetBeans Platform provides excellent out of the box support for building Swing applications. If you've ever built custom Swing applications, you understand the complexity and time it takes to make an application function. 
 
-These next few pages will explain how CashForward benefits from NetBeans Platform.
+The NetBeans Platform provides frameworks and tooling that help deal with that complexity. 
 
-== Get up and Running: Quick and easy interface creation ==
+These next few sections will explain how CashForward benefits from NetBeans Platform. 
+
+== [UICreation Net Get up and Running: Quick and easy interface creation] ==
   * Using Window and Forms for interface layout and design.
     * Its a process of continual prototyping
   * Matisse for form construction
     * Expanding the default palette
 
-== Stay in sync: Using Lookup as a central application messaging bus ==
+== [UIContext Stay in sync: Using Lookup as a central application messaging bus] ==
   * Central context for managing state (current selections, shared data)
 
-== Lets Dialog: Advanced Windowing and Dialog support ==
+== [UIEasyDialog Lets Dialog: Advanced Windowing and Dialog support]==
   * Using Notifier for handling error, warning, and info displays
  
-== Call to Action: Effectively using Actions 
+== [UIActionManagement Call to Action: Effectively using Actions]
   * Easy action creation via wizards
   * Customize menus and toolbars with the layer.xml
   * Working with Context aware actions 
 
-== What's your Preference: Managing user Preferences and settings
+== [UIOptions What's your Preference: Managing user Preferences and settings]
   * Customizing the Options dialog
   * Handling user and internal UI options
 
-== Find It: Integrating with the QuickSearch
+== [UIQuickSearch Find It: Integrating with the QuickSearch]
   * Enabling searching of application data and help files via the Search Provider
 
-== Nuts and Bolts: Infrastructure support: Module management, Logging, etc ==
+== [UIInternals Nuts and Bolts: Infrastructure support: Module management, Logging, etc] ==
   * Module development and reducing dependencies
   * Logging facilities
