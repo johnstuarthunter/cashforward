@@ -23,9 +23,27 @@ Each of these packages, {{{org.cashforward.ui.payment}}},{{{org.cashforward.ui.s
 
 == Actions ==
 
-The {{{org.cashforward.ui.action}}} package contains the actions for the menu/toolbars (usually inheriting off of {{{org.cashforward.action.BaseCallableSystemAction}}}) and other system actions. 
+The {{{org.cashforward.ui.action}}} package contains the actions for the menu/toolbars (usually inheriting off of {{{org.cashforward.action.BaseCallableSystemAction}}}) and other system actions. The actions control the flow of information between the Forms/Presentation and the Payment service adapters.
 
 
+== Service Adapters ==
 
+Adapters are responsible for taking presentation data and shuttling it to the {{{PaymentService}}} in the Model/Services module. Most of the time, actions should be using the adapters ({{{org.cashforward.ui.adapter}}} to connect to the services module. 
+
+Perhaps not evident immediately, one benefit of an adapter approach is future modularity - the ability to connect to different service providers without the rest of the user interface knowing about it. The client can work with the model data, and the adapter handles the communication with the service.
+
+In the future adapters will also act as a bridge/converter between Presentation objects (e.g. Nodes) and the actual domain data. 
+
+= Internal  =
+
+There are other classes and packages for internal support:
+
+   * Filtering
+   * Searching 
+   * Options/Preferences
+
+== Filtering == 
+
+{{{org.cashforward.ui.internal.filter}}} and {{{org.cashforward.ui.internal.filter}}}
 
 
