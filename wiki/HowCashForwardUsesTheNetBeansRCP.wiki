@@ -1,4 +1,4 @@
-#summary How NetBeans Uses the NetBeans Platform
+#summary How CashForward Uses the NetBeans Platform
 
 = Overview =
 
