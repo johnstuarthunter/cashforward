@@ -20,16 +20,16 @@ These next few sections will explain how CashForward benefits from NetBeans Plat
 == [UIEasyDialog Lets Dialog: Advanced Windowing and Dialog support]==
   * Using Notifier for handling error, warning, and info displays
  
-== [UIActionManagement Call to Action: Effectively using Actions]
+== [UIActionManagement Call to Action: Effectively using Actions] ==
   * Easy action creation via wizards
   * Customize menus and toolbars with the layer.xml
   * Working with Context aware actions 
 
-== [UIOptions What's your Preference: Managing user Preferences and settings]
+== [UIOptions What's your Preference: Managing user Preferences and settings] ==
   * Customizing the Options dialog
   * Handling user and internal UI options
 
-== [UIQuickSearch Find It: Integrating with the QuickSearch]
+== [UIQuickSearch Find It: Integrating with the QuickSearch]==
   * Enabling searching of application data and help files via the Search Provider
 
 == [UIInternals Nuts and Bolts: Infrastructure support: Module management, Logging, etc] ==
