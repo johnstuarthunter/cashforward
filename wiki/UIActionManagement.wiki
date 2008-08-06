@@ -1,6 +1,6 @@
 #summary Using the Actions API
 
-= Introduction =
+== Introduction ==
 
 The [http://bits.netbeans.org/dev/javadoc/index.html Actions API] manages the actions available to the Platform modules. Menus, Toolbars, and code can access and invoke registered actions.
 
