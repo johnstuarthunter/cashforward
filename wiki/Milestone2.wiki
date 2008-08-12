@@ -20,7 +20,7 @@ New Features
 Interface Changes and Enhancements
   * Improved look for the cashflow graph
   * Option panels for managing the Payee and Label data
-  * Improved usability 
+  * Improved usability for filtering and entry
   * Look and feel effects: transitions, gradients, and color themes.
 
 Misc
