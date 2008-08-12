@@ -14,6 +14,8 @@ Architectural changes
 New Features
   * i18n support
   * Importing data from other finance tools (i.e. Quicken, MS Money, GNUCash, etc).
+  * Income/Expense Reports
+  * Upcoming Payment alerts
 
 Interface Changes and Enhancements
   * Improved look for the cashflow graph
