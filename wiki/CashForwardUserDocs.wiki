@@ -9,7 +9,7 @@ In CashForward, Bills and Deposits are called _Payments_. Each Payment has one _
 
 Payments can also be scheduled. Scheduled Payments are used to help project cashflow.
 
-Once a payments have been created, they can be associated with different _Scenarios_. For instance, you can compare your current Scenario (budget) with what it may look like with a car payment, or additional income. 
+Once payments have been created, they can be associated with different _Scenarios_. For instance, you can compare your current Scenario (budget) with what it may look like with a car payment, or additional income. 
 
 == Contents ==
 
