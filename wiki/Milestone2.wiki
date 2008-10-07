@@ -1,4 +1,4 @@
-#summary Proposed changes and features for the next Milestone
+#summary Proposed changes and features for the next Milestone, anticipated January 2009.
 
 = Introduction =
 
