@@ -1,0 +1,1 @@
+To compare scenarios, select multiple scenarios from the Scenario check list. The CashFlow for each will be graphed in the CashFlow view.
